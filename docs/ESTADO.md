@@ -16,7 +16,7 @@
 - [ ] 6.1 CI GitHub Actions
 - [ ] 6.2 Perfilado en dispositivo
 - [ ] 6.3 Checklist de accesibilidad completo
-- [x] 6.4 Export Android debug (APK arm64 firmado con keystore debug). Pendiente: icono, keystore de release, AAB para Play
+- [x] 6.4 Export Android debug (APK arm64 firmado con keystore debug). Icono propio en `assets/icon/` (principal, adaptativo y monocromo). Pendiente: keystore de release, AAB para Play
 - [ ] 6.5 Export iOS (requiere Mac)
 - [ ] 6.6 Publicación (cuentas de desarrollador con costo)
 
@@ -34,7 +34,7 @@
 - Preset versionado en `export_presets.cfg` (incluye `data/*.json` y `locale/*.json`; excluye `tests/` y `docs/`).
 - `project.godot` activa `import_etc2_astc` (requerido por Android).
 - Toolchain local: JDK 17 (Microsoft OpenJDK), Android SDK en `%LOCALAPPDATA%/Android/Sdk` (platform-tools, build-tools 36.1.0, android-36), templates 4.7.2 (solo APKs Android), keystore debug en `%APPDATA%/Godot/keystores/debug.keystore`.
-- Falta: icono de app (hoy usa el de Godot), keystore de release fuera del repo, export AAB con Gradle para Play Store.
+- Falta: keystore de release fuera del repo, export AAB con Gradle para Play Store.
 
 ## Comandos
 Ver `README.md`.
