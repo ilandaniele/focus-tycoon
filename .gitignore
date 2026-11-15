@@ -1,7 +1,6 @@
 .godot/
 .import/
 *.translation
-export_presets.cfg
 build/
 .claude/handoff/
 *.tmp

@@ -28,6 +28,13 @@ godot --path . --headless --quit-after 120
 ```
 Must print no `SCRIPT ERROR`.
 
+## Android debug APK
+Needs JDK 17, Android SDK (build-tools) and Godot 4.7.2 export templates, with their paths set in Editor Settings > Export > Android.
+```bash
+godot --path . --headless --export-debug "Android" build/android/focus-tycoon-debug.apk
+adb install -r build/android/focus-tycoon-debug.apk
+```
+
 ## Layout
 | Path | Content |
 |---|---|
