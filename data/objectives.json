@@ -1,0 +1,18 @@
+{
+	"daily_count": 3,
+	"daily_pool": [
+		{"id": "complete_1_session", "metric": "sessions_completed", "target": 1, "reward": {"coins": 30}},
+		{"id": "complete_2_sessions", "metric": "sessions_completed", "target": 2, "reward": {"coins": 50}},
+		{"id": "focus_50_minutes", "metric": "focus_minutes", "target": 50, "reward": {"coins": 40, "nature": 5}},
+		{"id": "meditate_3_minutes", "metric": "meditation_minutes", "target": 3, "reward": {"coins": 20, "nature": 5}},
+		{"id": "place_3_objects", "metric": "objects_placed", "target": 3, "reward": {"coins": 15}}
+	],
+	"achievements": [
+		{"id": "first_session", "metric": "sessions_completed_total", "target": 1, "reward": {"coins": 20}},
+		{"id": "focus_10_hours", "metric": "focus_minutes_total", "target": 600, "reward": {"coins": 150}},
+		{"id": "first_animal", "metric": "animals_total", "target": 1, "reward": {"nature": 30}},
+		{"id": "all_species", "metric": "species_distinct", "target": 5, "reward": {"coins": 300}},
+		{"id": "meditate_7_days", "metric": "meditation_days_distinct", "target": 7, "reward": {"nature": 50}},
+		{"id": "level_5", "metric": "level", "target": 5, "reward": {"coins": 100}}
+	]
+}

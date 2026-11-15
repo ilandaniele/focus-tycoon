@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/world/park_world.tscn" id="2_world"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/tutorial_overlay.tscn" id="4_tutorial"]
+[ext_resource type="Script" path="res://scripts/ui/toast.gd" id="5_toast"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="ParkWorld" parent="." instance=ExtResource("2_world")]
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="HUD" parent="UI" instance=ExtResource("3_hud")]
+
+[node name="ScreenHost" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TutorialOverlay" parent="UI" instance=ExtResource("4_tutorial")]
+
+[node name="Dialogs" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Toasts" type="VBoxContainer" parent="UI"]
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+script = ExtResource("5_toast")

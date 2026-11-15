@@ -1,0 +1,14 @@
+{
+	"exercises": [
+		{"id": "box", "kind": "breath", "durations": [1, 2, 5],
+		 "phases": [{"name": "inhale", "seconds": 4}, {"name": "hold", "seconds": 4}, {"name": "exhale", "seconds": 4}, {"name": "hold", "seconds": 4}]},
+		{"id": "relax_478", "kind": "breath", "durations": [1, 2, 4],
+		 "phases": [{"name": "inhale", "seconds": 4}, {"name": "hold", "seconds": 7}, {"name": "exhale", "seconds": 8}]},
+		{"id": "coherent", "kind": "breath", "durations": [2, 5, 10],
+		 "phases": [{"name": "inhale", "seconds": 5}, {"name": "exhale", "seconds": 5}]},
+		{"id": "mindful", "kind": "guided", "durations": [3, 5, 10], "prompt_every_s": 45,
+		 "prompts": ["med.mindful.p1", "med.mindful.p2", "med.mindful.p3", "med.mindful.p4", "med.mindful.p5", "med.mindful.p6"]},
+		{"id": "pause", "kind": "guided", "durations": [1], "prompt_every_s": 20,
+		 "prompts": ["med.pause.p1", "med.pause.p2", "med.pause.p3"]}
+	]
+}
