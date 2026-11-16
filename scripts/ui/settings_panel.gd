@@ -93,4 +93,4 @@ func _apply_reminder() -> void:
 		return
 	var local_s: int = GameState.now() + GameState.clock.tz_offset_seconds()
 	var wait_s := posmod(int(_setting("reminder_hour", 9)) * 3600 - local_s % DAY_S, DAY_S)
-	Platform.schedule_notification(REMINDER_ID, maxi(wait_s, 60), UIKit.t("reminder.title"), UIKit.t("reminder.body"))
+	Platform.schedule_notification(REMINDER_ID, maxi(wait_s, 60), UIKit.t("reminder.title"), UIKit.t("reminder.body"), DAY_S)
