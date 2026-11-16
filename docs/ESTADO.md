@@ -13,9 +13,9 @@
 - [ ] 5.5 IAP real — **bloqueado: requiere confirmación (GodotGooglePlayBilling / godot-ios-plugins)**
 - [ ] 5.6 Notificaciones locales — **bloqueado: requiere confirmación de plugin** (hoy: NullNotificationBackend)
 - [ ] 5.7 Sync Supabase — **bloqueado: requiere proyecto Supabase**
-- [ ] 6.1 CI GitHub Actions
+- [ ] 6.1 CI GitHub Actions: workflow `.github/workflows/ci.yml` escrito (import, tests, smoke). Pendiente: repo remoto en GitHub para ver el badge verde
 - [ ] 6.2 Perfilado en dispositivo
-- [ ] 6.3 Checklist de accesibilidad completo
+- [x] 6.3 Checklist de accesibilidad completo. Verificado con capturas a 100 % y 150 %. Supuesto: las etiquetas de la barra inferior no escalan (como la tab bar de iOS) porque a 150 % se cortaban; el resto de la UI sí escala
 - [x] 6.4 Export Android debug (APK arm64 firmado con keystore debug). Icono propio en `assets/icon/` (principal, adaptativo y monocromo). Pendiente: keystore de release, AAB para Play
 - [ ] 6.5 Export iOS (requiere Mac)
 - [ ] 6.6 Publicación (cuentas de desarrollador con costo)

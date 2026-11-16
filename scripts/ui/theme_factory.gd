@@ -12,6 +12,7 @@ const LEAF := Color("5FAF7A")
 const BASE_FONT := 26
 const MIN_TOUCH := 56
 const RADIUS := 20
+const NAV_FONT_RATIO := 0.8
 
 
 static func text_scale() -> float:
@@ -60,11 +61,11 @@ static func _style_buttons(theme: Theme, scale: float) -> void:
 	_button_variant(theme, "SecondaryButton", MINT, MINT, RADIUS)
 	_button_variant(theme, "ChipButton", SAND_DARK, MINT, RADIUS)
 	_button_variant(theme, "FocusButton", CORAL, CORAL, 90)
-	_compact_nav_button(theme, scale)
+	_compact_nav_button(theme)
 
 
-static func _compact_nav_button(theme: Theme, scale: float) -> void:
-	theme.set_font_size("font_size", "NavButton", roundi(BASE_FONT * 0.8 * scale))
+static func _compact_nav_button(theme: Theme) -> void:
+	theme.set_font_size("font_size", "NavButton", roundi(BASE_FONT * NAV_FONT_RATIO))
 	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
 		var box: StyleBoxFlat = theme.get_stylebox(state, "NavButton")
 		box.content_margin_left = 4
