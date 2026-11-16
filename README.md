@@ -1,5 +1,7 @@
 # Focus Tycoon
 
+[![CI](https://github.com/ilandaniele/focus-tycoon/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/ilandaniele/focus-tycoon/actions/workflows/ci.yml)
+
 Cozy isometric zoo builder powered by real focus and meditation sessions. Godot 4.7, typed GDScript, mobile-first (portrait).
 
 > Focus Tycoon does not measure or verify real concentration. It rewards the time you choose to dedicate. Meditation content is general wellbeing, not medical or psychological treatment.

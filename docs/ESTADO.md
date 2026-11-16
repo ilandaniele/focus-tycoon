@@ -13,7 +13,7 @@
 - [ ] 5.5 IAP real — **bloqueado: requiere confirmación (GodotGooglePlayBilling / godot-ios-plugins)**
 - [ ] 5.6 Notificaciones locales — **bloqueado: requiere confirmación de plugin** (hoy: NullNotificationBackend)
 - [ ] 5.7 Sync Supabase — **bloqueado: requiere proyecto Supabase**
-- [ ] 6.1 CI GitHub Actions: workflow `.github/workflows/ci.yml` escrito (import, tests, smoke). Pendiente: repo remoto en GitHub para ver el badge verde
+- [x] 6.1 CI GitHub Actions (`.github/workflows/ci.yml`: import, tests, smoke) verde en `dev`. Repo público: https://github.com/ilandaniele/focus-tycoon
 - [ ] 6.2 Perfilado en dispositivo
 - [x] 6.3 Checklist de accesibilidad completo. Verificado con capturas a 100 % y 150 %. Supuesto: las etiquetas de la barra inferior no escalan (como la tab bar de iOS) porque a 150 % se cortaban; el resto de la UI sí escala
 - [x] 6.4 Export Android debug (APK arm64 firmado con keystore debug). Icono propio en `assets/icon/` (principal, adaptativo y monocromo). Pendiente: keystore de release, AAB para Play
