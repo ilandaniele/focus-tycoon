@@ -37,6 +37,10 @@ func get_balance(resource: String) -> int:
 	return int(balances.get(resource, 0))
 
 
+func entries() -> Array:
+	return _log
+
+
 func has_key(key: String) -> bool:
 	return _applied_keys.has(key)
 

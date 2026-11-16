@@ -21,6 +21,7 @@ FocusService="*res://scripts/autoload/focus_service.gd"
 MeditationService="*res://scripts/autoload/meditation_service.gd"
 AudioService="*res://scripts/autoload/audio_service.gd"
 Platform="*res://scripts/autoload/platform.gd"
+SyncService="*res://scripts/autoload/sync_service.gd"
 
 [debug]
 

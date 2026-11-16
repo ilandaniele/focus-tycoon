@@ -1,0 +1,8 @@
+{
+  "url": "",
+  "anon_key": "",
+  "batch_size": 100,
+  "interval_s": 120,
+  "timeout_s": 10,
+  "token_margin_s": 60
+}

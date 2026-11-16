@@ -6,3 +6,4 @@ build/
 *.tmp
 .env*
 /android/
+data/sync.local.json
