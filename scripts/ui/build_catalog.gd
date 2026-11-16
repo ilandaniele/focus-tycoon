@@ -11,6 +11,12 @@ var _tab: String = "build"
 var _category: String = "path"
 
 
+func _ready() -> void:
+	super()
+	Platform.store.purchased.connect(_on_product_purchased)
+	Platform.store.purchase_failed.connect(_on_purchase_failed)
+
+
 func _build(_container: VBoxContainer) -> void:
 	_add_header(UIKit.t("hud.build"))
 	_root.add_child(UIKit.chips(_options("build.tab.", TABS), _tab, _set_tab))
@@ -110,11 +116,17 @@ func _fill_premium(column: VBoxContainer) -> void:
 
 func _buy_product(id: String) -> void:
 	var result: Dictionary = Platform.store.purchase(id)
-	if result.get("ok", false):
-		UIKit.toast(self, UIKit.t("store.thanks"))
-	else:
-		UIKit.toast_error(self, result.get("error", "already_owned"))
+	if not result.get("ok", false):
+		_on_purchase_failed(result.get("error", "store_unavailable"))
+
+
+func _on_product_purchased(_product_id: String) -> void:
+	UIKit.toast(self, UIKit.t("store.thanks"))
 	_rebuild()
+
+
+func _on_purchase_failed(error: String) -> void:
+	UIKit.toast_error(self, error)
 
 
 func _restore() -> void:

@@ -28,12 +28,14 @@ func test_unknown_product_rejected() -> void:
 	assert_false(store.has_entitlement("gems_9999"))
 
 
-func test_restore_reemits_owned_products() -> void:
+func test_restore_keeps_owned_products_without_duplicates() -> void:
 	var store := _store()
 	store.purchase(StoreService.PREMIUM)
 	_purchased.clear()
 	store.restore()
-	assert_eq(_purchased, [StoreService.PREMIUM] as Array[String])
+	assert_true(store.has_entitlement(StoreService.PREMIUM))
+	assert_eq(GameState.progress["entitlements"].count(StoreService.PREMIUM), 1)
+	assert_eq(_purchased, [] as Array[String])
 
 
 func test_fresh_store_has_no_entitlements() -> void:
