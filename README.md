@@ -56,6 +56,11 @@ Supabase setup: create a free project, enable anonymous sign-ins (Authentication
 ```
 Sync uploads the resource ledger with one idempotent key per transaction. The server recalculates balances and ignores keys it already has, so retries never duplicate resources.
 
+Check the migration locally (no Docker, no Supabase account) with PGlite and stubbed `auth` roles:
+```bash
+npm i --no-save @electric-sql/pglite@0.3.15 && node supabase/tests/migration_check.mjs supabase/migrations/20261116000000_resource_sync.sql
+```
+
 ## Layout
 | Path | Content |
 |---|---|
