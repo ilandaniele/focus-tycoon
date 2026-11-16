@@ -30,12 +30,31 @@ godot --path . --headless --quit-after 120
 ```
 Must print no `SCRIPT ERROR`.
 
-## Android debug APK
-Needs JDK 17, Android SDK (build-tools) and Godot 4.7.2 export templates, with their paths set in Editor Settings > Export > Android.
+## Android builds
+Needs JDK 17, Android SDK (build-tools) and Godot 4.7.2 export templates, with their paths set in Editor Settings > Export > Android. Exports use the Gradle build (`android/` is generated and gitignored), which packages the billing and notification plugins.
 ```bash
-godot --path . --headless --export-debug "Android" build/android/focus-tycoon-debug.apk
+godot --path . --headless --install-android-build-template --export-debug "Android" build/android/focus-tycoon-debug.apk
 adb install -r build/android/focus-tycoon-debug.apk
 ```
+Release AAB for Google Play. The keystore and its password live outside the repo and are passed through environment variables:
+```bash
+set -a; . ~/.focus-tycoon/release.env; set +a
+godot --path . --headless --export-release "Android AAB" build/android/focus-tycoon-release.aab
+```
+`release.env` defines `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD`. Back up the keystore: Play rejects updates signed with a different key.
+
+## Platform integrations
+| Feature | Android | Without the plugin (desktop, tests) |
+|---|---|---|
+| In-app purchases | `addons/GodotGooglePlayBilling` (MIT). Works only in builds installed from Play with products created in Play Console | `MockStore` |
+| Local notifications | `addons/NotificationSchedulerPlugin` (MIT) | `NullNotificationBackend` |
+| Cloud sync | Supabase REST, enabled when `data/sync.local.json` sets `url` and `anon_key` | Disabled, local save only |
+
+Supabase setup: create a free project, enable anonymous sign-ins (Authentication > Providers), apply `supabase/migrations/*.sql`, then write `data/sync.local.json` (gitignored):
+```json
+{"url": "https://<project>.supabase.co", "anon_key": "<anon public key>"}
+```
+Sync uploads the resource ledger with one idempotent key per transaction. The server recalculates balances and ignores keys it already has, so retries never duplicate resources.
 
 ## Layout
 | Path | Content |
@@ -47,10 +66,12 @@ adb install -r build/android/focus-tycoon-debug.apk
 | `scripts/autoload/` | Services wiring domain to engine |
 | `scripts/world/`, `scenes/world/` | Isometric park, camera, placement, animals |
 | `scripts/ui/`, `scenes/ui/` | HUD and screens |
-| `scripts/platform/` | Store and notification interfaces with mock backends |
+| `scripts/platform/` | Store, notification and sync backends (plugin, mock and null) |
+| `addons/` | Third-party Godot plugins (billing, notifications) |
+| `supabase/migrations/` | Remote schema with row level security |
 | `assets/` | Optional final art; placeholders are generated when files are missing |
 | `locale/` | ES/EN strings |
 | `tests/` | Headless test runner, unit and integration tests |
 
-## Not included yet (needs confirmation)
-Real in-app purchases, local notifications, Supabase sync and store publishing require plugins, accounts or paid developer programs. See `docs/01-PRD.md` risks R3–R6 and `docs/06-plan-implementacion.md` tasks 5.5–5.7 and 6.4–6.6.
+## Not included yet
+Store publishing needs paid developer accounts (Google Play USD 25 one-time, Apple USD 99/year). iOS export needs a Mac. Device profiling needs a phone. See `docs/ESTADO.md`.
