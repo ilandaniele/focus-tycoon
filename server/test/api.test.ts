@@ -173,7 +173,7 @@ describe("POST /v1/transactions", () => {
 
 describe("routing and headers", () => {
   it("returns 404 for unknown paths", async () => {
-    const response = await SELF.fetch(`${BASE}/v1/nope`);
+    const response = await SELF.fetch(`${BASE}/v1/nope`, { headers: { Origin: "https://evil.example" } });
     expect(response.status).toBe(404);
     expect(await response.json()).toMatchObject({ error: "not_found" });
   });
@@ -205,11 +205,44 @@ describe("routing and headers", () => {
     expect(((await missing.json()) as { request_id: string }).request_id).toBe(missing.headers.get("X-Request-Id"));
   });
 
-  it("sends security headers and no CORS headers", async () => {
-    const response = await SELF.fetch(`${BASE}/v1/nope`);
+  it("sends security headers and no CORS headers without an allowed origin", async () => {
+    const response = await SELF.fetch(`${BASE}/v1/nope`, { headers: { Origin: "https://evil.example" } });
     expect(response.headers.get("X-Content-Type-Options")).toBe("nosniff");
     expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(response.headers.get("Content-Security-Policy")).toContain("default-src 'none'");
     expect(response.headers.get("Access-Control-Allow-Origin")).toBeNull();
+  });
+});
+
+describe("CORS for the web build", () => {
+  const ORIGIN = "https://focus-tycoon.pages.dev";
+
+  it("answers preflight from an allowed origin", async () => {
+    const response = await SELF.fetch(`${BASE}/v1/transactions`, {
+      method: "OPTIONS",
+      headers: { Origin: ORIGIN, "Access-Control-Request-Method": "POST", "CF-Connecting-IP": nextIp() },
+    });
+    expect(response.status).toBe(204);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe(ORIGIN);
+    expect(response.headers.get("Access-Control-Allow-Headers")).toContain("Authorization");
+    expect(response.headers.get("Vary")).toBe("Origin");
+  });
+
+  it("rejects preflight from an unknown origin", async () => {
+    const response = await SELF.fetch(`${BASE}/v1/transactions`, {
+      method: "OPTIONS",
+      headers: { Origin: "https://evil.example", "Access-Control-Request-Method": "POST", "CF-Connecting-IP": nextIp() },
+    });
+    expect(response.status).toBe(403);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBeNull();
+  });
+
+  it("adds the allow origin header to real responses", async () => {
+    const response = await SELF.fetch(`${BASE}/v1/players`, {
+      method: "POST",
+      headers: { Origin: ORIGIN, "CF-Connecting-IP": nextIp() },
+    });
+    expect(response.status).toBe(201);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe(ORIGIN);
   });
 });

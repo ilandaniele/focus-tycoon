@@ -43,6 +43,14 @@ godot --path . --headless --export-release "Android AAB" build/android/focus-tyc
 ```
 `release.env` defines `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD`. Back up the keystore: Play rejects updates signed with a different key.
 
+## Web build
+Single-threaded export, so it runs on any static host without COOP/COEP headers. Needs the `web_nothreads_*.zip` export templates for 4.7.2. Saves go to the browser's IndexedDB; purchases and reminders fall back to the mock store and no-op notifications.
+```bash
+godot --path . --headless --export-release "Web" build/web/index.html
+python -m http.server 8060 -d build/web
+```
+The sync API only answers browsers from origins listed in `ALLOWED_ORIGINS` (`server/wrangler.jsonc`).
+
 ## Platform integrations
 | Feature | Android | Without the plugin (desktop, tests) |
 |---|---|---|

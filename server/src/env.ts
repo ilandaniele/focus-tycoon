@@ -3,4 +3,5 @@ export interface Env {
   SIGNUP_LIMITER: RateLimit;
   SYNC_LIMITER: RateLimit;
   IP_LIMITER: RateLimit;
+  ALLOWED_ORIGINS: string;
 }

@@ -44,5 +44,11 @@
 - Gradle build activo; `android/` se genera con `--install-android-build-template` y está en `.gitignore`.
 - Keystore de release: `~/.focus-tycoon/release.keystore` (alias `focustycoon`) y `~/.focus-tycoon/release.env`. **Hacer backup**: perderla impide actualizar la app en Play.
 
+## Export Web
+- Preset "Web" en `export_presets.cfg`: un solo hilo, sin GDExtension, salida en `build/web/` (gitignored). Templates `web_nothreads_debug/release.zip` 4.7.2 instalados en `%APPDATA%/Godot/export_templates/4.7.2.stable`.
+- Probado en navegador local: arranque, tutorial, catálogo, colocación y guardado en IndexedDB tras recargar.
+- Compras usan `MockStore` y recordatorios `NullNotificationBackend` (no hay plugins en web).
+- El Worker responde CORS solo a `ALLOWED_ORIGINS` (`server/wrangler.jsonc`). Hosting previsto: Cloudflare Pages (`focus-tycoon.pages.dev`), plan gratuito.
+
 ## Comandos
 Ver `README.md`.
