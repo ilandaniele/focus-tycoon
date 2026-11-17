@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "focus-tycoon-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "focus-tycoon",
+      "database_id": "14f71871-50d6-4c57-8908-2d16bf133a2c",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    { "name": "SIGNUP_LIMITER", "namespace_id": "7341", "simple": { "limit": 5, "period": 60 } },
+    { "name": "SYNC_LIMITER", "namespace_id": "7342", "simple": { "limit": 30, "period": 60 } }
+  ]
+}

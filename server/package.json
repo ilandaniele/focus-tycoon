@@ -1,0 +1,26 @@
+{
+  "name": "focus-tycoon-api",
+  "version": "1.0.0",
+  "description": "Focus Tycoon resource sync API (Cloudflare Worker + D1)",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "db:migrate": "wrangler d1 migrations apply focus-tycoon --remote"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.8.3",
+    "@cloudflare/workers-types": "^5.20261117.1",
+    "@vitest/runner": "^4.1.12",
+    "@vitest/snapshot": "^4.1.12",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.12",
+    "wrangler": "^4.163.0"
+  }
+}
