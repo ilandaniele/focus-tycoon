@@ -54,6 +54,7 @@ func open_screen(screen_name: String) -> void:
 		_screen.connect("placement_requested", _begin_placement)
 		_screen.connect("adopt_requested", _begin_adopt)
 	_host.add_child(_screen)
+	UIKit.fade_in(_screen)
 	_set_fullscreen_mode(true)
 
 

@@ -2,6 +2,8 @@ class_name UIKit
 extends RefCounted
 
 const ICON_SIZE := 40.0
+const FADE_SECONDS := 0.15
+const FLASH_COLOR := Color(1.25, 1.2, 1.05)
 
 
 static func t(key: String) -> String:
@@ -128,7 +130,24 @@ static func resource_pill(kind: String, value: int) -> PanelContainer:
 
 
 static func set_pill_value(pill: PanelContainer, value: int) -> void:
-	(pill.find_child("Value", true, false) as Label).text = str(value)
+	var amount := pill.find_child("Value", true, false) as Label
+	if amount.text == str(value):
+		return
+	amount.text = str(value)
+	flash(pill)
+
+
+static func fade_in(item: CanvasItem) -> void:
+	item.modulate.a = 0.0
+	item.create_tween().tween_property(item, "modulate:a", 1.0, FADE_SECONDS)
+
+
+static func flash(item: CanvasItem) -> void:
+	if not item.is_inside_tree():
+		return
+	var tween := item.create_tween()
+	tween.tween_property(item, "modulate", FLASH_COLOR, FADE_SECONDS)
+	tween.tween_property(item, "modulate", Color.WHITE, FADE_SECONDS * 2.0)
 
 
 static func labeled_slider(text: String, value: float, on_change: Callable) -> VBoxContainer:

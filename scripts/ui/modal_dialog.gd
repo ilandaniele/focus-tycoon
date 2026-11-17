@@ -11,6 +11,7 @@ static func open(from: Node, title: String) -> ModalDialog:
 	dialog.top_level = true
 	from.add_child(dialog)
 	dialog._build(title)
+	UIKit.fade_in(dialog)
 	return dialog
 
 

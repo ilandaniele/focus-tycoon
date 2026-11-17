@@ -2,8 +2,9 @@ class_name AudioSynth
 extends RefCounted
 
 const MIX_RATE := 11025
-const BELL_RATE := 22050
+const SFX_RATE := 22050
 const AMBIENT_IDS: Array[String] = ["rain", "forest", "brown"]
+const SFX_IDS: Array[String] = ["bell", "pop"]
 
 var _rng := RandomNumberGenerator.new()
 var _brown: float = 0.0
@@ -19,18 +20,32 @@ var _chirp_notes_left: int = 0
 var _chirp_gap: int = 0
 
 
-static func bell() -> AudioStreamWAV:
-	var count := int(BELL_RATE * 1.8)
+static func sfx(id: String) -> AudioStreamWAV:
+	if id == "pop":
+		return _render(0.18, _pop_sample)
+	return _render(1.8, _bell_sample)
+
+
+static func _bell_sample(time: float) -> float:
+	var tone := sin(TAU * 660.0 * time) + 0.45 * sin(TAU * 1822.0 * time) * exp(-time * 2.0) + 0.2 * sin(TAU * 3564.0 * time) * exp(-time * 4.0)
+	return tone * minf(1.0, time * 300.0) * exp(-time * 2.6) * 0.45
+
+
+static func _pop_sample(time: float) -> float:
+	var phase := TAU * (880.0 * time - 1200.0 * time * time)
+	return sin(phase) * minf(1.0, time * 400.0) * exp(-time * 25.0) * 0.4
+
+
+static func _render(seconds: float, sample_at: Callable) -> AudioStreamWAV:
+	var count := int(SFX_RATE * seconds)
 	var data := PackedByteArray()
 	data.resize(count * 2)
 	for index in count:
-		var time := float(index) / BELL_RATE
-		var tone := sin(TAU * 660.0 * time) + 0.45 * sin(TAU * 1822.0 * time) * exp(-time * 2.0) + 0.2 * sin(TAU * 3564.0 * time) * exp(-time * 4.0)
-		var sample := tone * minf(1.0, time * 300.0) * exp(-time * 2.6) * 0.45
+		var sample: float = sample_at.call(float(index) / SFX_RATE)
 		data.encode_s16(index * 2, int(clampf(sample, -1.0, 1.0) * 32767.0))
 	var stream := AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_16_BITS
-	stream.mix_rate = BELL_RATE
+	stream.mix_rate = SFX_RATE
 	stream.data = data
 	return stream
 
