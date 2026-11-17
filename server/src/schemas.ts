@@ -11,7 +11,7 @@ export const transactionSchema = z.strictObject({
   delta_nature: delta,
   delta_xp: z.number().int().min(0).max(MAX_DELTA),
   reason: z.string().min(1).max(32),
-  client_at: z.iso.datetime(),
+  client_at: z.iso.datetime({ precision: 0 }),
 });
 
 export const pushSchema = z.strictObject({

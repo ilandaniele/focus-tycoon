@@ -30,16 +30,18 @@ function transaction(idemKey: string, overrides: Record<string, unknown> = {}) {
   };
 }
 
-function push(token: string, body: unknown): Promise<Response> {
+function push(token: string, body: unknown, ip = nextIp()): Promise<Response> {
   return SELF.fetch(`${BASE}/v1/transactions`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "CF-Connecting-IP": ip },
     body: typeof body === "string" ? body : JSON.stringify(body),
   });
 }
 
 async function balance(token: string): Promise<Record<string, number>> {
-  const response = await SELF.fetch(`${BASE}/v1/resources`, { headers: { Authorization: `Bearer ${token}` } });
+  const response = await SELF.fetch(`${BASE}/v1/resources`, {
+    headers: { Authorization: `Bearer ${token}`, "CF-Connecting-IP": nextIp() },
+  });
   expect(response.status).toBe(200);
   return response.json();
 }
@@ -64,6 +66,18 @@ describe("POST /v1/players", () => {
     const statuses: number[] = [];
     for (let attempt = 0; attempt < 7; attempt += 1) {
       const response = await SELF.fetch(`${BASE}/v1/players`, { method: "POST", headers: { "CF-Connecting-IP": ip } });
+      statuses.push(response.status);
+    }
+    expect(statuses).toContain(429);
+  });
+
+  it("rate limits signups per IPv6 /64 prefix", async () => {
+    const statuses: number[] = [];
+    for (let host = 1; host <= 7; host += 1) {
+      const response = await SELF.fetch(`${BASE}/v1/players`, {
+        method: "POST",
+        headers: { "CF-Connecting-IP": `2001:db8:77:1::${host}` },
+      });
       statuses.push(response.status);
     }
     expect(statuses).toContain(429);
@@ -116,6 +130,7 @@ describe("POST /v1/transactions", () => {
     ["extra fields", { transactions: [transaction("a", { player_id: "someone-else" })] }, "invalid_body"],
     ["negative xp", { transactions: [transaction("a", { delta_xp: -1 })] }, "invalid_body"],
     ["bad timestamp", { transactions: [transaction("a", { client_at: "yesterday" })] }, "invalid_body"],
+    ["fractional timestamp", { transactions: [transaction("a", { client_at: `2026-11-17T10:00:00.${"1".repeat(5000)}Z` })] }, "invalid_body"],
     ["oversized batch", { transactions: Array.from({ length: 101 }, (_, index) => transaction(`k${index}`)) }, "invalid_body"],
   ])("rejects %s with 400", async (_name, body, code) => {
     const { token } = await signup();
@@ -127,6 +142,22 @@ describe("POST /v1/transactions", () => {
   it("rejects bodies over 64 KB with 413", async () => {
     const { token } = await signup();
     const response = await push(token, JSON.stringify({ padding: "x".repeat(70 * 1024) }));
+    expect(response.status).toBe(413);
+  });
+
+  it("rejects multibyte bodies over 64 KB with 413", async () => {
+    const { token } = await signup();
+    const response = await push(token, JSON.stringify({ padding: "é".repeat(40 * 1024) }));
+    expect(response.status).toBe(413);
+  });
+
+  it("rejects a declared Content-Length over 64 KB before reading the body", async () => {
+    const { token } = await signup();
+    const response = await SELF.fetch(`${BASE}/v1/transactions`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Length": String(70 * 1024), "CF-Connecting-IP": nextIp() },
+      body: "{}",
+    });
     expect(response.status).toBe(413);
   });
 
@@ -150,6 +181,28 @@ describe("routing and headers", () => {
   it("returns 405 for wrong methods", async () => {
     const response = await SELF.fetch(`${BASE}/v1/players`);
     expect(response.status).toBe(405);
+  });
+
+  it("rate limits authenticated requests per IP before touching the database", async () => {
+    const ip = "198.51.100.9";
+    const statuses: number[] = [];
+    for (let attempt = 0; attempt < 62; attempt += 1) {
+      const response = await SELF.fetch(`${BASE}/v1/resources`, {
+        headers: { Authorization: `Bearer ${"x".repeat(43)}`, "CF-Connecting-IP": ip },
+      });
+      statuses.push(response.status);
+    }
+    expect(statuses).toContain(429);
+  });
+
+  it("sends a request id header on every response", async () => {
+    const session = await signup();
+    const ok = await SELF.fetch(`${BASE}/v1/resources`, {
+      headers: { Authorization: `Bearer ${session.token}`, "CF-Connecting-IP": nextIp() },
+    });
+    const missing = await SELF.fetch(`${BASE}/v1/nope`);
+    expect(ok.headers.get("X-Request-Id")).toMatch(/^[0-9a-f-]{36}$/);
+    expect(((await missing.json()) as { request_id: string }).request_id).toBe(missing.headers.get("X-Request-Id"));
   });
 
   it("sends security headers and no CORS headers", async () => {

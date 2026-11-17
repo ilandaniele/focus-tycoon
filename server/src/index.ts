@@ -1,5 +1,5 @@
 import type { Env } from "./env";
-import { errorResponse, HttpError } from "./http";
+import { clientIp, errorResponse, HttpError } from "./http";
 import { createPlayer } from "./routes/players";
 import { getResources } from "./routes/resources";
 import { pushTransactions } from "./routes/transactions";
@@ -15,20 +15,30 @@ const ROUTES: Record<string, Record<string, Handler>> = {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const requestId = crypto.randomUUID();
-    try {
-      return await route(request, env);
-    } catch (error) {
-      if (error instanceof HttpError) return errorResponse(error.status, error.code, requestId);
-      console.error(JSON.stringify({ request_id: requestId, error: String(error) }));
-      return errorResponse(500, "internal_error", requestId);
-    }
+    const response = await handle(request, env, requestId);
+    response.headers.set("X-Request-Id", requestId);
+    return response;
   },
 } satisfies ExportedHandler<Env>;
 
-function route(request: Request, env: Env): Promise<Response> {
+async function handle(request: Request, env: Env, requestId: string): Promise<Response> {
+  try {
+    return await route(request, env);
+  } catch (error) {
+    if (error instanceof HttpError) {
+      console.warn(JSON.stringify({ request_id: requestId, status: error.status, error: error.code }));
+      return errorResponse(error.status, error.code, requestId);
+    }
+    console.error(JSON.stringify({ request_id: requestId, error: String(error) }));
+    return errorResponse(500, "internal_error", requestId);
+  }
+}
+
+async function route(request: Request, env: Env): Promise<Response> {
   const methods = ROUTES[new URL(request.url).pathname];
   if (!methods) throw new HttpError(404, "not_found");
-  const handler = methods[request.method];
-  if (!handler) throw new HttpError(405, "method_not_allowed");
-  return handler(request, env);
+  if (!Object.hasOwn(methods, request.method)) throw new HttpError(405, "method_not_allowed");
+  const { success } = await env.IP_LIMITER.limit({ key: clientIp(request) });
+  if (!success) throw new HttpError(429, "rate_limited");
+  return methods[request.method](request, env);
 }

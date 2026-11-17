@@ -27,8 +27,10 @@ export function errorResponse(status: number, code: string, requestId: string): 
 }
 
 export async function readJson(request: Request): Promise<unknown> {
-  const text = await request.text();
-  if (text.length > MAX_BODY_BYTES) throw new HttpError(413, "payload_too_large");
+  if (Number(request.headers.get("Content-Length") ?? 0) > MAX_BODY_BYTES) throw new HttpError(413, "payload_too_large");
+  const bytes = await request.arrayBuffer();
+  if (bytes.byteLength > MAX_BODY_BYTES) throw new HttpError(413, "payload_too_large");
+  const text = new TextDecoder().decode(bytes);
   try {
     return JSON.parse(text);
   } catch {
@@ -36,6 +38,17 @@ export async function readJson(request: Request): Promise<unknown> {
   }
 }
 
+const IPV6_NETWORK_GROUPS = 4;
+
 export function clientIp(request: Request): string {
-  return request.headers.get("CF-Connecting-IP") ?? "unknown";
+  const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
+  return ip.includes(":") ? ipv6Network(ip) : ip;
+}
+
+function ipv6Network(ip: string): string {
+  const [head, tail = ""] = ip.toLowerCase().split("::");
+  const headGroups = head ? head.split(":") : [];
+  const tailGroups = ip.includes("::") && tail ? tail.split(":") : [];
+  const missing = Array(Math.max(0, 8 - headGroups.length - tailGroups.length)).fill("0");
+  return [...headGroups, ...missing, ...tailGroups].slice(0, IPV6_NETWORK_GROUPS).join(":") + "::/64";
 }
