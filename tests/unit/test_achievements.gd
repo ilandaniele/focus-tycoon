@@ -23,5 +23,10 @@ func test_evaluate_nothing_when_no_totals() -> void:
 
 func test_all_defined_achievements_reachable() -> void:
 	var totals := {"sessions_completed_total": 1, "focus_minutes_total": 600.0, "animals_total": 1,
-		"species_distinct": 5, "meditation_days_distinct": 7, "level": 5}
+		"species_distinct": Config.species.size(), "meditation_days_distinct": 7, "level": 5}
 	assert_eq(Achievements.evaluate(Config.objectives["achievements"], totals, {}).size(), 6)
+
+
+func test_all_species_needs_every_species() -> void:
+	var all_species: Array = Config.objectives["achievements"].filter(func(a: Dictionary) -> bool: return a["id"] == "all_species")
+	assert_eq(int(all_species[0]["target"]), Config.species.size())

@@ -121,7 +121,7 @@ Un animal se adopta dentro de un recinto de su bioma con capacidad libre. Los an
   | meditate_3_minutes | 3 min de meditación | 20 c + 5 n |
   | place_3_objects | colocar 3 objetos | 15 c |
   Si no se cumplen, simplemente cambian al día siguiente. Se reclaman una sola vez (clave `daily:<fecha>:<id>`).
-- **Logros** (una vez cada uno): first_session (20 c), focus_10_hours (150 c), first_animal (30 n), all_species (300 c), meditate_7_days (7 días distintos, no consecutivos; 50 n), level_5 (100 c).
+- **Logros** (una vez cada uno): first_session (20 c), focus_10_hours (150 c), first_animal (30 n), all_species (todas las especies, 300 c), meditate_7_days (7 días distintos, no consecutivos; 50 n), level_5 (100 c).
 
 ### Anti-abuso (lo que el sistema garantiza y lo que no)
 - **Garantiza:** cada sesión acredita como máximo una vez (idempotencia por `session_id`); nunca más minutos que los planificados; una sola sesión activa; dividir en muchas sesiones cortas no rinde más por minuto que una larga; el tope diario acota el ingreso máximo (≈ 874 c/día de foco).

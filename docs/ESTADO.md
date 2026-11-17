@@ -24,7 +24,7 @@
 - [x] 6.8 Pulido: fuente Nunito (OFL) e íconos vectoriales en HUD; juice (pop al colocar, confeti, sonido pop sintetizado, fades de pantalla y modal, flash en contadores; respeta reducir movimiento); animales animados con tiras idle (4 frames) y walk (6 frames) generadas desde los SVG por `tools/animal_strips.gd` (grupos `body`/`head`/`legs_a`/`legs_b`); contenido nuevo: foca, zorro, cebra, tulipanes, roca con musgo y estanque. Desvío del GDD: la caminata usa una tira lateral con `flip_h`, no las cuatro direcciones isométricas
 
 ## Verificación actual
-- `godot --path . --headless -s res://tests/run_tests.gd`: 180 tests, 0 fallos, 0 `SCRIPT ERROR`. El runner cuenta como fallo un script de test que no compila y un test que dispara un error de script en ejecución (un `Logger` registrado con `OS.add_logger` los cuenta).
+- `godot --path . --headless -s res://tests/run_tests.gd`: 181 tests, 0 fallos, 0 `SCRIPT ERROR`. El runner cuenta como fallo un script de test que no compila y un test que dispara un error de script en ejecución (un `Logger` registrado con `OS.add_logger` los cuenta).
 - `cd server && npm run typecheck && npm test`: 25 tests, 0 fallos.
 - `godot --path . --headless --quit-after 120`: 0 `SCRIPT ERROR`.
 
