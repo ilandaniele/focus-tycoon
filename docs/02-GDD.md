@@ -73,10 +73,13 @@ Perfil medio llega a nivel 5 ≈ día 6, nivel 7 ≈ día 11, nivel 15 ≈ día 
 | tree_oak | plant | 1×1 | 25 c | 1 |
 | tree_pine | plant | 1×1 | 30 c | 2 |
 | tree_cherry | plant | 1×1 | 60 c | 6 |
+| flower_tulips | plant | 1×1 | 18 c | 3 |
 | sign_wood | decor | 1×1 | 20 c | 2 |
+| rock_mossy | decor | 1×1 | 15 c | 2 |
 | bench | decor | 1×1 | 40 c | 1 |
 | lamp | decor | 1×1 | 50 c | 3 |
 | fountain | decor | 2×2 | 300 c | 5 |
+| pond | decor | 2×2 | 180 c | 4 |
 | statue | decor | 1×1 | 500 c | 8 |
 | enclosure_meadow | enclosure | 3×3, capacidad 3 | 200 c | 1 |
 | enclosure_ice | enclosure | 3×3, capacidad 3 | 400 c + 20 n | 2 |
@@ -101,6 +104,9 @@ Quitar un objeto devuelve 50 % de las monedas (no la naturaleza). Mover es grati
 | capybara | meadow | 150 c + 30 n | 3 | Muy tranquila, idle largo |
 | red_panda | forest | 250 c + 50 n | 5 | Cola anillada, curiosa |
 | elephant | savanna | 600 c + 120 n | 7 | Grande, paso lento |
+| seal | ice | 200 c + 40 n | 4 | Se arrastra despacio |
+| fox | forest | 320 c + 65 n | 6 | Cola con punta blanca, ágil |
+| zebra | savanna | 800 c + 150 n | 9 | Rayas, trote medio |
 
 Un animal se adopta dentro de un recinto de su bioma con capacidad libre. Los animales no se venden en MVP.
 
@@ -124,10 +130,10 @@ Un animal se adopta dentro de un recinto de su bioma con capacidad libre. Los an
 
 ## Progresión y desbloqueos
 - Nivel 1: pradera, conejo, caminos de tierra, roble, arbusto, banco.
-- Nivel 2: hielo + pingüino, piedra, pino, cartel.
-- Nivel 3: capibara, farol, expansión 1.
-- Nivel 4: bosque, camino de madera. Nivel 5: panda rojo, fuente.
-- Nivel 6: cerezo, expansión 2. Nivel 7: sabana + elefante. Nivel 8: estatua. Nivel 10: expansión 3.
+- Nivel 2: hielo + pingüino, piedra, pino, cartel, roca con musgo.
+- Nivel 3: capibara, farol, tulipanes, expansión 1.
+- Nivel 4: bosque, camino de madera, foca, estanque. Nivel 5: panda rojo, fuente.
+- Nivel 6: cerezo, zorro, expansión 2. Nivel 7: sabana + elefante. Nivel 8: estatua. Nivel 9: cebra. Nivel 10: expansión 3.
 - Al subir de nivel: tarjeta "Nuevo en el catálogo" con los ítems desbloqueados.
 
 ## Meditación (bienestar general)
