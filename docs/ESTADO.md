@@ -21,9 +21,10 @@
 - [ ] 6.5 Export iOS (requiere Mac)
 - [ ] 6.6 Publicación (cuentas de desarrollador con costo)
 - [x] 6.7 Revisión de seguridad del Worker: 0 críticos/altos. Arreglado: `client_at` sin fracciones (evita filas gigantes), límite de push bajado a 6/min por jugador, límite por IP (60/min) antes de tocar D1 en todas las rutas, alta limitada por prefijo IPv6 /64, tamaño del body medido en bytes y rechazo por `Content-Length`, `X-Request-Id` en todas las respuestas y log de errores 4xx. Riesgo aceptado: el token se guarda sin cifrar en `user://sync_session.json` (solo protege un backup, Android con `allowBackup=false`). Riesgo residual: muchos jugadores anónimos desde muchas IPs pueden agotar la cuota diaria gratuita de escrituras de D1 (solo corta el backup ese día); mitigación futura: Play Integrity / App Attest
+- [x] 6.8 Pulido: fuente Nunito (OFL) e íconos vectoriales en HUD; juice (pop al colocar, confeti, sonido pop sintetizado, fades de pantalla y modal, flash en contadores; respeta reducir movimiento); animales animados con tiras idle (4 frames) y walk (6 frames) generadas desde los SVG por `tools/animal_strips.gd` (grupos `body`/`head`/`legs_a`/`legs_b`); contenido nuevo: foca, zorro, cebra, tulipanes, roca con musgo y estanque. Desvío del GDD: la caminata usa una tira lateral con `flip_h`, no las cuatro direcciones isométricas
 
 ## Verificación actual
-- `godot --path . --headless -s res://tests/run_tests.gd`: 175 tests, 0 fallos, 0 `SCRIPT ERROR`. El runner cuenta como fallo un script de test que no compila y un test que dispara un error de script en ejecución (un `Logger` registrado con `OS.add_logger` los cuenta).
+- `godot --path . --headless -s res://tests/run_tests.gd`: 180 tests, 0 fallos, 0 `SCRIPT ERROR`. El runner cuenta como fallo un script de test que no compila y un test que dispara un error de script en ejecución (un `Logger` registrado con `OS.add_logger` los cuenta).
 - `cd server && npm run typecheck && npm test`: 25 tests, 0 fallos.
 - `godot --path . --headless --quit-after 120`: 0 `SCRIPT ERROR`.
 
