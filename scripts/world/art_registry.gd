@@ -53,8 +53,15 @@ static func object_pivot(texture: Texture2D, size: Vector2i) -> Vector2:
 	return Vector2(texture.get_width() / 2.0, texture.get_height() - (size.x + size.y) * 16.0)
 
 
-static func animal_pivot(texture: Texture2D) -> Vector2:
-	return Vector2(texture.get_width() / 2.0, texture.get_height() - FOOT_MARGIN)
+static func animal_pivot(frame_size: Vector2) -> Vector2:
+	return Vector2(frame_size.x / 2.0, frame_size.y - FOOT_MARGIN)
+
+
+static func animation(species_id: String, anim: String) -> Texture2D:
+	var key := "animals/%s_%s" % [species_id, anim]
+	if not _cache.has(key):
+		_cache[key] = _load_asset(key)
+	return _cache[key]
 
 
 static func tile_keys() -> Array[String]:

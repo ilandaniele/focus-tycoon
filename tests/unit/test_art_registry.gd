@@ -1,5 +1,6 @@
 extends TestCase
 
+const ANIMATION_FRAMES := {"idle": 4, "walk": 6}
 const OBJECT_SIZES := {1: Vector2i(128, 160), 2: Vector2i(256, 256), 3: Vector2i(384, 320), 4: Vector2i(512, 384)}
 
 
@@ -24,6 +25,23 @@ func test_every_species_has_texture_with_canvas_size() -> void:
 		assert_true(texture != null, "texture for %s" % species_id)
 		var expected := Vector2(160, 128) if species_id == "elephant" else Vector2(96, 96)
 		assert_eq(texture.get_size(), expected, species_id)
+
+
+func test_every_species_has_idle_and_walk_strips() -> void:
+	for species_id: String in Config.species:
+		var canvas := Vector2(ArtRegistry.animal_canvas(species_id))
+		for anim: String in ANIMATION_FRAMES:
+			var strip := ArtRegistry.animation(species_id, anim)
+			assert_true(strip != null, "%s %s" % [species_id, anim])
+			assert_eq(strip.get_size(), Vector2(canvas.x * ANIMATION_FRAMES[anim], canvas.y), "%s %s" % [species_id, anim])
+
+
+func test_missing_animation_is_null() -> void:
+	assert_eq(ArtRegistry.animation("rabbit", "dance"), null)
+
+
+func test_animal_pivot_is_frame_foot_center() -> void:
+	assert_eq(ArtRegistry.animal_pivot(Vector2(96, 96)), Vector2(48, 96 - ArtRegistry.FOOT_MARGIN))
 
 
 func test_terrain_and_marker_keys_exist() -> void:
