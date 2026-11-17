@@ -4,19 +4,19 @@ const CONFIG_PATH := "res://data/sync.json"
 const LOCAL_CONFIG_PATH := "res://data/sync.local.json"
 const SESSION_PATH := "user://sync_session.json"
 
-var _client: SupabaseClient
+var _client: SyncApiClient
 var _sync: LedgerSync
 var _busy: bool = false
 
 
 func _ready() -> void:
 	var config := _load_config()
-	if str(config["url"]) == "" or str(config["anon_key"]) == "":
+	if str(config["url"]) == "":
 		return
 	var transport := HttpTransport.new()
 	transport.timeout_s = float(config["timeout_s"])
 	add_child(transport)
-	_client = SupabaseClient.new(config["url"], config["anon_key"], transport, int(config["token_margin_s"]))
+	_client = SyncApiClient.new(config["url"], transport)
 	_client.session = _read_session()
 	_sync = LedgerSync.new(_client, int(config["batch_size"]))
 	var timer := Timer.new()

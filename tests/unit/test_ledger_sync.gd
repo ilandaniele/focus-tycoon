@@ -1,11 +1,11 @@
 extends TestCase
 
-const URL := "https://demo.supabase.co"
 const NOW := 1_763_200_000
-const INSERT_PATH := "/rest/v1/resource_transactions?on_conflict=player_id,idem_key"
+const PLAYERS_PATH := "/v1/players"
+const TRANSACTIONS_PATH := "/v1/transactions"
 
 var _transport: FakeHttpTransport
-var _client: SupabaseClient
+var _client: SyncApiClient
 var _sync: LedgerSync
 var _ledger: Ledger
 var _synced: Dictionary
@@ -13,7 +13,7 @@ var _synced: Dictionary
 
 func before_each() -> void:
 	_transport = FakeHttpTransport.new()
-	_client = SupabaseClient.new(URL, "anon", _transport, 60)
+	_client = SyncApiClient.new(FakeHttpTransport.BASE_URL, _transport)
 	_sync = LedgerSync.new(_client, 2)
 	_ledger = Ledger.new()
 	_synced = {}
@@ -27,29 +27,30 @@ func after_each() -> void:
 
 
 func test_first_push_signs_up_and_uploads_a_batch() -> void:
-	_transport.responses = [_auth_ok("user-1", "refresh-1"), {"code": 201, "body": null}]
+	_transport.responses = [_signup_ok("player-1", "token-1"), _accepted(2)]
 	var result: Dictionary = await _sync.push(_ledger.entries(), _synced, NOW)
 	assert_eq(result, {"ok": true, "sent": 2})
-	assert_eq(_transport.paths(), ["/auth/v1/signup", INSERT_PATH] as Array[String])
-	var rows: Array = _transport.requests[1]["body"]
-	assert_eq(rows[1]["player_id"], "user-1")
+	assert_eq(_transport.paths(), [PLAYERS_PATH, TRANSACTIONS_PATH] as Array[String])
+	assert_true(_transport.requests[1]["headers"].has("Authorization: Bearer token-1"))
+	var rows: Array = _transport.requests[1]["body"]["transactions"]
+	assert_false(rows[1].has("player_id"))
 	assert_eq(rows[1]["idem_key"], "focus:s1#1")
 	assert_eq(rows[1]["delta_coins"], 25)
 	assert_eq(rows[1]["delta_nature"], 2)
 	assert_eq(rows[1]["delta_xp"], 25)
+	assert_eq(rows[1]["client_at"], Time.get_datetime_string_from_unix_time(NOW + 10) + "Z")
 	assert_true(_synced.has("starter_grant") and _synced.has("focus:s1#1"))
 	assert_false(_synced.has("buy:o_1"))
 
 
 func test_failed_upload_is_retried_with_the_same_keys() -> void:
-	_transport.responses = [_auth_ok("user-1", "refresh-1"), {"code": 503, "body": null}, {"code": 201, "body": null}]
+	_transport.responses = [_signup_ok("player-1", "token-1"), {"code": 503, "body": null}, _accepted(2)]
 	var failed: Dictionary = await _sync.push(_ledger.entries(), _synced, NOW)
 	assert_false(failed["ok"])
 	assert_true(_synced.is_empty())
 	await _sync.push(_ledger.entries(), _synced, NOW + 5)
-	var first_keys := _keys(_transport.requests[1]["body"])
-	assert_eq(_keys(_transport.requests[2]["body"]), first_keys)
-	assert_eq(_transport.requests[2]["headers"].has("Prefer: resolution=ignore-duplicates,return=minimal"), true)
+	assert_eq(_transport.paths(), [PLAYERS_PATH, TRANSACTIONS_PATH, TRANSACTIONS_PATH] as Array[String])
+	assert_eq(_keys(_transport.requests[2]["body"]), _keys(_transport.requests[1]["body"]))
 
 
 func test_nothing_pending_sends_no_request() -> void:
@@ -59,25 +60,27 @@ func test_nothing_pending_sends_no_request() -> void:
 	assert_eq(_transport.requests.size(), 0)
 
 
-func test_expired_session_refreshes_instead_of_signing_up() -> void:
-	_client.session = {"access_token": "old", "refresh_token": "refresh-1", "expires_at": NOW + 30, "user_id": "user-1"}
-	_transport.responses = [_auth_ok("user-1", "refresh-2"), {"code": 201, "body": null}]
+func test_stored_session_is_reused() -> void:
+	_client.session = {"player_id": "player-1", "token": "live"}
+	_transport.responses = [_accepted(2)]
 	await _sync.push(_ledger.entries(), _synced, NOW)
-	assert_eq(_transport.paths()[0], "/auth/v1/token?grant_type=refresh_token")
-	assert_eq(_transport.requests[0]["body"], {"refresh_token": "refresh-1"})
-	assert_eq(_client.session["refresh_token"], "refresh-2")
-
-
-func test_valid_session_is_reused() -> void:
-	_client.session = {"access_token": "live", "refresh_token": "r", "expires_at": NOW + 3600, "user_id": "user-1"}
-	_transport.responses = [{"code": 201, "body": null}]
-	await _sync.push(_ledger.entries(), _synced, NOW)
-	assert_eq(_transport.paths(), [INSERT_PATH] as Array[String])
+	assert_eq(_transport.paths(), [TRANSACTIONS_PATH] as Array[String])
 	assert_true(_transport.requests[0]["headers"].has("Authorization: Bearer live"))
 
 
-func test_auth_failure_uploads_nothing() -> void:
-	_transport.responses = [{"code": 422, "body": {"msg": "Anonymous sign-ins are disabled"}}]
+func test_rejected_token_clears_session_and_signs_up_again() -> void:
+	_client.session = {"player_id": "player-1", "token": "revoked"}
+	_transport.responses = [{"code": 401, "body": {"error": "unauthorized"}}, _signup_ok("player-2", "token-2"), _accepted(2)]
+	var failed: Dictionary = await _sync.push(_ledger.entries(), _synced, NOW)
+	assert_false(failed["ok"])
+	assert_true(_client.session.is_empty())
+	var retried: Dictionary = await _sync.push(_ledger.entries(), _synced, NOW + 5)
+	assert_true(retried["ok"])
+	assert_eq(_client.session["token"], "token-2")
+
+
+func test_signup_failure_uploads_nothing() -> void:
+	_transport.responses = [{"code": 429, "body": {"error": "rate_limited"}}]
 	var result: Dictionary = await _sync.push(_ledger.entries(), _synced, NOW)
 	assert_false(result["ok"])
 	assert_eq(_transport.requests.size(), 1)
@@ -89,9 +92,13 @@ func test_prune_drops_keys_that_left_the_log() -> void:
 	assert_eq(SyncBatch.prune(synced, _ledger.entries()), {"starter_grant": NOW})
 
 
-func _auth_ok(user_id: String, refresh: String) -> Dictionary:
-	return {"code": 200, "body": {"access_token": "access", "refresh_token": refresh, "expires_in": 3600, "user": {"id": user_id}}}
+func _signup_ok(player_id: String, token: String) -> Dictionary:
+	return {"code": 201, "body": {"player_id": player_id, "token": token}}
 
 
-func _keys(rows: Array) -> Array:
-	return rows.map(func(row: Dictionary) -> String: return row["idem_key"])
+func _accepted(count: int) -> Dictionary:
+	return {"code": 200, "body": {"received": count, "accepted": count}}
+
+
+func _keys(body: Dictionary) -> Array:
+	return body["transactions"].map(func(row: Dictionary) -> String: return row["idem_key"])

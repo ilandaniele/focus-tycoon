@@ -16,7 +16,7 @@ func _run() -> void:
 			if filter != "" and not file_name.contains(filter):
 				continue
 			var script: GDScript = load(dir_path.path_join(file_name))
-			if script == null:
+			if script == null or not script.can_instantiate():
 				printerr("FAIL load %s" % file_name)
 				failed += 1
 				continue

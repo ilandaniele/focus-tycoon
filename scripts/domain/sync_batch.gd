@@ -12,10 +12,9 @@ static func pending(entries: Array, synced: Dictionary, limit: int) -> Array:
 	return result
 
 
-static func to_row(entry: Dictionary, player_id: String) -> Dictionary:
+static func to_row(entry: Dictionary) -> Dictionary:
 	var delta: Dictionary = entry["delta"]
 	return {
-		"player_id": player_id,
 		"idem_key": entry["key"],
 		"delta_coins": int(delta.get("coins", 0)),
 		"delta_nature": int(delta.get("nature", 0)),

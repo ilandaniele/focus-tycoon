@@ -15,7 +15,7 @@ func after_each() -> void:
 
 func test_creates_channel_on_initialization() -> void:
 	assert_eq(_scheduler.channels.size(), 1)
-	assert_eq(_scheduler.channels[0]["id"], PluginNotificationBackend.CHANNEL_ID)
+	assert_eq(_scheduler.channels[0][NotificationChannel.DATA_KEY_ID], PluginNotificationBackend.CHANNEL_ID)
 
 
 func test_schedule_maps_fields_and_requests_permission() -> void:

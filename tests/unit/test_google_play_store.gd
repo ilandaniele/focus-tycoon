@@ -67,9 +67,9 @@ func test_user_cancel_is_silent_and_errors_are_reported() -> void:
 
 
 func test_purchase_rejected_when_disconnected_or_owned() -> void:
-	_client.ready = false
+	_client.billing_ready = false
 	assert_eq(_store.purchase(StoreService.PREMIUM)["error"], "store_unavailable")
-	_client.ready = true
+	_client.billing_ready = true
 	_client.launch_code = 5
 	assert_eq(_store.purchase(StoreService.PREMIUM)["error"], "store_unavailable")
 	_client.query_purchases_response.emit(_response([_purchase(StoreService.PREMIUM, 1, true)]))
