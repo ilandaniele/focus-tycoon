@@ -57,6 +57,8 @@ func _load_config() -> Dictionary:
 
 
 func _read_session() -> Dictionary:
+	if not FileAccess.file_exists(SESSION_PATH):
+		return {}
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SESSION_PATH))
 	return parsed if parsed is Dictionary else {}
 
