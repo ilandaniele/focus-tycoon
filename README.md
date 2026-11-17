@@ -82,7 +82,8 @@ npm run deploy
 | `scripts/platform/` | Store, notification and sync backends (plugin, mock and null) |
 | `addons/` | Third-party Godot plugins (billing, notifications) |
 | `server/` | Cloudflare Worker sync API, D1 migrations and tests |
-| `assets/` | Optional final art; placeholders are generated when files are missing |
+| `assets/` | Rendered art; placeholders are generated when files are missing |
+| `art/` | SVG sources for `assets/`, rendered by `tools/render_art.gd` |
 | `locale/` | ES/EN strings |
 | `tests/` | Headless test runner, unit and integration tests |
 

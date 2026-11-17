@@ -2,6 +2,17 @@
 
 Final art is dropped here. Code never changes: `ArtRegistry` loads `res://assets/<key>.png` when it exists and generates a placeholder otherwise.
 
+## Source art
+
+Every PNG here is rendered from a hand-written SVG in `art/`, with the same relative path (`art/objects/fountain.svg` becomes `assets/objects/fountain.png`). Edit the SVG, never the PNG, then render and re-import:
+
+```bash
+godot --path . --headless -s res://tools/render_art.gd
+godot --path . --headless --import
+```
+
+`art/` holds a `.gdignore`, so Godot does not import the sources. SVGs use plain shapes only (no gradients, filters or text), so Godot's built-in ThorVG renders them identically on every platform. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own.
+
 ## Naming
 
 `assets/<category>/<id>[_<variant>][_<anim>].png`, lowercase `snake_case`. `<id>` is identical to the id in `data/catalog.json` or `data/species.json`.

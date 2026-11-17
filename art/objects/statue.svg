@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="160" viewBox="0 0 128 160">
+  <ellipse cx="64" cy="130" rx="34" ry="12" fill="#3D3A35" fill-opacity="0.2"/>
+  <polygon points="36,118 64,106 92,118 64,132" fill="#C9C6BD"/>
+  <polygon points="36,118 64,132 64,138 36,124" fill="#A9A69D"/>
+  <polygon points="64,132 92,118 92,124 64,138" fill="#8F8C84"/>
+  <polygon points="42,114 64,104 86,114 64,124" fill="#DAD7CF"/>
+  <polygon points="42,114 64,124 64,128 42,118" fill="#A9A69D"/>
+  <polygon points="64,124 86,114 86,118 64,128" fill="#8F8C84"/>
+  <ellipse cx="64" cy="82" rx="22" ry="26" fill="#A9A69D"/>
+  <ellipse cx="60" cy="80" rx="19" ry="24" fill="#C9C6BD"/>
+  <ellipse cx="54" cy="68" rx="8" ry="12" fill="#DAD7CF"/>
+  <circle cx="64" cy="48" r="17" fill="#A9A69D"/>
+  <circle cx="61" cy="47" r="15" fill="#C9C6BD"/>
+  <circle cx="49" cy="34" r="7" fill="#C9C6BD"/>
+  <circle cx="75" cy="34" r="7" fill="#A9A69D"/>
+  <circle cx="49" cy="34" r="3.5" fill="#DAD7CF"/>
+  <circle cx="56" cy="40" r="6" fill="#DAD7CF" fill-opacity="0.8"/>
+  <circle cx="57" cy="50" r="2" fill="#3D3A35"/>
+  <circle cx="70" cy="50" r="2" fill="#3D3A35"/>
+  <ellipse cx="63.5" cy="55" rx="3" ry="2" fill="#8F8C84"/>
+  <ellipse cx="52" cy="100" rx="6" ry="9" fill="#A9A69D"/>
+  <ellipse cx="76" cy="100" rx="6" ry="9" fill="#A9A69D"/>
+  <g fill="#6FA56A" fill-opacity="0.8">
+    <ellipse cx="42" cy="124" rx="4" ry="2"/>
+    <ellipse cx="82" cy="126" rx="3" ry="2"/>
+  </g>
+</svg>

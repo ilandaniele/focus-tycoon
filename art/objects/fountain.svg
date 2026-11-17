@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <ellipse cx="128" cy="198" rx="116" ry="55" fill="#3D3A35" fill-opacity="0.2"/>
+  <ellipse cx="128" cy="202" rx="106" ry="53" fill="#8F8C84"/>
+  <ellipse cx="128" cy="196" rx="106" ry="53" fill="#A9A69D"/>
+  <ellipse cx="128" cy="188" rx="106" ry="53" fill="#C9C6BD"/>
+  <ellipse cx="128" cy="190" rx="90" ry="45" fill="#A9A69D"/>
+  <ellipse cx="128" cy="194" rx="86" ry="43" fill="#7EC8E3"/>
+  <ellipse cx="128" cy="198" rx="80" ry="38" fill="#5FB0D0" fill-opacity="0.6"/>
+  <g fill="none" stroke="#B9E4F2" stroke-width="3" stroke-linecap="round">
+    <path d="M70 192 q10 -6 22 -3"/>
+    <path d="M168 206 q12 3 22 -3"/>
+    <path d="M90 214 q8 4 18 3"/>
+    <path d="M176 182 q8 -4 16 -2"/>
+  </g>
+  <ellipse cx="128" cy="196" rx="34" ry="16" fill="#B9E4F2" fill-opacity="0.6"/>
+  <ellipse cx="128" cy="196" rx="22" ry="10" fill="#B9E4F2" fill-opacity="0.7"/>
+  <path d="M112 196 l4 -40 h24 l4 40 q-16 8 -32 0 z" fill="#A9A69D"/>
+  <path d="M128 200 l0 -44 h12 l4 40 q-8 4 -16 4 z" fill="#8F8C84"/>
+  <ellipse cx="128" cy="156" rx="20" ry="8" fill="#C9C6BD"/>
+  <ellipse cx="128" cy="157" rx="15" ry="5.5" fill="#7EC8E3"/>
+  <rect x="123" y="104" width="10" height="52" rx="5" fill="#A9A69D"/>
+  <rect x="128" y="104" width="5" height="52" rx="2.5" fill="#8F8C84"/>
+  <ellipse cx="128" cy="104" rx="26" ry="10" fill="#C9C6BD"/>
+  <ellipse cx="128" cy="105" rx="20" ry="7" fill="#7EC8E3"/>
+  <ellipse cx="128" cy="104" rx="12" ry="4" fill="#B9E4F2"/>
+  <path d="M128 98 q-14 -30 -34 -4" stroke="#7EC8E3" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M128 98 q14 -30 34 -4" stroke="#7EC8E3" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M128 96 q-6 -16 -14 -22 M128 96 q6 -16 14 -22" stroke="#B9E4F2" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <circle cx="128" cy="86" r="6" fill="#B9E4F2"/>
+  <g fill="#B9E4F2">
+    <circle cx="90" cy="104" r="3"/>
+    <circle cx="166" cy="104" r="3"/>
+    <circle cx="136" cy="76" r="2.5"/>
+  </g>
+</svg>
