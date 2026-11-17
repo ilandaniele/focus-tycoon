@@ -10,7 +10,7 @@
 | Objetos/animales | `Node2D` con `y_sort_enabled` | Orden de profundidad correcto con objetos multi-celda | Tiles de objetos (no permite animación libre) |
 | Tests | Runner propio headless (`tests/run_tests.gd`) | Cero dependencias externas; corre en CI | GUT (plugin de terceros; se puede adoptar luego) |
 | Persistencia local | JSON en `user://` con escritura atómica + checksum SHA-256 + backup | Simple, inspeccionable, migrable | SQLite (requiere GDExtension de terceros) |
-| Sync remoto | Supabase vía REST (PostgREST) — **post-slice, opcional** | Postgres + RLS + Auth | Firebase (SDK no oficial en Godot) |
+| Sync remoto | Cloudflare Worker + D1 vía REST propia | Free tier, sin SDK, mismo stack que el resto de las apps del autor | Supabase (descartado por el usuario), Firebase (SDK no oficial en Godot) |
 | IAP | Interfaz `StoreService` + backend mock — **plugins sin confirmar** | Ver R4 | — |
 | Notificaciones | Interfaz `NotificationBackend` + backend nulo — **plugin sin confirmar** | Ver R3 | — |
 
@@ -20,7 +20,7 @@
 | Google Play Billing | `godotengine/godot-google-play-billing` (oficial, AAR) | Sin verificar compatibilidad con 4.7 | Probar build Android; cuenta Google Play (USD 25) |
 | App Store IAP | `godotengine/godot-ios-plugins` → `inappstore` | Sin verificar con 4.7 / StoreKit 2 | Mac + Xcode; cuenta Apple Developer (USD 99/año) |
 | Notificaciones locales | Plugin Android propio (WorkManager/AlarmManager) e iOS (`UNUserNotificationCenter`) | Sin elegir | Decidir plugin comunitario vs. propio |
-| Supabase | REST directo con `HTTPRequest` | Diseñado (ver 05), sin proyecto creado | Crear proyecto free tier (confirmar) |
+| Cloudflare Worker + D1 | REST directo con `HTTPRequest` (`SyncApiClient`) | Desplegado en workers.dev (free tier) | Ninguna |
 
 ## Capas
 ```mermaid

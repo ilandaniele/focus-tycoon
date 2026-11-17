@@ -5,7 +5,7 @@
 - **Escritura atómica:** `save.json.tmp` → verificación (re-lectura + checksum) → `save.json` actual pasa a `save.bak` → rename del tmp. Si `save.json` está corrupto al cargar, se usa `save.bak`; si ambos fallan, partida nueva y el archivo dañado se renombra a `save.corrupt.<unix>.json` (nunca se borra).
 - **Transacciones idempotentes:** cada cambio de recursos lleva una clave única (ver 03). El `Ledger` guarda las claves aplicadas; repetir una clave no cambia nada.
 - **Versionado:** `schema_version` en el sobre; `SaveCodec.decode` migra paso a paso (`_migrate_1_to_2`, …).
-- **Sync (post-slice):** Supabase replica las mismas entidades; el cliente sube `resource_transactions` por clave idempotente (`unique(player_id, idem_key)`) y el servidor recalcula saldos. Conflictos: el servidor gana en recursos; el parque usa last-write-wins por objeto con `updated_at`.
+- **Sync:** Cloudflare Worker + D1 (`server/`). Hoy replica `players`, `player_resources` y `resource_transactions`; el cliente sube `resource_transactions` por clave idempotente (`unique(player_id, idem_key)`) y el servidor recalcula saldos. Conflictos: el servidor gana en recursos; el parque usa last-write-wins por objeto con `updated_at`.
 
 ## Archivo local (`save.json`)
 ```json
@@ -37,7 +37,9 @@
 ```
 Historial: se guardan las últimas 2000 sesiones de cada tipo en el archivo local (≈ 400 KB); el resto se agrega en `progress.archived_totals` (post-MVP).
 
-## Esquema remoto (Supabase / Postgres) — diseñado, no creado
+## Esquema remoto completo (diseño post-MVP)
+
+Lo implementado es el subconjunto de recursos en D1/SQLite: `server/migrations/0001_resource_sync.sql`. Los jugadores son anónimos (token aleatorio, se guarda solo su hash), no hay `auth.users`. El resto de este diseño (en dialecto Postgres) queda como referencia para cuando se sincronice el parque.
 
 ```mermaid
 erDiagram

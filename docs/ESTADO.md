@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-**Fase actual:** Hito 5 completo en código (IAP, notificaciones y sync implementados con tests). Lo que queda necesita dinero, un teléfono, una Mac o un login de Supabase.
+**Fase actual:** Hito 5 completo en código (IAP, notificaciones y sync implementados con tests). Sync en producción en Cloudflare. Lo que queda necesita dinero, un teléfono o una Mac.
 
 ## Checklist
 - [x] Hito 1 — Documentación (01-PRD, 02-GDD)
@@ -12,8 +12,8 @@
 - [x] 5.1–5.4 HUD y pantallas, tutorial 6 pasos, audio sintetizado con buses, tienda mock
 - [x] 5.5 IAP Android con `addons/GodotGooglePlayBilling` 3.3.0 (MIT): `GooglePlayStore` con compra asíncrona, acknowledge y restore idempotente. Falta: crear productos `premium` y `cosmetic_pack_garden` en Play Console (cuenta USD 25) y probar en track interno. iOS sin hacer (requiere Mac)
 - [x] 5.6 Notificaciones locales Android con `addons/NotificationSchedulerPlugin` 6.0 (MIT): canal propio, permiso POST_NOTIFICATIONS al primer uso, recordatorio diario con intervalo de 24 h, icono monocromo `ic_default_notification`. Falta: probar en teléfono
-- [x] 5.7 Sync Supabase (código): sube el ledger de recursos con clave idempotente (`on_conflict=player_id,idem_key`, ignore-duplicates), login anónimo, refresh de token, reintento seguro. Migración con RLS en `supabase/migrations/`. Desactivado sin `data/sync.local.json`. Migración verificada en PGlite con stubs de `auth` (`supabase/tests/migration_check.mjs`, 11 checks: alta de jugador, idempotencia, clamp a 0, RLS, permisos). Falta: crear proyecto Supabase gratis (login del usuario) y aplicar la migración. Fuera de alcance v1: bajar datos a otro dispositivo, sesiones y parque
-- [x] 6.1 CI GitHub Actions (`.github/workflows/ci.yml`: import, tests, smoke) verde en `dev`. Repo público: https://github.com/ilandaniele/focus-tycoon
+- [x] 5.7 Sync en Cloudflare (reemplaza Supabase): Worker `focus-tycoon-api` + D1 `focus-tycoon` en `server/`, desplegado en https://focus-tycoon-api.ilandaniele.workers.dev. Jugador anónimo con token aleatorio (solo se guarda el hash SHA-256), subida idempotente del ledger (`UNIQUE(player_id, idem_key)`, `ON CONFLICT DO NOTHING`), saldo por triggers con clamp a 0, rate limit por IP y por jugador, Zod, headers de seguridad, errores genéricos con `request_id`. 19 tests de integración con D1 local (`npm test`). Cliente Godot `SyncApiClient`: alta en el primer push, reintento con las mismas claves, si el token da 401 se borra la sesión y se crea otra. Smoke en producción OK (alta, push, duplicado ignorado, saldo, 401). Fuera de alcance v1: bajar datos a otro dispositivo, sesiones y parque
+- [x] 6.1 CI GitHub Actions (`.github/workflows/ci.yml`: import, tests, smoke, y job `server` con typecheck y tests del Worker) verde en `dev`. Repo público: https://github.com/ilandaniele/focus-tycoon
 - [ ] 6.2 Perfilado en dispositivo
 - [x] 6.3 Checklist de accesibilidad completo. Verificado con capturas a 100 % y 150 %. Supuesto: las etiquetas de la barra inferior no escalan (como la tab bar de iOS) porque a 150 % se cortaban; el resto de la UI sí escala
 - [x] 6.4 Export Android con Gradle: APK debug y AAB release (preset `Android AAB`) firmado con keystore de release en `~/.focus-tycoon/` (fuera del repo, contraseña por variables de entorno). Icono propio en `assets/icon/`
@@ -21,7 +21,8 @@
 - [ ] 6.6 Publicación (cuentas de desarrollador con costo)
 
 ## Verificación actual
-- `godot --path . --headless -s res://tests/run_tests.gd`: 164 tests, 0 fallos.
+- `godot --path . --headless -s res://tests/run_tests.gd`: 173 tests, 0 fallos, 0 `SCRIPT ERROR`. El runner ahora cuenta como fallo un script de test que no compila (antes se salteaba en silencio: 9 tests de Google Play no corrían).
+- `cd server && npm run typecheck && npm test`: 19 tests, 0 fallos.
 - `godot --path . --headless --quit-after 120`: 0 `SCRIPT ERROR`.
 
 ## Desvíos respecto de 03-TRD (aditivos)

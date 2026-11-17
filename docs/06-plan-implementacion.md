@@ -39,7 +39,7 @@ TRD + árbol de escenas + carpetas + contratos (03), UX (04), esquema local/remo
 | 5.4 | StoreService mock + pestaña Premium | Comprar mock otorga entitlement `premium`; restaurar funciona |
 | 5.5 | Integración IAP real **(requiere confirmación R4)** | Compra sandbox en dispositivo |
 | 5.6 | Notificaciones locales **(requiere confirmación R3)** | Aviso al terminar con app en segundo plano |
-| 5.7 | Sync Supabase **(requiere confirmación R6)** | Transacción idempotente reintentada no duplica saldo |
+| 5.7 | Sync Cloudflare Worker + D1 | Transacción idempotente reintentada no duplica saldo |
 
 ## Hito 6 — Calidad y publicación (FASE 6)
 | # | Tarea | Criterio |

@@ -21,7 +21,7 @@ Las apps de productividad tipo Pomodoro pierden al usuario cuando la motivación
 - **Profesional remoto** (25–45): bloques de trabajo profundo de 45–90 min, valora estadísticas.
 - **Buscador de bienestar**: pausas conscientes y respiración de 1–5 min.
 
-No hay roles: un único jugador por dispositivo. La cuenta online (Supabase) es opcional y posterior al MVP jugable.
+No hay roles: un único jugador por dispositivo. La cuenta online (Cloudflare Worker + D1, anónima) es opcional y posterior al MVP jugable.
 
 ## Funciones MVP
 
@@ -79,7 +79,7 @@ Biomas adicionales, visitantes con navegación, edificios comerciales, reputaci�
 ## Supuestos (decididos sin entrevista)
 1. Motor: Godot 4.7.2 estable (último disponible en winget al 2026-11-15), GDScript tipado, renderer Compatibility (mejor soporte móvil gama baja).
 2. Orientación vertical (portrait), resolución base 720×1280, stretch `canvas_items` + aspect `expand`.
-3. Un jugador local por dispositivo; Supabase llega después del vertical slice y es opcional.
+3. Un jugador local por dispositivo; el sync en la nube llega después del vertical slice y es opcional.
 4. Moneda premium inexistente: el premium es pago único + cosméticos, para evitar pay-to-win.
 5. Especies originales con diseño propio (no inspiradas en franquicias).
 6. Desarrollo en Windows: Android se compila aquí; **iOS requiere macOS con Xcode** (riesgo R5).
@@ -87,12 +87,12 @@ Biomas adicionales, visitantes con navegación, edificios comerciales, reputaci�
 ## Riesgos
 | ID | Riesgo | Prob. | Impacto | Mitigación |
 |---|---|---|---|---|
-| R1 | Manipulación del reloj del dispositivo para acelerar sesiones | Media | Medio | Recompensa limitada a duración planificada; detección de reloj hacia atrás; tope diario con rendimiento decreciente; validación server-side cuando exista Supabase. Se documenta que offline no es 100 % evitable. |
+| R1 | Manipulación del reloj del dispositivo para acelerar sesiones | Media | Medio | Recompensa limitada a duración planificada; detección de reloj hacia atrás; tope diario con rendimiento decreciente; validación server-side cuando el servidor tenga autoridad (hoy solo respalda el ledger). Se documenta que offline no es 100 % evitable. |
 | R2 | El SO mata la app en segundo plano | Alta | Alto | Todo el estado del temporizador se deriva de timestamps persistidos al iniciar/pausar; reconciliación al volver. |
 | R3 | Notificaciones locales no son nativas en Godot | Alta | Medio | Requiere plugin no confirmado para 4.7 (Android: plugin AAR propio o comunitario; iOS: plugin `UNUserNotificationCenter`). MVP usa interfaz `NotificationService` con backend nulo en escritorio. **No se instala nada sin confirmación.** |
 | R4 | IAP: plugins oficiales `GodotGooglePlayBilling` (Android) y `godot-ios-plugins/inappstore` (iOS) pueden no estar actualizados a 4.7 | Media | Medio | Interfaz `StoreService` con backend mock; verificar compatibilidad antes de integrar. Cuentas de desarrollador cuestan dinero (Apple USD 99/año, Google USD 25 único): **PARAR y preguntar**. |
 | R5 | iOS no se puede compilar en Windows | Cierta | Alto | Exportar proyecto Xcode desde Godot y compilar en Mac propio o servicio CI con macOS (costo: preguntar). |
-| R6 | Supabase: no hay SDK GDScript oficial | Alta | Bajo | Usar REST (PostgREST) con `HTTPRequest`; sincronización opcional y fuera del vertical slice. |
+| R6 | Backend remoto sin SDK GDScript oficial | Alta | Bajo | API REST propia en Cloudflare Worker + D1, llamada con `HTTPRequest`; sincronización opcional. |
 | R7 | Inflación de recursos | Media | Alto | Economía en JSON + simulación automatizada de 30 días en tests. |
 | R8 | Uso compulsivo | Baja | Alto | Tope diario (240 min a tasa completa, luego 50 %, sin recompensa después de 480 min), mensajes de descanso, sin rachas punitivas. |
 | R9 | Arte final inexistente | Cierta | Medio | Placeholders procedurales generados en runtime; arte se reemplaza por convención de nombres sin tocar lógica. |

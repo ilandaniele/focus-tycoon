@@ -48,18 +48,26 @@ godot --path . --headless --export-release "Android AAB" build/android/focus-tyc
 |---|---|---|
 | In-app purchases | `addons/GodotGooglePlayBilling` (MIT). Works only in builds installed from Play with products created in Play Console | `MockStore` |
 | Local notifications | `addons/NotificationSchedulerPlugin` (MIT) | `NullNotificationBackend` |
-| Cloud sync | Supabase REST, enabled when `data/sync.local.json` sets `url` and `anon_key` | Disabled, local save only |
+| Cloud sync | Cloudflare Worker + D1 in `server/`, enabled when `data/sync.json` has a `url` | Disabled when `url` is empty |
 
-Supabase setup: create a free project, enable anonymous sign-ins (Authentication > Providers), apply `supabase/migrations/*.sql`, then write `data/sync.local.json` (gitignored):
-```json
-{"url": "https://<project>.supabase.co", "anon_key": "<anon public key>"}
-```
-Sync uploads the resource ledger with one idempotent key per transaction. The server recalculates balances and ignores keys it already has, so retries never duplicate resources.
+Sync uploads the resource ledger with one idempotent key per transaction. Each install gets an anonymous player id and a random bearer token (the server stores only its SHA-256 hash). D1 triggers recalculate balances and ignore keys already stored, so retries never duplicate resources. The server mirrors the local ledger as a backup; it is not an anti-cheat authority.
 
-Check the migration locally (no Docker, no Supabase account) with PGlite and stubbed `auth` roles:
+API (`https://focus-tycoon-api.ilandaniele.workers.dev`):
+| Endpoint | Purpose |
+|---|---|
+| `POST /v1/players` | Create an anonymous player, returns `{player_id, token}`. Rate limited per IP |
+| `POST /v1/transactions` | Upload up to 100 ledger entries, returns `{received, accepted}`. Rate limited per player |
+| `GET /v1/resources` | Server balance for the token's player |
+
+Server commands (run in `server/`):
 ```bash
-npm i --no-save @electric-sql/pglite@0.3.15 && node supabase/tests/migration_check.mjs supabase/migrations/20261116000000_resource_sync.sql
+npm ci
+npm run typecheck
+npm test
+npm run db:migrate
+npm run deploy
 ```
+`npm test` runs the Worker against a local D1 with `@cloudflare/vitest-plugin`; no Cloudflare account needed. `db:migrate` and `deploy` need `npx wrangler login`. To point a dev build at another server, write `data/sync.local.json` (gitignored) with `{"url": "..."}`.
 
 ## Layout
 | Path | Content |
@@ -73,7 +81,7 @@ npm i --no-save @electric-sql/pglite@0.3.15 && node supabase/tests/migration_che
 | `scripts/ui/`, `scenes/ui/` | HUD and screens |
 | `scripts/platform/` | Store, notification and sync backends (plugin, mock and null) |
 | `addons/` | Third-party Godot plugins (billing, notifications) |
-| `supabase/migrations/` | Remote schema with row level security |
+| `server/` | Cloudflare Worker sync API, D1 migrations and tests |
 | `assets/` | Optional final art; placeholders are generated when files are missing |
 | `locale/` | ES/EN strings |
 | `tests/` | Headless test runner, unit and integration tests |

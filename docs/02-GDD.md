@@ -120,7 +120,7 @@ Un animal se adopta dentro de un recinto de su bioma con capacidad libre. Los an
 ### Anti-abuso (lo que el sistema garantiza y lo que no)
 - **Garantiza:** cada sesión acredita como máximo una vez (idempotencia por `session_id`); nunca más minutos que los planificados; una sola sesión activa; dividir en muchas sesiones cortas no rinde más por minuto que una larga; el tope diario acota el ingreso máximo (≈ 874 c/día de foco).
 - **Detecta:** reloj del sistema que retrocede (la sesión se cierra como interrumpida con los minutos medidos hasta el último instante válido).
-- **No garantiza:** que el usuario esté concentrado; adelantar el reloj del dispositivo offline. Se mitiga con el tope diario y, cuando exista Supabase, con validación de timestamps del servidor.
+- **No garantiza:** que el usuario esté concentrado; adelantar el reloj del dispositivo offline. Se mitiga con el tope diario y, cuando el servidor tenga autoridad, con validación de timestamps del servidor.
 
 ## Progresión y desbloqueos
 - Nivel 1: pradera, conejo, caminos de tierra, roble, arbusto, banco.

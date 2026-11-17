@@ -30,7 +30,13 @@ jobs:
         run: godot --path . --headless --import
 
       - name: Run tests
-        run: godot --path . --headless -s res://tests/run_tests.gd
+        run: |
+          set -o pipefail
+          godot --path . --headless -s res://tests/run_tests.gd 2>&1 | tee tests.log
+          if grep -q "SCRIPT ERROR" tests.log; then
+            echo "Tests reported script errors"
+            exit 1
+          fi
 
       - name: Smoke boot
         run: |
@@ -39,3 +45,22 @@ jobs:
             echo "Smoke boot reported script errors"
             exit 1
           fi
+
+  server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
