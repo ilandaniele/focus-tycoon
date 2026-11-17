@@ -41,10 +41,16 @@ func test_unknown_key_is_null_without_crash() -> void:
 	assert_true(ArtRegistry.get_texture("nothing/here") == null)
 
 
-func test_placeholders_are_not_blank() -> void:
+func test_tiles_are_not_blank() -> void:
 	var image := ArtRegistry.get_texture("terrain/grass").get_image()
-	assert_true(image.get_pixel(64, 32).a > 0.99)
+	assert_true(image.get_pixel(image.get_width() / 2, image.get_height() / 2).a > 0.99)
 	assert_true(image.get_pixel(0, 0).a < 0.01)
+
+
+func test_rendered_assets_keep_extra_pixels_at_logical_size() -> void:
+	var texture := ArtRegistry.get_texture("objects/tree_oak")
+	assert_eq(texture.get_size(), Vector2(128, 160))
+	assert_eq(texture.get_image().get_size(), Vector2i(128, 160) * ArtRegistry.ASSET_SCALE)
 
 
 func test_object_pivot_is_base_center() -> void:
@@ -61,3 +67,10 @@ func test_tileset_has_source_per_tile_key() -> void:
 	assert_eq(tile_set.tile_shape, TileSet.TILE_SHAPE_ISOMETRIC)
 	assert_eq(tile_set.tile_size, Vector2i(128, 64))
 	assert_true(keys.has("paths/path_dirt"))
+
+
+func test_tileset_atlas_holds_exactly_one_tile() -> void:
+	var tile_set := ArtRegistry.build_tileset()
+	for i in tile_set.get_source_count():
+		var source := tile_set.get_source(i) as TileSetAtlasSource
+		assert_eq(source.texture.get_image().get_size(), IsoGrid.TILE)

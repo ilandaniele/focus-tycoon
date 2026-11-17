@@ -10,7 +10,7 @@ func _initialize() -> void:
 		var target := TARGET_DIR + path.trim_prefix(SOURCE_DIR).get_basename() + ".png"
 		DirAccess.make_dir_recursive_absolute(target.get_base_dir())
 		var image := Image.new()
-		if image.load_svg_from_string(FileAccess.get_file_as_string(path)) != OK or image.save_png(target) != OK:
+		if image.load_svg_from_string(FileAccess.get_file_as_string(path), ArtRegistry.ASSET_SCALE) != OK or image.save_png(target) != OK:
 			printerr("FAIL %s" % path)
 			quit(1)
 			return

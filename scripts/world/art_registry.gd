@@ -2,6 +2,7 @@ class_name ArtRegistry
 extends RefCounted
 
 const ASSET_DIR := "res://assets/"
+const ASSET_SCALE := 2
 const OBJECT_CANVAS := {
 	Vector2i(1, 1): Vector2i(128, 160),
 	Vector2i(2, 2): Vector2i(256, 256),
@@ -75,18 +76,29 @@ static func build_tileset() -> TileSet:
 	var keys := tile_keys()
 	for i in keys.size():
 		var source := TileSetAtlasSource.new()
-		source.texture = get_texture(keys[i])
+		source.texture = _at_logical_size(get_texture(keys[i]))
 		source.texture_region_size = IsoGrid.TILE
 		source.create_tile(Vector2i.ZERO)
 		tile_set.add_source(source, i)
 	return tile_set
 
 
+static func _at_logical_size(texture: Texture2D) -> Texture2D:
+	var image := texture.get_image()
+	if image.get_size() == Vector2i(texture.get_size()):
+		return texture
+	image.resize(texture.get_width(), texture.get_height(), Image.INTERPOLATE_LANCZOS)
+	return ImageTexture.create_from_image(image)
+
+
 static func _load_asset(key: String) -> Texture2D:
 	var path := "%s%s.png" % [ASSET_DIR, key]
-	if ResourceLoader.exists(path):
-		return load(path) as Texture2D
-	return null
+	if not ResourceLoader.exists(path):
+		return null
+	var image := (load(path) as Texture2D).get_image()
+	var texture := ImageTexture.create_from_image(image)
+	texture.set_size_override(image.get_size() / ASSET_SCALE)
+	return texture
 
 
 static func _generate(key: String) -> Texture2D:

@@ -11,7 +11,7 @@ godot --path . --headless -s res://tools/render_art.gd
 godot --path . --headless --import
 ```
 
-`art/` holds a `.gdignore`, so Godot does not import the sources. SVGs use plain shapes only (no gradients, filters or text), so Godot's built-in ThorVG renders them identically on every platform. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own.
+`art/` holds a `.gdignore`, so Godot does not import the sources. SVGs use plain shapes only (no gradients, filters or text), so Godot's built-in ThorVG renders them identically on every platform. PNGs are rendered at `ArtRegistry.ASSET_SCALE` (2x) and loaded at their logical size, so the canvas sizes below stay the contract while zoomed-in views stay sharp. Ground tiles are scaled back to 1x for the TileSet atlas. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own.
 
 ## Naming
 

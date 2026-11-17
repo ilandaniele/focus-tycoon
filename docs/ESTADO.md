@@ -8,7 +8,7 @@
 - [x] 3.1 Proyecto Godot, autoloads, runner de tests
 - [x] 3.2–3.6 Datos, dominio, persistencia atómica, servicios núcleo
 - [x] 3.7 Mundo isométrico (TileMapLayer, placeholders procedurales, cámara táctil, colocación, animales)
-- [x] 3.8 Arte vectorial propio: 28 sprites SVG escritos a mano en `art/` (terreno, caminos, 13 objetos, 4 recintos, 5 animales, marcas y sombra), renderizados a `assets/` con `tools/render_art.gd` (ThorVG de Godot, sin dependencias ni costo). Verificado con captura en juego. Los placeholders procedurales quedan como respaldo para claves sin PNG
+- [x] 3.8 Arte vectorial propio: 28 sprites SVG escritos a mano en `art/` (terreno, caminos, 13 objetos, 4 recintos, 5 animales, marcas y sombra), renderizados a `assets/` con `tools/render_art.gd` (ThorVG de Godot, sin dependencias ni costo). Verificado con captura en juego. Los placeholders procedurales quedan como respaldo para claves sin PNG. Los PNG se renderizan a 2x y se cargan a tamaño lógico (nítidos con zoom); el atlas de suelo usa copia a 1x
 - [x] 4.1–4.5 Temporizador por timestamps, meditación, recompensas, objetivos, logros, simulación 30 días
 - [x] 5.1–5.4 HUD y pantallas, tutorial 6 pasos, audio sintetizado con buses, tienda mock
 - [x] 5.5 IAP Android con `addons/GodotGooglePlayBilling` 3.3.0 (MIT): `GooglePlayStore` con compra asíncrona, acknowledge y restore idempotente. Falta: crear productos `premium` y `cosmetic_pack_garden` en Play Console (cuenta USD 25) y probar en track interno. iOS sin hacer (requiere Mac)
