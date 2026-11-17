@@ -4,13 +4,14 @@ extends Control
 signal open_requested(screen_name: String)
 
 const NAV_ITEMS: Array[Dictionary] = [
-	{"id": "meditation", "key": "hud.meditate"},
-	{"id": "build", "key": "hud.build"},
-	{"id": "focus", "key": "hud.focus"},
-	{"id": "stats", "key": "hud.stats"},
-	{"id": "profile", "key": "hud.profile"},
+	{"id": "meditation", "key": "hud.meditate", "icon": "meditate"},
+	{"id": "build", "key": "hud.build", "icon": "build"},
+	{"id": "focus", "key": "hud.focus", "icon": "focus"},
+	{"id": "stats", "key": "hud.stats", "icon": "stats"},
+	{"id": "profile", "key": "hud.profile", "icon": "profile"},
 ]
 const FOCUS_SIZE := 150.0
+const NAV_HEIGHT := 104.0
 
 var _world: Variant = null
 var _coins: PanelContainer
@@ -101,12 +102,15 @@ func _build_bottom() -> VBoxContainer:
 func _nav_button(item: Dictionary) -> Button:
 	var id: String = item["id"]
 	var button := UIKit.button(UIKit.t(item["key"]), _on_nav_pressed.bind(id), "NavButton")
+	button.icon = UIKit.icon(item["icon"])
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 	if id == "focus":
 		button.theme_type_variation = "FocusButton"
 		button.custom_minimum_size = Vector2(FOCUS_SIZE, FOCUS_SIZE)
 	else:
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.custom_minimum_size = Vector2(0, 88)
+		button.custom_minimum_size = Vector2(0, NAV_HEIGHT)
 		button.clip_text = true
 	_buttons[id] = button
 	return button

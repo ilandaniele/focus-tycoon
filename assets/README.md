@@ -24,6 +24,7 @@ godot --path . --headless --import
 | `objects/<item_id>` | `assets/objects/<item_id>.png` | 1x1: 128x160, 2x2: 256x256, 3x3: 384x320, 4x4: 512x384 |
 | `animals/<species_id>` | `assets/animals/<species_id>.png` | 96x96 (elephant 160x128) |
 | `ui/mark_ok`, `ui/mark_bad` | `assets/ui/<name>.png` | 40x40 placement marker |
+| `ui/icon_<name>` | `assets/ui/icon_<name>.png` | 40x40 UI icon (`UIKit.icon(name)`) |
 | `fx/shadow` | `assets/fx/shadow.png` | 64x24 contact shadow |
 
 ## Pivot
@@ -37,3 +38,7 @@ godot --path . --headless --import
 - Palette and style: see `docs/02-GDD.md`, section "Direccion de arte".
 - Atlases (`terrain_atlas.png`, ...) are a later optimization; single PNGs per key work today.
 - Do not rename files after `data/*.json` ids are published.
+
+## Fonts
+
+`assets/fonts/Nunito.ttf` is the variable Nunito font from google/fonts, under the SIL Open Font License (`assets/fonts/OFL.txt`). `ThemeFactory` uses weight 600 for body text and 800 for titles and buttons.
