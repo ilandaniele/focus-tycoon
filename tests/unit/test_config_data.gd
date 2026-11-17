@@ -25,7 +25,7 @@ func test_economy_matches_gdd() -> void:
 
 
 func test_catalog_matches_gdd() -> void:
-	assert_eq(Config.catalog.size(), 17)
+	assert_eq(Config.catalog.size(), 28)
 	assert_eq(Config.item("tree_oak")["cost"]["coins"], 25)
 	assert_eq(Config.item("path_wood")["unlock_level"], 4)
 	assert_eq(Ints.of(Config.item("fountain")["size"]), [2, 2])
@@ -37,6 +37,8 @@ func test_catalog_matches_gdd() -> void:
 	assert_true(Config.item("lantern_premium")["premium"])
 	assert_eq(Config.items_in("enclosure").size(), 4)
 	assert_eq(Config.items_in("path").size(), 3)
+	assert_eq(Config.items_in("plant").size(), 13)
+	assert_eq(Config.item("hedge")["unlock_level"], 1)
 	assert_true(Config.item("missing").is_empty())
 
 
@@ -55,16 +57,16 @@ func test_expansions_match_gdd() -> void:
 
 
 func test_species_match_gdd_and_are_visually_distinct() -> void:
-	assert_eq(Config.species.keys(), ["rabbit", "penguin", "capybara", "red_panda", "elephant"])
+	assert_eq(Config.species.keys(), ["rabbit", "penguin", "beaver", "panda", "elephant", "polar_bear", "fox", "giraffe"])
 	assert_eq(Ints.of(Config.species["rabbit"]["cost"]), {"coins": 50, "nature": 10})
 	assert_eq(Config.species["elephant"]["biome"], "savanna")
-	assert_eq(Config.species["red_panda"]["unlock_level"], 5)
+	assert_eq(Config.species["panda"]["unlock_level"], 5)
 	var looks: Dictionary = {}
 	for id: String in Config.species:
 		var species: Dictionary = Config.species[id]
 		looks["%s|%s|%s" % [species["speed"], species["scale"], species["color"]]] = true
 		assert_true(str(species["color"]).begins_with("#"), id)
-	assert_eq(looks.size(), 5)
+	assert_eq(looks.size(), 8)
 
 
 func test_every_species_has_a_matching_enclosure_biome() -> void:

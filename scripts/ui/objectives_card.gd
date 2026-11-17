@@ -24,7 +24,10 @@ func refresh() -> void:
 	var summary := UIKit.fmt("hud.objectives", [done_count, entries.size()])
 	if claimable:
 		summary += " - " + UIKit.t("hud.reward_ready")
-	_body.add_child(UIKit.button(summary + ("  ^" if _expanded else "  v"), _toggle))
+	var toggle := UIKit.button(summary, _toggle)
+	toggle.icon = UIKit.icon("chevron_up" if _expanded else "chevron_down")
+	toggle.icon_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_body.add_child(toggle)
 	if _expanded:
 		for entry: Dictionary in entries:
 			_body.add_child(_row(entry))

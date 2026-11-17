@@ -36,7 +36,7 @@ func _ready() -> void:
 	ParkService.object_placed.connect(_on_object_placed)
 	ParkService.object_moved.connect(_on_object_moved)
 	ParkService.object_removed.connect(_on_object_removed)
-	ParkService.animal_adopted.connect(_spawn_animal)
+	ParkService.animal_adopted.connect(_on_animal_adopted)
 	ParkService.park_expanded.connect(_on_park_expanded)
 	rebuild()
 
@@ -144,10 +144,18 @@ func _enclosure_points(enclosure_uid: String) -> Array[Vector2]:
 
 
 func _on_object_placed(uid: String) -> void:
-	if ArtRegistry.is_path(GameState.park.objects[uid]["item_id"]):
+	var entry: Dictionary = GameState.park.objects[uid]
+	if ArtRegistry.is_path(entry["item_id"]):
 		_refresh_paths()
-	else:
-		_spawn_object(uid)
+		WorldFx.celebrate(_entities, _ground.map_to_local(entry["cell"]))
+		return
+	_spawn_object(uid)
+	WorldFx.celebrate(_entities, _objects[uid].position, _objects[uid])
+
+
+func _on_animal_adopted(uid: String) -> void:
+	_spawn_animal(uid)
+	WorldFx.celebrate(_entities, _actors[uid].position, _actors[uid])
 
 
 func _on_object_moved(uid: String) -> void:

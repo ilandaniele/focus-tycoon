@@ -9,7 +9,7 @@ var _ambient_player := AudioStreamPlayer.new()
 var _sfx_player := AudioStreamPlayer.new()
 var _playback: AudioStreamGeneratorPlayback
 var _sampler: Callable
-var _bell: AudioStreamWAV
+var _sfx_streams: Dictionary = {}
 
 
 func _ready() -> void:
@@ -58,11 +58,11 @@ func stop_ambient() -> void:
 
 
 func play_sfx(id: String) -> void:
-	if id != "bell" or _is_headless():
+	if id not in AudioSynth.SFX_IDS or _is_headless():
 		return
-	if _bell == null:
-		_bell = AudioSynth.bell()
-	_sfx_player.stream = _bell
+	if not _sfx_streams.has(id):
+		_sfx_streams[id] = AudioSynth.sfx(id)
+	_sfx_player.stream = _sfx_streams[id]
 	_sfx_player.play()
 
 

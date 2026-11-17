@@ -2,22 +2,30 @@ extends SceneTree
 
 const SOURCE_DIR := "res://art/"
 const TARGET_DIR := "res://assets/"
+const SOURCE_SUBDIRS: Array[String] = ["fx/", "ui/"]
 
 
 func _initialize() -> void:
 	var rendered := 0
-	for path in _svg_files(SOURCE_DIR):
-		var target := TARGET_DIR + path.trim_prefix(SOURCE_DIR).get_basename() + ".png"
-		DirAccess.make_dir_recursive_absolute(target.get_base_dir())
-		var image := Image.new()
-		if image.load_svg_from_string(FileAccess.get_file_as_string(path), ArtRegistry.ASSET_SCALE) != OK or image.save_png(target) != OK:
-			printerr("FAIL %s" % path)
-			quit(1)
-			return
-		print("%s -> %s (%dx%d)" % [path, target, image.get_width(), image.get_height()])
-		rendered += 1
+	for sub_dir in SOURCE_SUBDIRS:
+		for path in _svg_files(SOURCE_DIR + sub_dir):
+			var target := TARGET_DIR + path.trim_prefix(SOURCE_DIR).get_basename() + ".png"
+			DirAccess.make_dir_recursive_absolute(target.get_base_dir())
+			if not _render(FileAccess.get_file_as_string(path), target):
+				printerr("FAIL %s" % target)
+				quit(1)
+				return
+			rendered += 1
 	print("%d sprites rendered" % rendered)
 	quit()
+
+
+func _render(svg: String, target: String) -> bool:
+	var image := Image.new()
+	if image.load_svg_from_string(svg, ArtRegistry.ASSET_SCALE) != OK or image.save_png(target) != OK:
+		return false
+	print("%s (%dx%d)" % [target, image.get_width(), image.get_height()])
+	return true
 
 
 func _svg_files(dir_path: String) -> PackedStringArray:

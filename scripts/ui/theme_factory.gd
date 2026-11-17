@@ -13,6 +13,10 @@ const BASE_FONT := 26
 const MIN_TOUCH := 56
 const RADIUS := 20
 const NAV_FONT_RATIO := 0.8
+const FONT_PATH := "res://assets/fonts/Nunito.ttf"
+const REGULAR_WEIGHT := 600
+const BOLD_WEIGHT := 800
+const BOLD_TYPES: Array[String] = ["TitleLabel", "HeaderLabel", "BigLabel", "Button"]
 
 
 static func text_scale() -> float:
@@ -23,12 +27,28 @@ static func build() -> Theme:
 	var scale := text_scale()
 	var theme := Theme.new()
 	theme.default_font_size = roundi(BASE_FONT * scale)
+	_apply_fonts(theme)
 	_style_labels(theme, scale)
 	_style_buttons(theme, scale)
 	_style_panels(theme)
 	_style_progress(theme)
 	_style_slider(theme)
 	return theme
+
+
+static func _apply_fonts(theme: Theme) -> void:
+	var base: FontFile = load(FONT_PATH)
+	theme.default_font = _weighted(base, REGULAR_WEIGHT)
+	var bold := _weighted(base, BOLD_WEIGHT)
+	for type_name in BOLD_TYPES:
+		theme.set_font("font", type_name, bold)
+
+
+static func _weighted(base: FontFile, weight: int) -> FontVariation:
+	var font := FontVariation.new()
+	font.base_font = base
+	font.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): weight}
+	return font
 
 
 static func _box(color: Color, radius: int, pad_h: int, pad_v: int) -> StyleBoxFlat:

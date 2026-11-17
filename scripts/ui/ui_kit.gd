@@ -1,7 +1,9 @@
 class_name UIKit
 extends RefCounted
 
-const POOL_COLORS := {"coins": ThemeFactory.COIN, "nature": ThemeFactory.LEAF, "xp": ThemeFactory.CORAL}
+const ICON_SIZE := 40.0
+const FADE_SECONDS := 0.15
+const FLASH_COLOR := Color(1.25, 1.2, 1.05)
 
 
 static func t(key: String) -> String:
@@ -102,18 +104,24 @@ static func scroll_body(parent: Node) -> ScrollContainer:
 	return scroll
 
 
-static func dot(color: Color, diameter: float = 22.0) -> Control:
-	var node := ColorDot.new()
-	node.color = color
-	node.custom_minimum_size = Vector2(diameter, diameter)
-	return node
+static func icon(name: String) -> Texture2D:
+	return ArtRegistry.get_texture("ui/icon_" + name)
+
+
+static func icon_rect(name: String, side: float = ICON_SIZE) -> TextureRect:
+	var rect := TextureRect.new()
+	rect.texture = icon(name)
+	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	rect.custom_minimum_size = Vector2(side, side)
+	return rect
 
 
 static func resource_pill(kind: String, value: int) -> PanelContainer:
 	var pill := PanelContainer.new()
 	pill.theme_type_variation = "PillPanel"
 	var row := hbox(8)
-	row.add_child(dot(POOL_COLORS.get(kind, ThemeFactory.INK)))
+	row.add_child(icon_rect(kind, 32.0))
 	var amount := label(str(value))
 	amount.name = "Value"
 	row.add_child(amount)
@@ -122,7 +130,24 @@ static func resource_pill(kind: String, value: int) -> PanelContainer:
 
 
 static func set_pill_value(pill: PanelContainer, value: int) -> void:
-	(pill.find_child("Value", true, false) as Label).text = str(value)
+	var amount := pill.find_child("Value", true, false) as Label
+	if amount.text == str(value):
+		return
+	amount.text = str(value)
+	flash(pill)
+
+
+static func fade_in(item: CanvasItem) -> void:
+	item.modulate.a = 0.0
+	item.create_tween().tween_property(item, "modulate:a", 1.0, FADE_SECONDS)
+
+
+static func flash(item: CanvasItem) -> void:
+	if not item.is_inside_tree():
+		return
+	var tween := item.create_tween()
+	tween.tween_property(item, "modulate", FLASH_COLOR, FADE_SECONDS)
+	tween.tween_property(item, "modulate", Color.WHITE, FADE_SECONDS * 2.0)
 
 
 static func labeled_slider(text: String, value: float, on_change: Callable) -> VBoxContainer:
@@ -171,10 +196,3 @@ static func toast_error(from: Node, code: String) -> void:
 
 static func reduce_motion() -> bool:
 	return GameState.settings.get("reduce_motion", false)
-
-
-class ColorDot extends Control:
-	var color: Color = Color.WHITE
-
-	func _draw() -> void:
-		draw_circle(size / 2.0, minf(size.x, size.y) / 2.0, color)
