@@ -1,8 +1,8 @@
 # Política de privacidad de Focus Tycoon
 
-Última actualización: [fecha de publicación]
+Última actualización: 17 de noviembre de 2026
 
-Responsable: [nombre del responsable] · Contacto: [correo de contacto]
+Responsable: Ilan Daniele · Contacto: idaniele@blueboot.com
 
 ## Resumen
 Focus Tycoon no te pide nombre, correo, ubicación ni contactos. No muestra publicidad ni usa herramientas de analítica o rastreo. Casi todo se guarda solo en tu dispositivo. Lo único que sale del dispositivo es un respaldo anónimo de tus recursos del juego.
@@ -46,7 +46,7 @@ No vendemos ni compartimos tus datos con terceros, ni los usamos para publicidad
 Los datos del servidor se guardan mientras exista tu identificador de jugador. Si no hay actividad durante 24 meses, podemos borrarlos.
 
 ## Tus derechos y cómo borrar tus datos
-Podés pedir acceso, corrección o eliminación de los datos del servidor escribiendo a [correo de contacto]. Como no sabemos quién sos, para ubicar tus datos necesitamos tu identificador de jugador, que se muestra en Perfil › Ajustes. [Pendiente: mostrar el identificador y agregar el botón "Borrar mis datos del servidor" antes de publicar.] Respondemos en un plazo de 30 días.
+Podés pedir acceso, corrección o eliminación de los datos del servidor escribiendo a idaniele@blueboot.com. Como no sabemos quién sos, para ubicar tus datos necesitamos tu identificador de jugador, que se muestra en Perfil › Ajustes. [Pendiente: mostrar el identificador y agregar el botón "Borrar mis datos del servidor" antes de publicar.] Respondemos en un plazo de 30 días.
 
 Para borrar los datos del dispositivo, desinstalá la app o borrá sus datos desde los ajustes de Android.
 

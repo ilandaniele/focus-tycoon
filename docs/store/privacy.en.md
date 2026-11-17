@@ -1,8 +1,8 @@
 # Focus Tycoon Privacy Policy
 
-Last updated: [publication date]
+Last updated: November 17, 2026
 
-Controller: [controller name] · Contact: [contact email]
+Controller: Ilan Daniele · Contact: idaniele@blueboot.com
 
 ## Summary
 Focus Tycoon does not ask for your name, email, location or contacts. It shows no ads and uses no analytics or tracking tools. Almost everything is stored only on your device. The only thing that leaves your device is an anonymous backup of your in-game resources.
@@ -46,7 +46,7 @@ We do not sell or share your data with third parties, and we do not use it for a
 Server data is kept while your player ID exists. If there is no activity for 24 months, we may delete it.
 
 ## Your rights and how to delete your data
-You can ask to access, correct or delete your server data by writing to [contact email]. Because we do not know who you are, we need your player ID to find your data. It is shown under Profile › Settings. [To do: show the ID and add a "Delete my server data" button before release.] We reply within 30 days.
+You can ask to access, correct or delete your server data by writing to idaniele@blueboot.com. Because we do not know who you are, we need your player ID to find your data. It is shown under Profile › Settings. [To do: show the ID and add a "Delete my server data" button before release.] We reply within 30 days.
 
 To delete the data on your device, uninstall the app or clear its data from Android settings.
 
