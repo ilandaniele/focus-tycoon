@@ -1,6 +1,6 @@
 extends TestCase
 
-const ANIMATION_FRAMES := {"idle": 4, "walk": 6}
+const ANIMATION_FRAMES := {"idle": 8, "walk": 8}
 const OBJECT_SIZES := {1: Vector2i(128, 160), 2: Vector2i(256, 256), 3: Vector2i(384, 320), 4: Vector2i(512, 384)}
 
 
@@ -23,13 +23,13 @@ func test_every_species_has_texture_with_canvas_size() -> void:
 	for species_id: String in Config.species:
 		var texture := ArtRegistry.get_texture("animals/" + species_id)
 		assert_true(texture != null, "texture for %s" % species_id)
-		var expected := Vector2(160, 128) if species_id == "elephant" else Vector2(96, 96)
+		var expected := Vector2(ArtRegistry.ANIMAL_CANVAS)
 		assert_eq(texture.get_size(), expected, species_id)
 
 
 func test_every_species_has_idle_and_walk_strips() -> void:
 	for species_id: String in Config.species:
-		var canvas := Vector2(ArtRegistry.animal_canvas(species_id))
+		var canvas := Vector2(ArtRegistry.ANIMAL_CANVAS)
 		for anim: String in ANIMATION_FRAMES:
 			var strip := ArtRegistry.animation(species_id, anim)
 			assert_true(strip != null, "%s %s" % [species_id, anim])

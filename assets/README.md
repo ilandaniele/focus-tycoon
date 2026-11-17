@@ -4,15 +4,21 @@ Final art is dropped here. Code never changes: `ArtRegistry` loads `res://assets
 
 ## Source art
 
-Every PNG here is rendered from a hand-written SVG in `art/`, with the same relative path (`art/objects/fountain.svg` becomes `assets/objects/fountain.png`). Edit the SVG, never the PNG, then render and re-import:
+World art (terrain, paths, objects, animals) is rendered from 3D models of two Kenney CC0 packs vendored in `art/kenney/` ("Nature Kit" and "Cube Pets", see each `License.txt`). `tools/model_specs.gd` composes each key from models, tints and simple shapes; `tools/render_models.gd` shoots them with an orthographic isometric camera (`tools/iso_stage.gd`) and writes the PNGs. It needs a GPU, so it runs without `--headless`:
 
 ```bash
-godot --path . --headless -s res://tools/render_art.gd
+godot --path . -s res://tools/render_models.gd              # every key
+godot --path . -s res://tools/render_models.gd -- objects/fern animals/panda
 godot --path . --headless --import
 ```
 
-`art/` holds a `.gdignore`, so Godot does not import the sources. SVGs use plain shapes only (no gradients, filters or text), so Godot's built-in ThorVG renders them identically on every platform. PNGs are rendered at `ArtRegistry.ASSET_SCALE` (2x) and loaded at their logical size, so the canvas sizes below stay the contract while zoomed-in views stay sharp. Ground tiles are scaled back to 1x for the TileSet atlas. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own.
+UI icons, placement marks and the contact shadow are hand-written SVGs in `art/ui/` and `art/fx/`, rendered by `godot --path . --headless -s res://tools/render_art.gd`.
 
+`art/` holds a `.gdignore`, so Godot does not import the sources. PNGs are rendered at `ArtRegistry.ASSET_SCALE` (2x) and loaded at their logical size, so the canvas sizes below stay the contract while zoomed-in views stay sharp. Ground tiles are scaled back to 1x for the TileSet atlas. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own. Animal strips have 8 frames each for `idle` and `walk`, taken from the model's own animations.
+
+## Credits
+
+3D models: Kenney (www.kenney.nl), Nature Kit and Cube Pets, CC0.
 ## Naming
 
 `assets/<category>/<id>[_<variant>][_<anim>].png`, lowercase `snake_case`. `<id>` is identical to the id in `data/catalog.json` or `data/species.json`.
@@ -22,7 +28,7 @@ godot --path . --headless --import
 | `terrain/grass`, `terrain/locked`, `terrain/grid_ok` | `assets/terrain/<name>.png` | 128x64 diamond |
 | `paths/<item_id>` | `assets/paths/<item_id>.png` | 128x64 diamond |
 | `objects/<item_id>` | `assets/objects/<item_id>.png` | 1x1: 128x160, 2x2: 256x256, 3x3: 384x320, 4x4: 512x384 |
-| `animals/<species_id>` | `assets/animals/<species_id>.png` | 96x96 (elephant 160x128) |
+| `animals/<species_id>` | `assets/animals/<species_id>.png` | 96x96 |
 | `ui/mark_ok`, `ui/mark_bad` | `assets/ui/<name>.png` | 40x40 placement marker |
 | `ui/icon_<name>` | `assets/ui/icon_<name>.png` | 40x40 UI icon (`UIKit.icon(name)`) |
 | `fx/shadow` | `assets/fx/shadow.png` | 64x24 contact shadow |

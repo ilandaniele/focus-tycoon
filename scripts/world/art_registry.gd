@@ -10,13 +10,11 @@ const OBJECT_CANVAS := {
 	Vector2i(4, 4): Vector2i(512, 384),
 }
 const ANIMAL_CANVAS := Vector2i(96, 96)
-const ANIMAL_CANVAS_BY_SPECIES := {"elephant": Vector2i(160, 128)}
 const FOOT_MARGIN := 12.0
 const DEFAULT_ANIMAL_COLOR := Color("C9A27E")
 const BASE_TILE_KEYS: Array[String] = ["terrain/grass", "terrain/locked"]
 
 static var _cache: Dictionary = {}
-
 
 static func get_texture(key: String) -> Texture2D:
 	if not _cache.has(key):
@@ -29,14 +27,11 @@ static func get_texture(key: String) -> Texture2D:
 		_cache[key] = texture
 	return _cache[key]
 
-
 static func item_key(item_id: String) -> String:
 	return ("paths/" if is_path(item_id) else "objects/") + item_id
 
-
 static func is_path(item_id: String) -> bool:
 	return Config.item(item_id).get("category", "") == "path"
-
 
 static func canvas_size(size: Vector2i) -> Vector2i:
 	if OBJECT_CANVAS.has(size):
@@ -44,25 +39,17 @@ static func canvas_size(size: Vector2i) -> Vector2i:
 	var span := size.x + size.y
 	return Vector2i(span * 64, span * 32 + 128)
 
-
-static func animal_canvas(species_id: String) -> Vector2i:
-	return ANIMAL_CANVAS_BY_SPECIES.get(species_id, ANIMAL_CANVAS)
-
-
 static func object_pivot(texture: Texture2D, size: Vector2i) -> Vector2:
 	return Vector2(texture.get_width() / 2.0, texture.get_height() - (size.x + size.y) * 16.0)
 
-
 static func animal_pivot(frame_size: Vector2) -> Vector2:
 	return Vector2(frame_size.x / 2.0, frame_size.y - FOOT_MARGIN)
-
 
 static func animation(species_id: String, anim: String) -> Texture2D:
 	var key := "animals/%s_%s" % [species_id, anim]
 	if not _cache.has(key):
 		_cache[key] = _load_asset(key)
 	return _cache[key]
-
 
 static func tile_keys() -> Array[String]:
 	var path_ids: Array[String] = []
@@ -73,7 +60,6 @@ static func tile_keys() -> Array[String]:
 	for item_id in path_ids:
 		keys.append("paths/" + item_id)
 	return keys
-
 
 static func build_tileset() -> TileSet:
 	var tile_set := TileSet.new()
@@ -89,14 +75,12 @@ static func build_tileset() -> TileSet:
 		tile_set.add_source(source, i)
 	return tile_set
 
-
 static func _at_logical_size(texture: Texture2D) -> Texture2D:
 	var image := texture.get_image()
 	if image.get_size() == Vector2i(texture.get_size()):
 		return texture
 	image.resize(texture.get_width(), texture.get_height(), Image.INTERPOLATE_LANCZOS)
 	return ImageTexture.create_from_image(image)
-
 
 static func _load_asset(key: String) -> Texture2D:
 	var path := "%s%s.png" % [ASSET_DIR, key]
@@ -106,7 +90,6 @@ static func _load_asset(key: String) -> Texture2D:
 	var texture := ImageTexture.create_from_image(image)
 	texture.set_size_override(image.get_size() / ASSET_SCALE)
 	return texture
-
 
 static func _generate(key: String) -> Texture2D:
 	var parts := key.split("/", true, 1)
@@ -127,14 +110,12 @@ static func _generate(key: String) -> Texture2D:
 			image = PlaceholderArt.shadow()
 	return ImageTexture.create_from_image(image) if image != null else null
 
-
 static func _object_image(item_id: String) -> Image:
 	var item := Config.item(item_id)
 	var size := IsoGrid.size_of(item)
 	return PlaceholderArt.object(item_id, item, size, canvas_size(size))
 
-
 static func _animal_image(species_id: String) -> Image:
 	var species: Dictionary = Config.species.get(species_id, {})
 	var color := Color.html(species["color"]) if species.has("color") else DEFAULT_ANIMAL_COLOR
-	return PlaceholderAnimals.draw(species_id, color, animal_canvas(species_id), FOOT_MARGIN)
+	return PlaceholderAnimals.draw(species_id, color, ANIMAL_CANVAS, FOOT_MARGIN)

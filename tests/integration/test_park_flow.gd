@@ -108,7 +108,7 @@ func test_adopt_flow_and_errors() -> void:
 func test_adopt_requires_level_and_funds() -> void:
 	_fund(200, 10)
 	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(8, 8))["uid"]
-	assert_eq(ParkService.adopt("capybara", enclosure)["error"], "locked_level")
+	assert_eq(ParkService.adopt("beaver", enclosure)["error"], "locked_level")
 	assert_eq(ParkService.adopt("rabbit", enclosure)["error"], "insufficient_funds")
 	_fund(100)
 	assert_true(ParkService.adopt("rabbit", enclosure)["ok"])

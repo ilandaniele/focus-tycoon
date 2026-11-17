@@ -74,6 +74,14 @@ Perfil medio llega a nivel 5 ≈ día 6, nivel 7 ≈ día 11, nivel 15 ≈ día 
 | tree_pine | plant | 1×1 | 30 c | 2 |
 | tree_cherry | plant | 1×1 | 60 c | 6 |
 | flower_tulips | plant | 1×1 | 18 c | 3 |
+| fern | plant | 1×1 | 8 c | 1 |
+| hedge | plant | 1×1 | 10 c | 1 |
+| potted_plant | plant | 1×1 | 15 c | 1 |
+| sunflower | plant | 1×1 | 14 c | 2 |
+| lavender | plant | 1×1 | 16 c | 2 |
+| cactus | plant | 1×1 | 20 c | 3 |
+| bamboo | plant | 1×1 | 28 c | 4 |
+| palm_tree | plant | 1×1 | 45 c | 5 |
 | sign_wood | decor | 1×1 | 20 c | 2 |
 | rock_mossy | decor | 1×1 | 15 c | 2 |
 | bench | decor | 1×1 | 40 c | 1 |
@@ -101,12 +109,12 @@ Quitar un objeto devuelve 50 % de las monedas (no la naturaleza). Mover es grati
 |---|---|---|---|---|
 | rabbit | meadow | 50 c + 10 n | 1 | Orejas largas, salta corto |
 | penguin | ice | 120 c + 25 n | 2 | Bamboleo lento |
-| capybara | meadow | 150 c + 30 n | 3 | Muy tranquila, idle largo |
-| red_panda | forest | 250 c + 50 n | 5 | Cola anillada, curiosa |
+| beaver | meadow | 150 c + 30 n | 3 | Cola plana, tranquilo |
+| panda | forest | 250 c + 50 n | 5 | Blanco y negro, curioso |
 | elephant | savanna | 600 c + 120 n | 7 | Grande, paso lento |
-| seal | ice | 200 c + 40 n | 4 | Se arrastra despacio |
+| polar_bear | ice | 200 c + 40 n | 4 | Grande, paso pesado |
 | fox | forest | 320 c + 65 n | 6 | Cola con punta blanca, ágil |
-| zebra | savanna | 800 c + 150 n | 9 | Rayas, trote medio |
+| giraffe | savanna | 800 c + 150 n | 9 | Cuello largo, trote medio |
 
 Un animal se adopta dentro de un recinto de su bioma con capacidad libre. Los animales no se venden en MVP.
 
@@ -129,11 +137,11 @@ Un animal se adopta dentro de un recinto de su bioma con capacidad libre. Los an
 - **No garantiza:** que el usuario esté concentrado; adelantar el reloj del dispositivo offline. Se mitiga con el tope diario y, cuando el servidor tenga autoridad, con validación de timestamps del servidor.
 
 ## Progresión y desbloqueos
-- Nivel 1: pradera, conejo, caminos de tierra, roble, arbusto, banco.
-- Nivel 2: hielo + pingüino, piedra, pino, cartel, roca con musgo.
-- Nivel 3: capibara, farol, tulipanes, expansión 1.
-- Nivel 4: bosque, camino de madera, foca, estanque. Nivel 5: panda rojo, fuente.
-- Nivel 6: cerezo, zorro, expansión 2. Nivel 7: sabana + elefante. Nivel 8: estatua. Nivel 9: cebra. Nivel 10: expansión 3.
+- Nivel 1: pradera, conejo, caminos de tierra, roble, arbusto, helecho, seto, maceta, banco.
+- Nivel 2: hielo + pingüino, piedra, pino, girasol, lavanda, cartel, roca con musgo.
+- Nivel 3: castor, farol, tulipanes, cactus, expansión 1.
+- Nivel 4: bosque, camino de madera, oso polar, bambú, estanque. Nivel 5: panda, palmera, fuente.
+- Nivel 6: cerezo, zorro, expansión 2. Nivel 7: sabana + elefante. Nivel 8: estatua. Nivel 9: jirafa. Nivel 10: expansión 3.
 - Al subir de nivel: tarjeta "Nuevo en el catálogo" con los ítems desbloqueados.
 
 ## Meditación (bienestar general)
@@ -156,7 +164,7 @@ Sin voz grabada en MVP; la guía es visual (círculo que se expande/contrae) + v
 - **Capas (z / y-sort):** 0 terreno (TileMapLayer) · 1 caminos (TileMapLayer) · 2 overlay de cuadrícula/fantasma · 3 objetos + animales (un `Node2D` con `y_sort_enabled`) · 4 efectos/partículas · UI en `CanvasLayer` aparte.
 - **Atlas:** un atlas por categoría (`terrain_atlas.png`, `paths_atlas.png`, `objects_<categoria>.png`, `animals_<especie>.png` como spritesheet por animación), máximo 2048×2048, con margen de 2 px para evitar sangrado.
 - **Animaciones animales:** `idle` (4–6 frames, 6 fps), `walk_ne/nw/se/sw` (6 frames, 10 fps); en MVP placeholder con squash/bob por código.
-- **Convención de nombres:** `assets/<categoria>/<id>[_<variante>][_<anim>].png`, minúsculas y `snake_case`, id idéntico al de `data/catalog.json`/`data/species.json`. Ej.: `assets/animals/red_panda_walk_se.png`.
+- **Convención de nombres:** `assets/<categoria>/<id>[_<variante>][_<anim>].png`, minúsculas y `snake_case`, id idéntico al de `data/catalog.json`/`data/species.json`. Ej.: `assets/animals/panda_walk_se.png`.
 - **Placeholders:** generados por código en `ArtRegistry` (rombos coloreados, árboles de círculos, animales de elipses con orejas) usando la paleta. Si existe `assets/...<id>.png`, se usa ese archivo; si no, el placeholder. Reemplazar arte = soltar PNGs con el nombre correcto, cero cambios de lógica.
 - **UI:** tarjetas crema con radio 20, sombras suaves, íconos redondeados, tipografía redondeada (Nunito o similar con licencia OFL, a incluir en hito de pulido; MVP usa la fuente por defecto de Godot).
 

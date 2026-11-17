@@ -14,10 +14,10 @@ static func draw(species_id: String, color: Color, canvas_size: Vector2i, foot_m
 			_rabbit(canvas, base, color)
 		"penguin":
 			_penguin(canvas, base, color)
-		"capybara":
-			_capybara(canvas, base, color)
-		"red_panda":
-			_red_panda(canvas, base, color)
+		"beaver":
+			_beaver(canvas, base, color)
+		"panda":
+			_panda(canvas, base, color)
 		"elephant":
 			_elephant(canvas, base, color)
 		_:
@@ -63,7 +63,7 @@ static func _penguin(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
 	_eye(canvas, base + Vector2(10, -58))
 
 
-static func _capybara(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
+static func _beaver(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
 	_shadow(canvas, base, Vector2(36, 8))
 	canvas.ellipse(base + Vector2(-20, -3), Vector2(7, 5), color.darkened(0.25))
 	canvas.ellipse(base + Vector2(6, -3), Vector2(7, 5), color.darkened(0.25))
@@ -76,7 +76,7 @@ static func _capybara(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
 	_eye(canvas, base + Vector2(27, -32))
 
 
-static func _red_panda(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
+static func _panda(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
 	_shadow(canvas, base, Vector2(30, 7))
 	var rings := [Vector2(-26, -22), Vector2(-33, -30), Vector2(-36, -40), Vector2(-33, -50), Vector2(-27, -58)]
 	for i in rings.size():

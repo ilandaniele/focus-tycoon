@@ -29,7 +29,7 @@ func test_newly_unlocked_between_levels() -> void:
 
 func test_newly_unlocked_spans_several_levels_and_none_when_same() -> void:
 	var unlocked := Progression.newly_unlocked(Config.catalog, Config.species, 4, 7)
-	for id in ["red_panda", "fountain", "tree_cherry", "enclosure_savanna", "elephant"]:
+	for id in ["panda", "fountain", "tree_cherry", "enclosure_savanna", "elephant"]:
 		assert_true(unlocked.has(id), id)
 	assert_false(unlocked.has("statue"))
 	assert_true(Progression.newly_unlocked(Config.catalog, Config.species, 3, 3).is_empty())

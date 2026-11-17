@@ -33,7 +33,7 @@ func setup(new_species_id: String, new_enclosure_uid: String, points: Array[Vect
 	enclosure_uid = new_enclosure_uid
 	var species: Dictionary = Config.species[species_id]
 	_speed = species["speed"]
-	_canvas = Vector2(ArtRegistry.animal_canvas(species_id))
+	_canvas = Vector2(ArtRegistry.ANIMAL_CANVAS)
 	_load_strips()
 	_sprite.texture = ArtRegistry.get_texture("animals/" + species_id)
 	_sprite.centered = false

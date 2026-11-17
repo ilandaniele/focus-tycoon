@@ -2,22 +2,16 @@ extends SceneTree
 
 const SOURCE_DIR := "res://art/"
 const TARGET_DIR := "res://assets/"
-const ANIMAL_DIR := SOURCE_DIR + "animals/"
-const AnimalStrips := preload("res://tools/animal_strips.gd")
+const SOURCE_SUBDIRS: Array[String] = ["fx/", "ui/"]
 
 
 func _initialize() -> void:
 	var rendered := 0
-	for path in _svg_files(SOURCE_DIR):
-		var target_base := TARGET_DIR + path.trim_prefix(SOURCE_DIR).get_basename()
-		var svg := FileAccess.get_file_as_string(path)
-		DirAccess.make_dir_recursive_absolute(target_base.get_base_dir())
-		var outputs := {target_base + ".png": svg}
-		if path.begins_with(ANIMAL_DIR):
-			for anim: String in AnimalStrips.FRAME_COUNTS:
-				outputs["%s_%s.png" % [target_base, anim]] = AnimalStrips.build(svg, anim)
-		for target: String in outputs:
-			if not _render(outputs[target], target):
+	for sub_dir in SOURCE_SUBDIRS:
+		for path in _svg_files(SOURCE_DIR + sub_dir):
+			var target := TARGET_DIR + path.trim_prefix(SOURCE_DIR).get_basename() + ".png"
+			DirAccess.make_dir_recursive_absolute(target.get_base_dir())
+			if not _render(FileAccess.get_file_as_string(path), target):
 				printerr("FAIL %s" % target)
 				quit(1)
 				return
