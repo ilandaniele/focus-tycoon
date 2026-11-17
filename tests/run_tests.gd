@@ -1,9 +1,13 @@
 extends SceneTree
 
 const TEST_DIRS: Array[String] = ["res://tests/unit", "res://tests/integration"]
+const ScriptErrorCounter := preload("res://tests/helpers/script_error_counter.gd")
+
+var _errors := ScriptErrorCounter.new()
 
 
 func _initialize() -> void:
+	OS.add_logger(_errors)
 	_run.call_deferred()
 
 
@@ -25,10 +29,13 @@ func _run() -> void:
 				if not name.begins_with("test_"):
 					continue
 				total += 1
+				var errors_before := _errors.count
 				var test: TestCase = script.new()
 				test.before_each()
 				await test.call(name)
 				test.after_each()
+				if _errors.count > errors_before:
+					test.failures.append("script error during test")
 				if test.failures.is_empty():
 					print("  ok   %s :: %s" % [file_name, name])
 				else:
