@@ -19,6 +19,7 @@ func setup(options: Array, initial: Variant) -> ChipGroup:
 		button.toggle_mode = true
 		button.button_group = _group
 		button.custom_minimum_size = Vector2(ThemeFactory.MIN_TOUCH, ThemeFactory.MIN_TOUCH)
+		button.mouse_filter = Control.MOUSE_FILTER_PASS
 		button.pressed.connect(_on_pressed.bind(option["id"]))
 		_buttons[option["id"]] = button
 		add_child(button)
