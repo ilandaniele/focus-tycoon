@@ -16,9 +16,10 @@ func _ready() -> void:
 	add_child(_bg)
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var area := SafeArea.current(get_viewport())
 	for side in ["left", "right", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 24)
-	margin.add_theme_constant_override("margin_top", 48)
+		margin.add_theme_constant_override("margin_" + side, 24 + int(area[side]))
+	margin.add_theme_constant_override("margin_top", 48 + int(area["top"]))
 	add_child(margin)
 	_root = UIKit.vbox(16)
 	margin.add_child(_root)
