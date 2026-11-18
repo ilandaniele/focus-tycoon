@@ -6,10 +6,9 @@ const GENERATOR_BUFFER_S := 0.3
 
 var _synth := AudioSynth.new()
 var _ambient_player := AudioStreamPlayer.new()
-var _sfx_player := AudioStreamPlayer.new()
 var _playback: AudioStreamGeneratorPlayback
 var _sampler: Callable
-var _sfx_streams: Dictionary = {}
+var _sfx_players: Dictionary = {}
 
 
 func _ready() -> void:
@@ -19,9 +18,7 @@ func _ready() -> void:
 	generator.buffer_length = GENERATOR_BUFFER_S
 	_ambient_player.stream = generator
 	_ambient_player.bus = "Ambient"
-	_sfx_player.bus = "SFX"
 	add_child(_ambient_player)
-	add_child(_sfx_player)
 	set_process(false)
 	GameState.state_loaded.connect(_apply_volumes)
 	GameState.settings_changed.connect(_on_setting_changed)
@@ -60,10 +57,13 @@ func stop_ambient() -> void:
 func play_sfx(id: String) -> void:
 	if id not in AudioSynth.SFX_IDS or _is_headless():
 		return
-	if not _sfx_streams.has(id):
-		_sfx_streams[id] = AudioSynth.sfx(id)
-	_sfx_player.stream = _sfx_streams[id]
-	_sfx_player.play()
+	if not _sfx_players.has(id):
+		var player := AudioStreamPlayer.new()
+		player.stream = AudioSynth.sfx(id)
+		player.bus = "SFX"
+		add_child(player)
+		_sfx_players[id] = player
+	(_sfx_players[id] as AudioStreamPlayer).play()
 
 
 func _is_headless() -> bool:

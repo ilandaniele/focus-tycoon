@@ -11,6 +11,7 @@ var _total_s: int
 var _started_ms: int = 0
 var _last_phase: String = ""
 var _amount: float = 0.0
+var _warning: String = ""
 var _circle: BreathingCircle
 var _phase: Label
 var _prompt: Label
@@ -35,6 +36,10 @@ func _ready() -> void:
 	_countdown = _centered("HeaderLabel")
 	add_child(UIKit.spacer())
 	add_child(UIKit.button(UIKit.t("med.finish"), _finish_early))
+	var warning_key: String = Config.meditations[_exercise_id].get("warning", "")
+	_warning = UIKit.t(warning_key) if warning_key != "" else ""
+	AudioService.play_ambient(GameState.settings.get("meditation_ambient_id", "none"))
+	AudioService.play_sfx("bell")
 	_started_ms = Time.get_ticks_msec()
 	_update()
 
@@ -55,12 +60,19 @@ func _update() -> void:
 	var phase_name: String = step.get("name", "")
 	_advance_amount(phase_name, _smooth_progress(step, elapsed), elapsed)
 	_circle.amount = _amount
-	_phase.text = UIKit.t("med.phase." + phase_name) if phase_name in ["inhale", "hold", "exhale"] else ""
-	_prompt.text = UIKit.t(step["prompt"]) if step.get("prompt", "") != "" else ""
+	_phase.text = UIKit.t("med.phase." + phase_name) if phase_name not in ["", "prompt"] else ""
+	_prompt.text = UIKit.t(step["prompt"]) if step.get("prompt", "") != "" else _warning
 	_countdown.text = UIKit.mmss(ceili(_total_s - elapsed))
 	if phase_name != _last_phase:
 		_last_phase = phase_name
 		Platform.haptic(30)
+		_play_cue(phase_name)
+
+
+func _play_cue(phase_name: String) -> void:
+	var cue := AudioSynth.cue_for(phase_name)
+	if cue != "":
+		AudioService.play_sfx(cue)
 
 
 func _smooth_progress(step: Dictionary, elapsed: float) -> float:
@@ -76,7 +88,7 @@ func _advance_amount(phase_name: String, progress: float, elapsed: float) -> voi
 			_amount = progress
 		"exhale":
 			_amount = 1.0 - progress
-		"hold":
+		"hold", "retain":
 			pass
 		_:
 			_amount = 0.5 + 0.5 * sin(elapsed * TAU / 8.0)
@@ -99,12 +111,14 @@ func _complete() -> void:
 
 func _end(completed: bool) -> void:
 	_record(completed)
+	AudioService.play_sfx("bell")
 	finished.emit()
 
 
 func _record(completed: bool) -> void:
 	is_done = true
 	set_process(false)
+	AudioService.stop_ambient()
 	MeditationService.finish(completed)
 
 

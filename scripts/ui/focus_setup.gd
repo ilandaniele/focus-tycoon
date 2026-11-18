@@ -3,8 +3,6 @@ extends VBoxContainer
 
 signal start_requested(plan: Dictionary)
 
-const AMBIENTS: Array[String] = ["none", "rain", "forest", "brown"]
-
 var _minutes: int = 25
 var _mode: String = "study"
 var _cycles: int = 1
@@ -12,7 +10,10 @@ var _break_min: int = 5
 var _ambient: String = "none"
 var _presets: ChipGroup
 var _minutes_label: Label
-var _break_card: VBoxContainer
+var _pomodoro: ChipGroup
+var _cycle_chips: ChipGroup
+var _break_chips: ChipGroup
+var _break_panel: Control
 var _focus_cfg: Dictionary = Config.economy["focus"]
 
 
@@ -24,12 +25,14 @@ func _ready() -> void:
 	var column := UIKit.vbox(16)
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(column)
+	_pomodoro = _build_choice(column, "focus.pomodoro", _pomodoro_options(), _matching_pomodoro(), _apply_pomodoro)
 	_build_duration(UIKit.card(column))
 	_build_choice(column, "focus.mode", _mode_options(), _mode, _set_mode)
-	_build_choice(column, "focus.cycles", _numbered(1, _focus_cfg["max_cycles"]), _cycles, _set_cycles)
-	_break_card = _build_choice(column, "focus.break", _break_options(), _break_min, _set_break)
-	_break_card.get_parent().visible = _cycles > 1
-	_build_choice(column, "focus.ambient", _ambient_options(), _ambient, _set_ambient)
+	_cycle_chips = _build_choice(column, "focus.cycles", _numbered(1, _focus_cfg["max_cycles"]), _cycles, _set_cycles)
+	_break_chips = _build_choice(column, "focus.break", _break_options(), _break_min, _set_break)
+	_break_panel = _break_chips.get_parent().get_parent()
+	_break_panel.visible = _cycles > 1
+	_build_choice(column, "focus.ambient", UIKit.ambient_options(), _ambient, _set_ambient)
 	add_child(UIKit.primary_button(UIKit.t("focus.start"), _on_start))
 
 
@@ -60,11 +63,36 @@ func _build_duration(card: VBoxContainer) -> void:
 	_refresh_minutes()
 
 
-func _build_choice(parent: Node, title_key: String, options: Array, initial: Variant, on_select: Callable) -> VBoxContainer:
+func _build_choice(parent: Node, title_key: String, options: Array, initial: Variant, on_select: Callable) -> ChipGroup:
 	var card := UIKit.card(parent)
 	card.add_child(UIKit.section_title(UIKit.t(title_key)))
-	card.add_child(UIKit.chips(options, initial, on_select))
-	return card
+	var group := UIKit.chips(options, initial, on_select)
+	card.add_child(group)
+	return group
+
+
+func _pomodoro_options() -> Array:
+	var options: Array = []
+	for preset: Dictionary in _focus_cfg["pomodoro"]:
+		options.append({"id": preset["id"], "text": UIKit.fmt("focus.pomodoro.option", [int(preset["minutes"]), int(preset["break_min"]), int(preset["cycles"])])})
+	return options
+
+
+func _matching_pomodoro() -> Variant:
+	for preset: Dictionary in _focus_cfg["pomodoro"]:
+		if int(preset["minutes"]) == _minutes and int(preset["break_min"]) == _break_min and int(preset["cycles"]) == _cycles:
+			return preset["id"]
+	return null
+
+
+func _apply_pomodoro(id: String) -> void:
+	for preset: Dictionary in _focus_cfg["pomodoro"]:
+		if preset["id"] == id:
+			_set_minutes(int(preset["minutes"]))
+			_set_cycles(int(preset["cycles"]))
+			_set_break(int(preset["break_min"]))
+			_cycle_chips.select(_cycles)
+			_break_chips.select(_break_min)
 
 
 func _mode_options() -> Array:
@@ -81,13 +109,6 @@ func _break_options() -> Array:
 	return options
 
 
-func _ambient_options() -> Array:
-	var options: Array = []
-	for id in AMBIENTS:
-		options.append({"id": id, "text": UIKit.t("focus.ambient." + id)})
-	return options
-
-
 func _numbered(first: int, last: int) -> Array:
 	var options: Array = []
 	for value in range(first, last + 1):
@@ -98,6 +119,7 @@ func _numbered(first: int, last: int) -> Array:
 func _refresh_minutes() -> void:
 	_minutes_label.text = UIKit.fmt("ui.minutes", [_minutes])
 	_presets.select(_minutes)
+	_pomodoro.select(_matching_pomodoro())
 
 
 func _set_minutes(minutes: int) -> void:
@@ -115,11 +137,13 @@ func _set_mode(mode: String) -> void:
 
 func _set_cycles(cycles: int) -> void:
 	_cycles = cycles
-	_break_card.get_parent().visible = cycles > 1
+	_break_panel.visible = cycles > 1
+	_pomodoro.select(_matching_pomodoro())
 
 
 func _set_break(minutes: int) -> void:
 	_break_min = minutes
+	_pomodoro.select(_matching_pomodoro())
 
 
 func _set_ambient(id: String) -> void:

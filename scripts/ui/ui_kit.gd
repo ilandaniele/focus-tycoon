@@ -59,6 +59,7 @@ static func button(text: String, on_press: Callable, variation: String = "") -> 
 	node.text = text
 	node.theme_type_variation = variation
 	node.custom_minimum_size = Vector2(ThemeFactory.MIN_TOUCH, ThemeFactory.MIN_TOUCH)
+	node.mouse_filter = Control.MOUSE_FILTER_PASS
 	node.pressed.connect(on_press)
 	return node
 
@@ -74,26 +75,43 @@ static func secondary_button(text: String, on_press: Callable) -> Button:
 static func card(parent: Node, variation: String = "CardPanel") -> VBoxContainer:
 	var panel := PanelContainer.new()
 	panel.theme_type_variation = variation
+	panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	parent.add_child(panel)
 	var body := vbox(10)
 	panel.add_child(body)
 	return body
 
 
-static func chips(options: Array, initial: Variant, on_select: Callable) -> ChipGroup:
-	var group := ChipGroup.new().setup(options, initial)
+static func chips(options: Array, initial: Variant, on_select: Callable, variation: String = "ChipButton", fill: bool = false) -> ChipGroup:
+	var group := ChipGroup.new().setup(options, initial, variation, fill)
 	group.selected.connect(on_select)
 	return group
 
 
-static func screen_header(title: String, on_back: Callable) -> HBoxContainer:
-	var row := hbox(12)
-	row.add_child(button(t("ui.back"), on_back))
+static func segmented(options: Array, initial: Variant, on_select: Callable) -> PanelContainer:
+	var track := PanelContainer.new()
+	track.theme_type_variation = "SegmentTrack"
+	track.add_child(chips(options, initial, on_select, "SegmentButton", true))
+	return track
+
+
+static func ambient_options() -> Array:
+	var options: Array = [{"id": "none", "text": t("focus.ambient.none")}]
+	for id in AudioSynth.AMBIENT_IDS:
+		options.append({"id": id, "text": t("focus.ambient." + id)})
+	return options
+
+
+static func screen_header(title: String, on_back: Callable) -> MarginContainer:
+	var header := MarginContainer.new()
 	var title_label := label(title, "TitleLabel")
-	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	row.add_child(title_label)
-	return row
+	header.add_child(title_label)
+	var back_row := hbox(0)
+	back_row.add_child(button(t("ui.back"), on_back))
+	header.add_child(back_row)
+	return header
 
 
 static func scroll_body(parent: Node) -> ScrollContainer:

@@ -3,8 +3,10 @@ extends RefCounted
 
 const MIX_RATE := 11025
 const SFX_RATE := 22050
-const AMBIENT_IDS: Array[String] = ["rain", "forest", "brown"]
-const SFX_IDS: Array[String] = ["bell", "pop"]
+const AMBIENT_IDS: Array[String] = ["rain", "forest", "brown", "cafe", "library"]
+const SFX_IDS: Array[String] = ["bell", "pop", "cue_inhale", "cue_exhale", "cue_hold"]
+const CUE_FREQUENCIES := {"cue_inhale": 523.25, "cue_exhale": 392.0, "cue_hold": 440.0}
+const PHASE_CUES := {"inhale": "cue_inhale", "exhale": "cue_exhale", "hold": "cue_hold", "retain": "cue_hold"}
 
 var _rng := RandomNumberGenerator.new()
 var _brown: float = 0.0
@@ -18,12 +20,30 @@ var _chirp_phase: float = 0.0
 var _chirp_freq: float = 0.0
 var _chirp_notes_left: int = 0
 var _chirp_gap: int = 0
+var _murmur: float = 0.0
+var _murmur_swell: float = 0.0
+var _clink_env: float = 0.0
+var _clink_phase: float = 0.0
+var _clink_freq: float = 0.0
+var _rustle_env: float = 0.0
+var _rustle_lowpass: float = 0.0
 
 
 static func sfx(id: String) -> AudioStreamWAV:
 	if id == "pop":
 		return _render(0.18, _pop_sample)
+	if CUE_FREQUENCIES.has(id):
+		return _render(0.6, _cue_sample.bind(float(CUE_FREQUENCIES[id])))
 	return _render(1.8, _bell_sample)
+
+
+static func cue_for(phase_name: String) -> String:
+	return PHASE_CUES.get(phase_name, "")
+
+
+static func _cue_sample(time: float, frequency: float) -> float:
+	var tone := sin(TAU * frequency * time) + 0.25 * sin(TAU * frequency * 2.0 * time)
+	return tone * minf(1.0, time * 60.0) * exp(-time * 6.0) * 0.3
 
 
 static func _bell_sample(time: float) -> float:
@@ -56,6 +76,10 @@ func sampler_for(id: String) -> Callable:
 			return _rain_sample
 		"forest":
 			return _forest_sample
+		"cafe":
+			return _cafe_sample
+		"library":
+			return _library_sample
 	return _brown_sample
 
 
@@ -125,4 +149,30 @@ func _chirp_sample() -> float:
 	_chirp_phase += TAU * _chirp_freq / MIX_RATE
 	_chirp_freq += 0.4
 	_chirp_env *= 0.9985
+	return sample
+
+
+func _cafe_sample() -> float:
+	_murmur += 0.08 * (_pink_noise() - _murmur)
+	_murmur_swell += 0.00002 * (_rng.randf() - _murmur_swell)
+	var sample := _murmur * (0.32 + 0.2 * _murmur_swell)
+	if _clink_env < 0.001 and _rng.randf() < 0.25 / MIX_RATE:
+		_clink_env = 1.0
+		_clink_phase = 0.0
+		_clink_freq = _rng.randf_range(2600.0, 3800.0)
+	if _clink_env >= 0.001:
+		sample += sin(_clink_phase) * _clink_env * 0.12
+		_clink_phase += TAU * _clink_freq / MIX_RATE
+		_clink_env *= 0.9993
+	return sample
+
+
+func _library_sample() -> float:
+	var sample := _brown_sample() * 0.35
+	if _rustle_env < 0.001 and _rng.randf() < 0.08 / MIX_RATE:
+		_rustle_env = 1.0
+	if _rustle_env >= 0.001:
+		_rustle_lowpass += 0.5 * (_white() - _rustle_lowpass)
+		sample += _rustle_lowpass * _rustle_env * 0.25
+		_rustle_env *= 0.9996
 	return sample

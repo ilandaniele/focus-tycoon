@@ -76,7 +76,7 @@ func test_every_species_has_a_matching_enclosure_biome() -> void:
 
 
 func test_meditations_match_gdd() -> void:
-	assert_eq(Config.meditations.keys(), ["box", "relax_478", "coherent", "mindful", "pause"])
+	assert_eq(Config.meditations.keys(), ["box", "relax_478", "coherent", "rounds", "mindful", "pause"])
 	assert_eq(Ints.of(Config.meditations["box"]["durations"]), [1, 2, 5])
 	assert_eq(Config.meditations["box"]["phases"].size(), 4)
 	assert_eq(Config.meditations["relax_478"]["phases"][1]["seconds"], 7)
@@ -85,6 +85,22 @@ func test_meditations_match_gdd() -> void:
 	assert_eq(Config.meditations["mindful"]["prompts"][5], "med.mindful.p6")
 	assert_eq(Config.meditations["pause"]["prompts"], ["med.pause.p1", "med.pause.p2", "med.pause.p3"])
 	assert_eq(Ints.of(Config.meditations["pause"]["durations"]), [1])
+	assert_eq(Ints.of(Config.meditations["rounds"]["durations"]), [3, 6, 9])
+	assert_eq(Config.meditations["rounds"]["warning"], "med.rounds.warning")
+
+
+func test_pomodoro_presets_fit_focus_limits() -> void:
+	var focus: Dictionary = Config.economy["focus"]
+	var shapes: Array = focus["pomodoro"].map(func(p: Dictionary) -> Array: return [int(p["minutes"]), int(p["break_min"]), int(p["cycles"])])
+	assert_eq(shapes, [[25, 5, 4], [50, 10, 2], [90, 20, 2]])
+	for preset: Dictionary in focus["pomodoro"]:
+		assert_true(int(preset["minutes"]) >= int(focus["min_minutes"]) and int(preset["minutes"]) <= int(focus["max_minutes"]), preset["id"])
+		assert_true(Ints.of(focus["break_options"]).has(int(preset["break_min"])), preset["id"])
+		assert_true(int(preset["cycles"]) <= int(focus["max_cycles"]), preset["id"])
+
+
+func test_study_modes() -> void:
+	assert_eq(Config.economy["modes"], ["study", "work", "reading", "languages", "review", "project"])
 
 
 func test_objectives_match_gdd() -> void:

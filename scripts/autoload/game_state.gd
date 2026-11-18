@@ -8,7 +8,7 @@ const MAX_SESSIONS := 2000
 const DEFAULT_SETTINGS: Dictionary = {
 	"locale": "", "vol_master": 1.0, "vol_music": 0.7, "vol_ambient": 0.7, "vol_sfx": 0.8,
 	"vibration": true, "reduce_motion": false, "text_scale": 1.0,
-	"reminders_enabled": false, "reminder_hour": 9, "ambient_id": "none",
+	"reminders_enabled": false, "reminder_hour": 9, "ambient_id": "none", "meditation_ambient_id": "none",
 	"default_minutes": 25, "default_mode": "study", "break_min": 5, "cycles": 1,
 }
 
