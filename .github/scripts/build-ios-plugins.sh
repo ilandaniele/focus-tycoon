@@ -45,6 +45,9 @@ build_storekit() {
   local swift_file="$src/godot-storekit2/GodotStoreKit2Swift.swift"
   perl -0pi -e 's/if #available\(iOS 18\.4, \*\) \{.*?\} else \{/do {/s' "$swift_file"
   if grep -q "currentEntitlements" "$swift_file"; then exit 1; fi
+  local header="$src/godot-storekit2/godot-storekit2.h"
+  perl -pi -e 's|^(#include "core/object/ref_counted.h")$|$1\n#include "core/variant/type_info.h"|' "$header"
+  grep -qF '#include "core/variant/type_info.h"' "$header"
   for config in Debug Release; do
     local device="$WORK/storekit-$config-device.xcarchive"
     local simulator="$WORK/storekit-$config-simulator.xcarchive"
