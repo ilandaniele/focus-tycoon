@@ -11,11 +11,13 @@ static func add(parent: Node, title: String, detail: String, cost: Dictionary, u
 	if detail != "":
 		card.add_child(UIKit.label(detail, "MutedLabel", true))
 	var reason := _reason(cost, unlock_level, blocked_reason)
-	var button := UIKit.primary_button(UIKit.t("build.choose"), action)
-	button.disabled = reason != ""
-	card.add_child(button)
-	if reason != "":
-		card.add_child(UIKit.label(reason, "MutedLabel", true))
+	if reason == "":
+		card.add_child(UIKit.primary_button(UIKit.t("build.choose"), action))
+	else:
+		var button := UIKit.button(reason, action)
+		button.disabled = true
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		card.add_child(button)
 
 
 static func _reason(cost: Dictionary, unlock_level: int, blocked_reason: String) -> String:

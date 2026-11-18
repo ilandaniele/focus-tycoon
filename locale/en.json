@@ -29,7 +29,7 @@
 	"build.valid": "Looks good!",
 	"build.locked_level": "Unlocks at level %d",
 	"build.owned": "Owned",
-	"build.tab.build": "Build",
+	"build.tab.build": "Items",
 	"build.tab.animals": "Animals",
 	"build.tab.park": "Park",
 	"build.tab.premium": "Premium",

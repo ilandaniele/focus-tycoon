@@ -6,9 +6,11 @@ signal adopt_requested(species_id: String)
 
 const TABS: Array[String] = ["build", "animals", "park", "premium"]
 const CATEGORIES: Array[String] = ["path", "plant", "decor", "enclosure"]
+const LIST_FADE_SECONDS := 0.18
 
 var _tab: String = "build"
 var _category: String = "path"
+var _animate_list := false
 
 
 func _ready() -> void:
@@ -19,8 +21,12 @@ func _ready() -> void:
 
 func _build(_container: VBoxContainer) -> void:
 	_add_header(UIKit.t("hud.build"))
-	_root.add_child(UIKit.chips(_options("build.tab.", TABS), _tab, _set_tab))
+	_root.add_child(UIKit.segmented(_options("build.tab.", TABS), _tab, _set_tab))
+	if _tab == "build":
+		_root.add_child(UIKit.chips(_options("cat.", CATEGORIES), _category, _set_category, "FilterChip"))
 	var column := _add_scroll_body()
+	if _animate_list:
+		_fade_in(column)
 	match _tab:
 		"build":
 			_fill_build(column)
@@ -41,12 +47,24 @@ func _options(prefix: String, ids: Array[String]) -> Array:
 
 func _set_tab(tab: String) -> void:
 	_tab = tab
-	_rebuild()
+	_rebuild_animated()
 
 
 func _set_category(category: String) -> void:
 	_category = category
+	_rebuild_animated()
+
+
+func _rebuild_animated() -> void:
+	_animate_list = true
 	_rebuild()
+	_animate_list = false
+
+
+func _fade_in(column: Control) -> void:
+	column.modulate.a = 0.0
+	var tween := column.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(column, "modulate:a", 1.0, LIST_FADE_SECONDS)
 
 
 func _choose_item(item_id: String) -> void:
@@ -58,7 +76,6 @@ func _choose_species(species_id: String) -> void:
 
 
 func _fill_build(column: VBoxContainer) -> void:
-	column.add_child(UIKit.chips(_options("cat.", CATEGORIES), _category, _set_category))
 	for item: Dictionary in Config.items_in(_category):
 		var id: String = item["id"]
 		var reason := ""

@@ -82,6 +82,8 @@ static func _style_buttons(theme: Theme, scale: float) -> void:
 	_button_variant(theme, "ChipButton", SAND_DARK, MINT, RADIUS)
 	_button_variant(theme, "FocusButton", CORAL, CORAL, 90)
 	_compact_nav_button(theme)
+	_segment_button(theme)
+	_filter_chip(theme, scale)
 
 
 static func _compact_nav_button(theme: Theme) -> void:
@@ -90,6 +92,41 @@ static func _compact_nav_button(theme: Theme) -> void:
 		var box: StyleBoxFlat = theme.get_stylebox(state, "NavButton")
 		box.content_margin_left = 4
 		box.content_margin_right = 4
+
+
+static func _segment_button(theme: Theme) -> void:
+	theme.set_type_variation("SegmentButton", "Button")
+	var idle := _box(Color(CREAM, 0.0), RADIUS - 6, 12, 10)
+	var active := _button_box(CREAM, RADIUS - 6, 0.0)
+	active.content_margin_left = 12
+	active.content_margin_right = 12
+	active.content_margin_top = 10
+	active.content_margin_bottom = 10
+	for state in ["normal", "hover", "disabled"]:
+		theme.set_stylebox(state, "SegmentButton", idle)
+	for state in ["pressed", "hover_pressed"]:
+		theme.set_stylebox(state, "SegmentButton", active)
+	theme.set_stylebox("focus", "SegmentButton", StyleBoxEmpty.new())
+	theme.set_color("font_color", "SegmentButton", Color(INK, 0.6))
+	theme.set_color("font_hover_color", "SegmentButton", INK)
+
+
+static func _filter_chip(theme: Theme, scale: float) -> void:
+	theme.set_type_variation("FilterChip", "Button")
+	theme.set_font_size("font_size", "FilterChip", roundi(BASE_FONT * 0.85 * scale))
+	var idle := _box(Color(CREAM, 0.0), RADIUS, 16, 6)
+	idle.set_border_width_all(2)
+	idle.border_color = SAND_DARK
+	var active := _box(INK, RADIUS, 16, 6)
+	active.set_border_width_all(2)
+	active.border_color = INK
+	for state in ["normal", "hover", "disabled"]:
+		theme.set_stylebox(state, "FilterChip", idle)
+	for state in ["pressed", "hover_pressed"]:
+		theme.set_stylebox(state, "FilterChip", active)
+	theme.set_stylebox("focus", "FilterChip", StyleBoxEmpty.new())
+	for state in ["font_pressed_color", "font_hover_pressed_color"]:
+		theme.set_color(state, "FilterChip", CREAM)
 
 
 static func _button_variant(theme: Theme, type_name: String, color: Color, pressed_color: Color, radius: int) -> void:
@@ -121,6 +158,8 @@ static func _style_panels(theme: Theme) -> void:
 	theme.set_stylebox("panel", "CardPanel", card)
 	theme.set_type_variation("PillPanel", "PanelContainer")
 	theme.set_stylebox("panel", "PillPanel", _box(CREAM, RADIUS, 14, 8))
+	theme.set_type_variation("SegmentTrack", "PanelContainer")
+	theme.set_stylebox("panel", "SegmentTrack", _box(SAND_DARK, RADIUS, 6, 6))
 	theme.set_type_variation("MintCard", "PanelContainer")
 	theme.set_stylebox("panel", "MintCard", _box(MINT.lightened(0.5), RADIUS, 18, 16))
 

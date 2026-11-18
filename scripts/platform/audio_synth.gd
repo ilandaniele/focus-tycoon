@@ -155,7 +155,7 @@ func _chirp_sample() -> float:
 func _cafe_sample() -> float:
 	_murmur += 0.08 * (_pink_noise() - _murmur)
 	_murmur_swell += 0.00002 * (_rng.randf() - _murmur_swell)
-	var sample := _murmur * (0.9 + 0.6 * _murmur_swell)
+	var sample := _murmur * (0.32 + 0.2 * _murmur_swell)
 	if _clink_env < 0.001 and _rng.randf() < 0.25 / MIX_RATE:
 		_clink_env = 1.0
 		_clink_phase = 0.0
