@@ -42,6 +42,9 @@ build_storekit() {
   git -C "$src" checkout "$STOREKIT_PLUGIN_REF"
   mkdir -p "$src/godot"
   unzip -q "$HEADERS" -d "$src/godot"
+  local swift_file="$src/godot-storekit2/GodotStoreKit2Swift.swift"
+  perl -0pi -e 's/if #available\(iOS 18\.4, \*\) \{.*?\} else \{/do {/s' "$swift_file"
+  if grep -q "currentEntitlements" "$swift_file"; then exit 1; fi
   for config in Debug Release; do
     local device="$WORK/storekit-$config-device.xcarchive"
     local simulator="$WORK/storekit-$config-simulator.xcarchive"
