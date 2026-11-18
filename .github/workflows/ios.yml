@@ -10,6 +10,8 @@ permissions:
 
 env:
   GODOT_VERSION: 4.7.2
+  NOTIFICATION_PLUGIN_REF: v6.0
+  STOREKIT_PLUGIN_REF: beabb0464072175b59281cab825c9d23761fc237
 
 jobs:
   simulator:
@@ -28,6 +30,25 @@ jobs:
           mkdir -p "$TEMPLATES"
           unzip -q -j templates.tpz "templates/ios.zip" "templates/version.txt" -d "$TEMPLATES"
           rm godot.zip templates.tpz
+
+      - name: Cache iOS plugins
+        id: plugins
+        uses: actions/cache@v4
+        with:
+          path: ios/plugins
+          key: ios-plugins-${{ env.GODOT_VERSION }}-${{ env.NOTIFICATION_PLUGIN_REF }}-${{ env.STOREKIT_PLUGIN_REF }}-${{ hashFiles('.github/scripts/build-ios-plugins.sh') }}
+
+      - uses: actions/setup-java@v4
+        if: steps.plugins.outputs.cache-hit != 'true'
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build iOS plugins
+        if: steps.plugins.outputs.cache-hit != 'true'
+        run: |
+          gem install xcodeproj --no-document
+          bash .github/scripts/build-ios-plugins.sh
 
       - name: Export Xcode project
         run: |
@@ -54,10 +75,12 @@ jobs:
           BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist")
           echo "Installing $APP ($BUNDLE_ID)"
           xcrun simctl install "$DEVICE" "$APP"
-          xcrun simctl launch "$DEVICE" "$BUNDLE_ID"
+          xcrun simctl launch --stdout="$PWD/app.log" --stderr="$PWD/app.log" "$DEVICE" "$BUNDLE_ID"
           sleep 30
           xcrun simctl io "$DEVICE" screenshot ios-simulator.png
           xcrun simctl spawn "$DEVICE" launchctl list | grep "$BUNDLE_ID"
+          grep "Platform backends" app.log
+          grep -q "Platform backends: AppleStore, PluginNotificationBackend" app.log
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -66,3 +89,4 @@ jobs:
           path: |
             ios-simulator.png
             export.log
+            app.log

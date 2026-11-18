@@ -7,8 +7,11 @@ var _notifications: NotificationBackend = NullNotificationBackend.new()
 func _ready() -> void:
 	if GooglePlayStore.available():
 		store = GooglePlayStore.new(_attach(BillingClient.new()))
+	elif AppleStore.available():
+		store = AppleStore.new(AppleStore.native_kit())
 	if PluginNotificationBackend.available():
 		_notifications = PluginNotificationBackend.new(_attach(NotificationScheduler.new()))
+	print("Platform backends: %s, %s" % [_name(store), _name(_notifications)])
 
 
 func haptic(ms: int) -> void:
@@ -34,3 +37,7 @@ func request_notification_permission() -> void:
 func _attach(child: Node) -> Node:
 	add_child(child)
 	return child
+
+
+func _name(backend: RefCounted) -> String:
+	return backend.get_script().get_global_name()
