@@ -58,7 +58,8 @@ func _highlight_target() -> Control:
 	if _hud == null or not visible or not _hud.visible:
 		return null
 	var id: String = STEPS[_step]["highlight"]
-	return _hud.button_for(id) if id != "" else null
+	var target: Control = _hud.button_for(id) if id != "" else null
+	return target if target != null and target.is_visible_in_tree() else null
 
 
 func _render() -> void:
