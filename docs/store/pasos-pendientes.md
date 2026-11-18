@@ -31,7 +31,7 @@ Copiar `~/.focus-tycoon/release.keystore` y `~/.focus-tycoon/release.env` a un l
 ## 4. iOS (6.5, USD 99 por año para publicar)
 1. Sin Mac: el workflow "iOS simulator" de GitHub Actions compila y corre el juego en el simulador en cada push a `dev` o `main`. La captura queda en el artifact `ios-simulator` de cada corrida.
 2. Para publicar: cuenta Apple Developer, poner el Team ID real en el preset "iOS" de `export_presets.cfg` y firmar. Se puede firmar en CI con certificados guardados como secrets de GitHub, sin Mac propia.
-3. Falta código: compras con StoreKit, notificaciones locales para iOS (hoy solo hay Android) y margen de safe area para el HUD bajo la Dynamic Island.
+3. Falta código: compras con StoreKit, y notificaciones locales para iOS (hoy solo hay Android).
 
 ## 5. Opcional
 - El email de contacto es público en `docs/store/`. Si preferís, usar una dirección solo para soporte.
