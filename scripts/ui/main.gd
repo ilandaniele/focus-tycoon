@@ -28,6 +28,8 @@ func _ready() -> void:
 	_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_dialogs.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_apply_theme()
+	_apply_safe_area()
+	get_viewport().size_changed.connect(_apply_safe_area)
 	GameState.settings_changed.connect(_on_setting_changed)
 	_hud.bind_world(_world)
 	_hud.open_requested.connect(open_screen)
@@ -92,6 +94,11 @@ func _apply_theme() -> void:
 	var theme := ThemeFactory.build()
 	for root: Control in [_hud, _host, _tutorial, _toasts, _dialogs]:
 		root.theme = theme
+
+
+func _apply_safe_area() -> void:
+	for root: Control in [_hud, _tutorial, _toasts]:
+		SafeArea.inset_full_rect(root)
 
 
 func _on_setting_changed(key: String) -> void:
