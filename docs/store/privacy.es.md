@@ -43,10 +43,12 @@ No vendemos ni compartimos tus datos con terceros, ni los usamos para publicidad
 - **Google LLC:** procesa los pagos a través de Google Play.
 
 ## Conservación
-Los datos del servidor se guardan mientras exista tu identificador de jugador. Si no hay actividad durante 24 meses, podemos borrarlos.
+Los datos del servidor se guardan mientras exista tu identificador de jugador. Si no hay actividad durante 24 meses, se borran automáticamente.
 
 ## Tus derechos y cómo borrar tus datos
-Podés pedir acceso, corrección o eliminación de los datos del servidor escribiendo a idaniele@blueboot.com. Como no sabemos quién sos, para ubicar tus datos necesitamos tu identificador de jugador, que se muestra en Perfil › Ajustes. [Pendiente: mostrar el identificador y agregar el botón "Borrar mis datos del servidor" antes de publicar.] Respondemos en un plazo de 30 días.
+Podés pedir acceso, corrección o eliminación de los datos del servidor escribiendo a idaniele@blueboot.com. Como no sabemos quién sos, para ubicar tus datos necesitamos tu identificador de jugador, que se muestra en Perfil › Ajustes. Respondemos en un plazo de 30 días.
+
+También podés borrarlos vos mismo en cualquier momento con el botón "Borrar mis datos del servidor" en Perfil › Ajustes. El borrado es inmediato y definitivo. Tu parque en el dispositivo no cambia; si la sincronización sigue activa, la próxima vez se crea un identificador nuevo.
 
 Para borrar los datos del dispositivo, desinstalá la app o borrá sus datos desde los ajustes de Android.
 

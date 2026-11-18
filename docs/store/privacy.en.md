@@ -43,10 +43,12 @@ We do not sell or share your data with third parties, and we do not use it for a
 - **Google LLC:** processes payments through Google Play.
 
 ## Retention
-Server data is kept while your player ID exists. If there is no activity for 24 months, we may delete it.
+Server data is kept while your player ID exists. If there is no activity for 24 months, it is deleted automatically.
 
 ## Your rights and how to delete your data
-You can ask to access, correct or delete your server data by writing to idaniele@blueboot.com. Because we do not know who you are, we need your player ID to find your data. It is shown under Profile › Settings. [To do: show the ID and add a "Delete my server data" button before release.] We reply within 30 days.
+You can ask to access, correct or delete your server data by writing to idaniele@blueboot.com. Because we do not know who you are, we need your player ID to find your data. It is shown under Profile › Settings. We reply within 30 days.
+
+You can also delete it yourself at any time with the "Delete my server data" button under Profile › Settings. Deletion is immediate and permanent. Your park on the device stays the same; if sync stays on, a new ID is created next time.
 
 To delete the data on your device, uninstall the app or clear its data from Android settings.
 

@@ -52,8 +52,8 @@ Focus Tycoon es un temporizador con recompensas: no mide ni verifica tu concentr
 - Clasificación esperada: PEGI 3 / ESRB Everyone.
 
 ## Seguridad de los datos (formulario de Google Play)
-Ver `privacy.es.md`. Resumen para el formulario:
+Ver `privacy.es.md` (URL pública: https://github.com/ilandaniele/focus-tycoon/blob/main/docs/store/privacy.es.md). Resumen para el formulario:
 - Datos recopilados: identificador anónimo de la app y actividad en la app (movimientos de monedas, naturaleza y XP). Uso: funcionalidad de la app y prevención de fraude.
 - Datos compartidos con terceros: ninguno.
 - Cifrado en tránsito: sí (HTTPS).
-- Solicitud de eliminación: por correo de contacto (ver política).
+- Solicitud de eliminación: botón "Borrar mis datos del servidor" en Perfil › Ajustes, o por correo de contacto.

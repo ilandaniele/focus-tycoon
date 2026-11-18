@@ -52,8 +52,8 @@ Focus Tycoon is a timer with rewards: it does not measure or verify real concent
 - Expected rating: PEGI 3 / ESRB Everyone.
 
 ## Data safety (Google Play form)
-See `privacy.en.md`. Form summary:
+See `privacy.en.md` (public URL: https://github.com/ilandaniele/focus-tycoon/blob/main/docs/store/privacy.en.md). Form summary:
 - Data collected: anonymous app identifier and in-app activity (coin, nature and XP changes). Purpose: app functionality and fraud prevention.
 - Data shared with third parties: none.
 - Encrypted in transit: yes (HTTPS).
-- Deletion request: by contact email (see policy).
+- Deletion request: "Delete my server data" button under Profile › Settings, or by contact email.

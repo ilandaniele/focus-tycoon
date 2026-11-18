@@ -22,6 +22,10 @@ export function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: SECURITY_HEADERS });
 }
 
+export function noContent(): Response {
+  return new Response(null, { status: 204, headers: SECURITY_HEADERS });
+}
+
 export function errorResponse(status: number, code: string, requestId: string): Response {
   return json({ error: code, request_id: requestId }, status);
 }

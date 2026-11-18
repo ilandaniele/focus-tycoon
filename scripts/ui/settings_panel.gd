@@ -12,6 +12,7 @@ const REMINDER_ID := "daily_reminder"
 const DAY_S := 86400
 
 var _hour_label: Label
+var _player_id_label: Label
 
 
 func _ready() -> void:
@@ -20,6 +21,8 @@ func _ready() -> void:
 	_build_audio()
 	_build_comfort()
 	_build_reminders()
+	if SyncService.enabled():
+		_build_server_data()
 
 
 func _build_language() -> void:
@@ -62,6 +65,40 @@ func _build_reminders() -> void:
 	if not OS.has_feature("mobile"):
 		card.add_child(UIKit.label(UIKit.t("profile.reminders_desktop"), "MutedLabel", true))
 	_refresh_hour()
+
+
+func _build_server_data() -> void:
+	var card := UIKit.card(self)
+	card.add_child(UIKit.section_title(UIKit.t("profile.server_data")))
+	card.add_child(UIKit.label(UIKit.t("profile.server_data_body"), "MutedLabel", true))
+	_player_id_label = UIKit.label("", "", true)
+	card.add_child(_player_id_label)
+	card.add_child(UIKit.button(UIKit.t("profile.copy_player_id"), _copy_player_id))
+	card.add_child(UIKit.secondary_button(UIKit.t("profile.delete_server_data"), _confirm_delete_server_data))
+	_refresh_player_id()
+
+
+func _refresh_player_id() -> void:
+	var player_id := SyncService.player_id()
+	_player_id_label.text = UIKit.fmt("profile.player_id", [player_id if player_id != "" else "-"])
+
+
+func _copy_player_id() -> void:
+	DisplayServer.clipboard_set(SyncService.player_id())
+	UIKit.toast(self, UIKit.t("profile.player_id_copied"))
+
+
+func _confirm_delete_server_data() -> void:
+	var dialog := ModalDialog.open(self, UIKit.t("profile.delete_title"))
+	dialog.body.add_child(UIKit.label(UIKit.t("profile.delete_body"), "", true))
+	dialog.add_button(UIKit.t("profile.delete_confirm"), true, _delete_server_data)
+	dialog.add_button(UIKit.t("profile.delete_cancel"), false)
+
+
+func _delete_server_data() -> void:
+	var deleted: bool = await SyncService.delete_server_data()
+	UIKit.toast(self, UIKit.t("profile.deleted" if deleted else "profile.delete_failed"))
+	_refresh_player_id()
 
 
 func _setting(key: String, fallback: Variant) -> Variant:

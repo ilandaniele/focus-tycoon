@@ -1,6 +1,6 @@
-import { generateToken, hashToken } from "../auth";
+import { bearerToken, generateToken, hashToken } from "../auth";
 import type { Env } from "../env";
-import { clientIp, HttpError, json } from "../http";
+import { clientIp, HttpError, json, noContent } from "../http";
 
 export async function createPlayer(request: Request, env: Env): Promise<Response> {
   const { success } = await env.SIGNUP_LIMITER.limit({ key: clientIp(request) });
@@ -11,4 +11,11 @@ export async function createPlayer(request: Request, env: Env): Promise<Response
     .bind(playerId, await hashToken(token), Date.now())
     .run();
   return json({ player_id: playerId, token }, 201);
+}
+
+export async function deletePlayer(request: Request, env: Env): Promise<Response> {
+  const tokenHash = await hashToken(bearerToken(request));
+  const deleted = await env.DB.prepare("DELETE FROM players WHERE token_hash = ? RETURNING id").bind(tokenHash).first();
+  if (!deleted) throw new HttpError(401, "unauthorized");
+  return noContent();
 }

@@ -87,6 +87,35 @@ func test_signup_failure_uploads_nothing() -> void:
 	assert_true(_synced.is_empty())
 
 
+func test_delete_player_sends_token_and_clears_session() -> void:
+	_client.session = {"player_id": "player-1", "token": "live"}
+	_transport.responses = [{"code": 204, "body": null}]
+	assert_true(await _client.delete_player())
+	assert_eq(_transport.requests[0]["method"], HTTPClient.METHOD_DELETE)
+	assert_eq(_transport.paths(), [PLAYERS_PATH] as Array[String])
+	assert_true(_transport.requests[0]["headers"].has("Authorization: Bearer live"))
+	assert_true(_client.session.is_empty())
+
+
+func test_delete_player_treats_unknown_token_as_already_deleted() -> void:
+	_client.session = {"player_id": "player-1", "token": "revoked"}
+	_transport.responses = [{"code": 401, "body": {"error": "unauthorized"}}]
+	assert_true(await _client.delete_player())
+	assert_true(_client.session.is_empty())
+
+
+func test_delete_player_keeps_session_when_the_server_fails() -> void:
+	_client.session = {"player_id": "player-1", "token": "live"}
+	_transport.responses = [{"code": 503, "body": null}]
+	assert_false(await _client.delete_player())
+	assert_eq(_client.session["token"], "live")
+
+
+func test_delete_player_without_session_sends_nothing() -> void:
+	assert_true(await _client.delete_player())
+	assert_eq(_transport.requests.size(), 0)
+
+
 func test_prune_drops_keys_that_left_the_log() -> void:
 	var synced := {"starter_grant": NOW, "gone": NOW}
 	assert_eq(SyncBatch.prune(synced, _ledger.entries()), {"starter_grant": NOW})

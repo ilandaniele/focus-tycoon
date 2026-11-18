@@ -68,6 +68,9 @@ API (`https://focus-tycoon-api.ilandaniele.workers.dev`):
 | `POST /v1/players` | Create an anonymous player, returns `{player_id, token}`. Rate limited per IP |
 | `POST /v1/transactions` | Upload up to 100 ledger entries, returns `{received, accepted}`. Rate limited per player |
 | `GET /v1/resources` | Server balance for the token's player |
+| `DELETE /v1/players` | Delete the token's player with its balance and ledger. Used by "Delete my server data" in Settings |
+
+A daily cron trigger (`scheduled` handler, `server/src/retention.ts`) deletes players with no activity for 730 days.
 
 Server commands (run in `server/`):
 ```bash

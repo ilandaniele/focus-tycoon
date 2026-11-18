@@ -1,14 +1,15 @@
 import type { Env } from "./env";
 import { allowedOrigin, preflight, withCors } from "./cors";
 import { clientIp, errorResponse, HttpError } from "./http";
-import { createPlayer } from "./routes/players";
+import { createPlayer, deletePlayer } from "./routes/players";
 import { getResources } from "./routes/resources";
+import { purgeInactivePlayers } from "./retention";
 import { pushTransactions } from "./routes/transactions";
 
 type Handler = (request: Request, env: Env) => Promise<Response>;
 
 const ROUTES: Record<string, Record<string, Handler>> = {
-  "/v1/players": { POST: createPlayer },
+  "/v1/players": { POST: createPlayer, DELETE: deletePlayer },
   "/v1/transactions": { POST: pushTransactions },
   "/v1/resources": { GET: getResources },
 };
@@ -19,6 +20,11 @@ export default {
     const response = await handle(request, env, requestId);
     response.headers.set("X-Request-Id", requestId);
     return withCors(response, allowedOrigin(request, env.ALLOWED_ORIGINS));
+  },
+
+  async scheduled(_controller: ScheduledController, env: Env): Promise<void> {
+    const purged = await purgeInactivePlayers(env.DB, Date.now());
+    console.log(JSON.stringify({ job: "purge_inactive_players", purged }));
   },
 } satisfies ExportedHandler<Env>;
 

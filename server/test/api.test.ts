@@ -1,5 +1,6 @@
 import { env, SELF } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
+import { purgeInactivePlayers, RETENTION_DAYS } from "../src/retention";
 
 const BASE = "https://api.test";
 
@@ -244,5 +245,77 @@ describe("CORS for the web build", () => {
     });
     expect(response.status).toBe(201);
     expect(response.headers.get("Access-Control-Allow-Origin")).toBe(ORIGIN);
+  });
+});
+
+function deletePlayer(token: string | null): Promise<Response> {
+  const headers: Record<string, string> = { "CF-Connecting-IP": nextIp() };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return SELF.fetch(`${BASE}/v1/players`, { method: "DELETE", headers });
+}
+
+async function countRows(table: string, playerColumn: string, playerId: string): Promise<number> {
+  const row = await env.DB.prepare(`SELECT count(*) AS total FROM ${table} WHERE ${playerColumn} = ?`).bind(playerId).first<{ total: number }>();
+  return row?.total ?? 0;
+}
+
+describe("DELETE /v1/players", () => {
+  it("deletes the player, balance and ledger", async () => {
+    const session = await signup();
+    expect((await push(session.token, { transactions: [transaction("a")] })).status).toBe(200);
+    const response = await deletePlayer(session.token);
+    expect(response.status).toBe(204);
+    expect(await countRows("players", "id", session.player_id)).toBe(0);
+    expect(await countRows("player_resources", "player_id", session.player_id)).toBe(0);
+    expect(await countRows("resource_transactions", "player_id", session.player_id)).toBe(0);
+    const after = await SELF.fetch(`${BASE}/v1/resources`, {
+      headers: { Authorization: `Bearer ${session.token}`, "CF-Connecting-IP": nextIp() },
+    });
+    expect(after.status).toBe(401);
+  });
+
+  it("deletes only the caller", async () => {
+    const caller = await signup();
+    const other = await signup();
+    await push(other.token, { transactions: [transaction("a")] });
+    expect((await deletePlayer(caller.token)).status).toBe(204);
+    expect((await balance(other.token)).coins).toBe(10);
+  });
+
+  it("rejects missing and unknown tokens", async () => {
+    expect((await deletePlayer(null)).status).toBe(401);
+    expect((await deletePlayer("x".repeat(43))).status).toBe(401);
+  });
+
+  it("allows DELETE in preflight", async () => {
+    const response = await SELF.fetch(`${BASE}/v1/players`, {
+      method: "OPTIONS",
+      headers: {
+        Origin: "https://focus-tycoon.ilandaniele.workers.dev",
+        "Access-Control-Request-Method": "DELETE",
+        "CF-Connecting-IP": nextIp(),
+      },
+    });
+    expect(response.headers.get("Access-Control-Allow-Methods")).toContain("DELETE");
+  });
+});
+
+describe("inactive player purge", () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
+  async function setLastActivity(playerId: string, at: number): Promise<void> {
+    await env.DB.prepare("UPDATE player_resources SET updated_at = ? WHERE player_id = ?").bind(at, playerId).run();
+  }
+
+  it("deletes players idle for longer than the retention window and keeps the rest", async () => {
+    const now = Date.UTC(2028, 0, 1);
+    const idle = await signup();
+    const active = await signup();
+    await setLastActivity(idle.player_id, now - (RETENTION_DAYS + 1) * DAY_MS);
+    await setLastActivity(active.player_id, now - (RETENTION_DAYS - 1) * DAY_MS);
+    const purged = await purgeInactivePlayers(env.DB, now);
+    expect(purged).toBeGreaterThanOrEqual(1);
+    expect(await countRows("players", "id", idle.player_id)).toBe(0);
+    expect(await countRows("players", "id", active.player_id)).toBe(1);
   });
 });

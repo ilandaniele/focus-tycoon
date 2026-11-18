@@ -13,7 +13,7 @@ export function preflight(request: Request, allowList: string): Response {
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Methods": "GET, POST",
+      "Access-Control-Allow-Methods": "GET, POST, DELETE",
       "Access-Control-Allow-Headers": "Authorization, Content-Type",
       "Access-Control-Max-Age": PREFLIGHT_MAX_AGE_SECONDS,
     },
