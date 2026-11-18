@@ -4,6 +4,9 @@ extends RefCounted
 const ICON_SIZE := 40.0
 const FADE_SECONDS := 0.15
 const FLASH_COLOR := Color(1.25, 1.2, 1.05)
+const PRESS_SCALE := 0.97
+const PRESS_SECONDS := 0.12
+const COST_ICON_SIZE := 28.0
 
 
 static func t(key: String) -> String:
@@ -61,7 +64,25 @@ static func button(text: String, on_press: Callable, variation: String = "") -> 
 	node.custom_minimum_size = Vector2(ThemeFactory.MIN_TOUCH, ThemeFactory.MIN_TOUCH)
 	node.mouse_filter = Control.MOUSE_FILTER_PASS
 	node.pressed.connect(on_press)
+	add_press_feedback(node)
 	return node
+
+
+static func add_press_feedback(node: BaseButton) -> void:
+	node.resized.connect(func() -> void: node.pivot_offset = node.size / 2.0)
+	node.button_down.connect(_tween_scale.bind(node, PRESS_SCALE))
+	node.button_up.connect(_tween_scale.bind(node, 1.0))
+
+
+static func _tween_scale(node: Control, target: float) -> void:
+	if reduce_motion():
+		return
+	var running: Tween = node.get_meta("press_tween", null)
+	if running != null:
+		running.kill()
+	var tween := node.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
+	tween.tween_property(node, "scale", Vector2.ONE * target, PRESS_SECONDS)
+	node.set_meta("press_tween", tween)
 
 
 static func primary_button(text: String, on_press: Callable) -> Button:
@@ -197,6 +218,18 @@ static func cost_text(cost: Dictionary) -> String:
 		if amount > 0:
 			parts.append("%d %s" % [amount, t("ui.res." + kind)])
 	return " + ".join(parts) if not parts.is_empty() else t("ui.free")
+
+
+static func cost_row(cost: Dictionary) -> HBoxContainer:
+	var row := hbox(6)
+	for kind: String in ["coins", "nature"]:
+		var amount: int = cost.get(kind, 0)
+		if amount > 0:
+			row.add_child(icon_rect(kind, COST_ICON_SIZE))
+			row.add_child(label(str(amount)))
+	if row.get_child_count() == 0:
+		row.add_child(label(t("ui.free"), "MutedLabel"))
+	return row
 
 
 static func mmss(seconds: int) -> String:

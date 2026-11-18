@@ -33,6 +33,7 @@ static func build() -> Theme:
 	_style_panels(theme)
 	_style_progress(theme)
 	_style_slider(theme)
+	_style_scrollbar(theme)
 	return theme
 
 
@@ -176,6 +177,16 @@ static func _style_slider(theme: Theme) -> void:
 	var grabber := _circle_texture(44, CORAL)
 	for name in ["grabber", "grabber_highlight", "grabber_disabled"]:
 		theme.set_icon(name, "HSlider", grabber)
+
+
+static func _style_scrollbar(theme: Theme) -> void:
+	var track := StyleBoxEmpty.new()
+	track.content_margin_left = 4
+	track.content_margin_right = 4
+	theme.set_stylebox("scroll", "VScrollBar", track)
+	var grabber := _box(SAND_DARK, 4, 4, 0)
+	for name in ["grabber", "grabber_highlight", "grabber_pressed"]:
+		theme.set_stylebox(name, "VScrollBar", grabber)
 
 
 static func _circle_texture(size: int, color: Color) -> ImageTexture:
