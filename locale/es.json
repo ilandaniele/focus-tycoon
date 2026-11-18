@@ -152,6 +152,7 @@
 	"summary.title_done": "Sesión completada",
 	"summary.title_partial": "Cada minuto cuenta",
 	"summary.minutes": "%d minutos",
+	"summary.minutes_one": "%d minuto",
 	"summary.msg_done": "Buen trabajo. Tu parque te lo agradece.",
 	"summary.msg_partial": "Guardamos lo que hiciste. Vuelve cuando quieras.",
 	"summary.cap_hint": "Hoy te concentraste mucho. Un descanso de verdad te vendrá bien.",

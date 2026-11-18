@@ -68,6 +68,8 @@ func begin_adopt_target(species_id: String) -> void:
 
 
 func confirm_placement() -> Dictionary:
+	if _placement.mode == PlacementController.Mode.ADOPT and not _placement.adopt_targets.is_empty():
+		return _adopt_into(_placement.adopt_targets[0])
 	if not _placement.is_placing():
 		return {"ok": false, "error": "invalid_cell"}
 	var result := _commit_placement()
@@ -213,9 +215,12 @@ func _tap_object(cell: Vector2i) -> void:
 
 func _tap_adopt_target(cell: Vector2i) -> void:
 	var uid := GameState.park.object_at(cell)
-	if not _placement.adopt_targets.has(uid):
-		return
-	var result := ParkService.adopt(_placement.item_id, uid)
-	adopt_resolved.emit(result)
+	if _placement.adopt_targets.has(uid):
+		adopt_resolved.emit(_adopt_into(uid))
+
+
+func _adopt_into(enclosure_uid: String) -> Dictionary:
+	var result := ParkService.adopt(_placement.item_id, enclosure_uid)
 	if result["ok"]:
 		_placement.cancel()
+	return result

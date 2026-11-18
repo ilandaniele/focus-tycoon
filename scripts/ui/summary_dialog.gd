@@ -16,10 +16,10 @@ static func show_entries(from: Node, entries: Array) -> ModalDialog:
 		var reward: Dictionary = entry.get("reward", {})
 		var effective := _minutes(entry["kind"], record)
 		minutes += effective
-		capped = capped or float(reward.get("counted_min", effective)) < effective - 0.01
+		capped = capped or bool(reward.get("capped", false))
 		for key: String in totals:
 			totals[key] += int(reward.get(key, 0))
-	dialog.body.add_child(_centered(UIKit.fmt("summary.minutes", [int(minutes)]), "HeaderLabel"))
+	dialog.body.add_child(_centered(UIKit.fmt("summary.minutes_one" if int(minutes) == 1 else "summary.minutes", [int(minutes)]), "HeaderLabel"))
 	for key: String in totals:
 		var line := _centered("", "")
 		dialog.body.add_child(line)

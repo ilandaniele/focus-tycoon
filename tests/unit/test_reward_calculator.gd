@@ -76,3 +76,16 @@ func test_meditation_daily_cap() -> void:
 	var capped := RewardCalculator.meditation_reward(Config.economy, 120, 60.0)
 	assert_eq(capped["coins"], 0)
 	assert_eq(capped["xp"], 0)
+
+
+func test_capped_flag_marks_reduced_tiers_only() -> void:
+	assert_false(RewardCalculator.focus_reward(Config.economy, 25.0, true, 0.0)["capped"])
+	assert_false(RewardCalculator.focus_reward(Config.economy, 1.0, false, 0.0)["capped"])
+	assert_true(RewardCalculator.focus_reward(Config.economy, 20.0, true, 230.0)["capped"])
+	assert_true(RewardCalculator.focus_reward(Config.economy, 30.0, true, 480.0)["capped"])
+
+
+func test_meditation_capped_flag() -> void:
+	assert_false(RewardCalculator.meditation_reward(Config.economy, 30, 0.0)["capped"])
+	assert_false(RewardCalculator.meditation_reward(Config.economy, 120, 0.0)["capped"])
+	assert_true(RewardCalculator.meditation_reward(Config.economy, 120, 59.0)["capped"])
