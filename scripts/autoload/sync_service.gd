@@ -36,8 +36,10 @@ func player_id() -> String:
 
 
 func delete_server_data() -> bool:
-	if not enabled() or _busy:
+	if not enabled():
 		return false
+	while _busy:
+		await get_tree().process_frame
 	_busy = true
 	var deleted: bool = await _client.delete_player()
 	_write_session(_client.session)
