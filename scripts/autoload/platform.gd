@@ -27,6 +27,10 @@ func cancel_notification(id: String) -> void:
 	_notifications.cancel(id)
 
 
+func request_notification_permission() -> void:
+	_notifications.request_permission()
+
+
 func _attach(child: Node) -> Node:
 	add_child(child)
 	return child

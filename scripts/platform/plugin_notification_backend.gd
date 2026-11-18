@@ -22,9 +22,13 @@ func _init(scheduler: Node) -> void:
 	_scheduler.initialize()
 
 
-func schedule(id: String, in_seconds: int, title: String, body: String, repeat_seconds: int = 0) -> void:
+func request_permission() -> void:
 	if not _scheduler.has_post_notifications_permission():
 		_scheduler.request_post_notifications_permission()
+
+
+func schedule(id: String, in_seconds: int, title: String, body: String, repeat_seconds: int = 0) -> void:
+	request_permission()
 	var data := NotificationData.new() \
 		.set_id(numeric_id(id)) \
 		.set_channel_id(CHANNEL_ID) \
