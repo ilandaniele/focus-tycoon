@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-11-01",
   "observability": { "enabled": true },
-  "vars": { "ALLOWED_ORIGINS": "https://focus-tycoon.pages.dev, http://localhost:8060" },
+  "vars": { "ALLOWED_ORIGINS": "https://focus-tycoon.ilandaniele.workers.dev, http://localhost:8060" },
   "d1_databases": [
     {
       "binding": "DB",

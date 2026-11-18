@@ -215,7 +215,7 @@ describe("routing and headers", () => {
 });
 
 describe("CORS for the web build", () => {
-  const ORIGIN = "https://focus-tycoon.pages.dev";
+  const ORIGIN = "https://focus-tycoon.ilandaniele.workers.dev";
 
   it("answers preflight from an allowed origin", async () => {
     const response = await SELF.fetch(`${BASE}/v1/transactions`, {

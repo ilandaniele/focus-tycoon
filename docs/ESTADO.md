@@ -48,7 +48,7 @@
 - Preset "Web" en `export_presets.cfg`: un solo hilo, sin GDExtension, salida en `build/web/` (gitignored). Templates `web_nothreads_debug/release.zip` 4.7.2 instalados en `%APPDATA%/Godot/export_templates/4.7.2.stable`.
 - Probado en navegador local: arranque, tutorial, catálogo, colocación y guardado en IndexedDB tras recargar.
 - Compras usan `MockStore` y recordatorios `NullNotificationBackend` (no hay plugins en web).
-- El Worker responde CORS solo a `ALLOWED_ORIGINS` (`server/wrangler.jsonc`). Hosting previsto: Cloudflare Pages (`focus-tycoon.pages.dev`), plan gratuito.
+- El Worker responde CORS solo a `ALLOWED_ORIGINS` (`server/wrangler.jsonc`). Publicado en https://focus-tycoon.ilandaniele.workers.dev (Workers static assets, plan gratuito; config en `tools/web/wrangler.jsonc`). `index.wasm` se parte en trozos de 20 MiB por el límite de 25 MiB por archivo.
 
 ## Comandos
 Ver `README.md`.

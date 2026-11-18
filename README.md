@@ -47,9 +47,11 @@ godot --path . --headless --export-release "Android AAB" build/android/focus-tyc
 Single-threaded export, so it runs on any static host without COOP/COEP headers. Needs the `web_nothreads_*.zip` export templates for 4.7.2. Saves go to the browser's IndexedDB; purchases and reminders fall back to the mock store and no-op notifications.
 ```bash
 godot --path . --headless --export-release "Web" build/web/index.html
+node tools/web/split_wasm.mjs build/web
 python -m http.server 8060 -d build/web
+npx wrangler deploy -c tools/web/wrangler.jsonc
 ```
-The sync API only answers browsers from origins listed in `ALLOWED_ORIGINS` (`server/wrangler.jsonc`).
+Cloudflare static assets reject files over 25 MiB, so `split_wasm.mjs` cuts `index.wasm` into parts and `tools/web/wasm_parts.js` (loaded through the preset's `html/head_include`) joins them in the browser. Live at https://focus-tycoon.ilandaniele.workers.dev. The sync API only answers browsers from origins listed in `ALLOWED_ORIGINS` (`server/wrangler.jsonc`).
 
 ## Platform integrations
 | Feature | Android | Without the plugin (desktop, tests) |
