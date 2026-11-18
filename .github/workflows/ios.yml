@@ -38,10 +38,12 @@ jobs:
 
       - name: Build for simulator
         run: |
+          set -o pipefail
           xcodebuild -project build/ios/focus-tycoon.xcodeproj -scheme focus-tycoon \
             -configuration Debug -sdk iphonesimulator \
             -destination "generic/platform=iOS Simulator" \
-            -derivedDataPath build/ios/derived CODE_SIGNING_ALLOWED=NO build | tail -n 40
+            -derivedDataPath build/ios/derived CODE_SIGNING_ALLOWED=NO \
+            ARCHS="$(uname -m)" ONLY_ACTIVE_ARCH=NO build | tail -n 40
 
       - name: Run in simulator
         run: |
