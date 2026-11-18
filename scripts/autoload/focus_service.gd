@@ -41,6 +41,7 @@ func start(minutes: int, mode: String, cycles: int = 1, break_min: int = 0) -> D
 		return {"ok": false, "error": "invalid_minutes"}
 	GameState.timer.start(GameState.now(), GameState.new_uid("s"), minutes, mode, cycles, break_min)
 	GameState.save_now()
+	_platform_call("request_notification_permission", [])
 	started.emit()
 	phase_changed.emit(state())
 	return {"ok": true, "error": ""}

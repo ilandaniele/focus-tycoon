@@ -47,3 +47,11 @@ func test_numeric_ids_are_stable_positive_and_distinct() -> void:
 	assert_eq(focus, PluginNotificationBackend.numeric_id("focus_phase"))
 	assert_true(focus >= 0)
 	assert_true(focus != PluginNotificationBackend.numeric_id("daily_reminder"))
+
+
+func test_request_permission_asks_only_when_missing() -> void:
+	_backend.request_permission()
+	assert_eq(_scheduler.permission_requests, 1)
+	_scheduler.permission = true
+	_backend.request_permission()
+	assert_eq(_scheduler.permission_requests, 1)
