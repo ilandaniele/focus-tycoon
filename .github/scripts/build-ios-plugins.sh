@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-shopt -s inherit_errexit
 
 OUT="$PWD/ios/plugins"
 WORK="$RUNNER_TEMP/ios-plugins"
@@ -29,8 +28,7 @@ archive_storekit() {
   local src="$1" config="$2" platform="$3" archive="$4"
   xcodebuild archive -project "$src/godot-storekit2.xcodeproj" -scheme godot-storekit2 \
     -configuration "$config" -destination "generic/platform=$platform" \
-    -archivePath "$archive" SKIP_INSTALL=NO | tail -n 20 >&2
-  find "$archive" -name "*.a" | head -n 1
+    -archivePath "$archive" SKIP_INSTALL=NO | tail -n 20
 }
 
 build_storekit() {
@@ -40,11 +38,13 @@ build_storekit() {
   mkdir -p "$src/godot"
   unzip -q "$HEADERS" -d "$src/godot"
   for config in Debug Release; do
-    local device simulator variant
-    device=$(archive_storekit "$src" "$config" "iOS" "$WORK/storekit-$config-device.xcarchive" )
-    simulator=$(archive_storekit "$src" "$config" "iOS Simulator" "$WORK/storekit-$config-simulator.xcarchive" )
+    local device="$WORK/storekit-$config-device.xcarchive"
+    local simulator="$WORK/storekit-$config-simulator.xcarchive"
+    local variant
+    archive_storekit "$src" "$config" "iOS" "$device"
+    archive_storekit "$src" "$config" "iOS Simulator" "$simulator"
     variant=$(echo "$config" | tr '[:upper:]' '[:lower:]')
-    xcodebuild -create-xcframework -library "$device" -library "$simulator" \
+    xcodebuild -create-xcframework       -library "$(find "$device" -name "*.a" | head -n 1)"       -library "$(find "$simulator" -name "*.a" | head -n 1)" \
       -output "$OUT/godot-storekit2.$variant.xcframework"
   done
   cp "$src/godot-storekit2/godot-storekit2.gdip" "$OUT/"
