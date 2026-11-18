@@ -17,6 +17,11 @@ build_notification_scheduler() {
   git clone --depth 1 --branch "$NOTIFICATION_PLUGIN_REF" \
     https://github.com/godot-mobile-plugins/godot-notification-scheduler.git "$src"
   printf 'godotVersion=%s\ngodotReleaseType=stable\n' "$GODOT_VERSION" > "$src/common/config/godot.properties"
+  local gradle_file="$src/ios/ios-build.gradle.kts"
+  local sdk_arg='addAll(listOf("-sdk", sdk))'
+  local sim_arch="if (sdk == \"iphonesimulator\") add(\"ARCHS=$(uname -m)\")"
+  sed -i '' "s|$sdk_arg|$sdk_arg; $sim_arch|" "$gradle_file"
+  grep -qF "$sim_arch" "$gradle_file"
   (cd "$src/common" && ./gradlew --no-daemon \
     buildiOSDebug buildiOSRelease buildiOSDebugSimulator buildiOSReleaseSimulator copyiOSBuildArtifacts)
   local gdip
@@ -44,7 +49,9 @@ build_storekit() {
     archive_storekit "$src" "$config" "iOS" "$device"
     archive_storekit "$src" "$config" "iOS Simulator" "$simulator"
     variant=$(echo "$config" | tr '[:upper:]' '[:lower:]')
-    xcodebuild -create-xcframework       -library "$(find "$device" -name "*.a" | head -n 1)"       -library "$(find "$simulator" -name "*.a" | head -n 1)" \
+    xcodebuild -create-xcframework \
+      -library "$(find "$device" -name "*.a" | head -n 1)" \
+      -library "$(find "$simulator" -name "*.a" | head -n 1)" \
       -output "$OUT/godot-storekit2.$variant.xcframework"
   done
   cp "$src/godot-storekit2/godot-storekit2.gdip" "$OUT/"
