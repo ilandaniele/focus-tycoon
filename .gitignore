@@ -9,3 +9,4 @@ build/
 data/sync.local.json
 node_modules/
 /package-lock.json
+.wrangler/

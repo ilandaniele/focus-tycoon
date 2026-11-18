@@ -12,7 +12,6 @@ const OBJECT_CANVAS := {
 const ANIMAL_CANVAS := Vector2i(96, 96)
 const FOOT_MARGIN := 12.0
 const DEFAULT_ANIMAL_COLOR := Color("C9A27E")
-const BASE_TILE_KEYS: Array[String] = ["terrain/grass", "terrain/locked"]
 
 static var _cache: Dictionary = {}
 
@@ -56,7 +55,7 @@ static func tile_keys() -> Array[String]:
 	for item: Dictionary in Config.items_in("path"):
 		path_ids.append(item["id"])
 	path_ids.sort()
-	var keys := BASE_TILE_KEYS.duplicate()
+	var keys := Scenery.ground_keys()
 	for item_id in path_ids:
 		keys.append("paths/" + item_id)
 	return keys

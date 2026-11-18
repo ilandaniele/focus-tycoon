@@ -11,10 +11,12 @@ var _tile_source: Dictionary = {}
 var _objects: Dictionary = {}
 var _actors: Dictionary = {}
 
+@onready var _island_edge: IslandEdge = $IslandEdge
 @onready var _ground: TileMapLayer = $Ground
 @onready var _paths: TileMapLayer = $Paths
 @onready var _grid_overlay: Node2D = $GridOverlay
 @onready var _entities: Node2D = $Entities
+@onready var _wild_props: WildProps = $Entities/WildProps
 @onready var _ghost: Sprite2D = $Ghost
 @onready var _placement: PlacementController = $PlacementController
 @onready var _camera: CameraController = $Camera2D
@@ -85,7 +87,8 @@ func focus_cell(cell: Vector2i) -> void:
 func rebuild() -> void:
 	var park := GameState.park
 	for node: Node in _entities.get_children():
-		node.queue_free()
+		if node != _wild_props:
+			node.queue_free()
 	_objects.clear()
 	_actors.clear()
 	_paint_ground()
@@ -111,8 +114,10 @@ func _paint_ground() -> void:
 	for x in park.map_size:
 		for y in park.map_size:
 			var cell := Vector2i(x, y)
-			var key := "terrain/grass" if park.is_cell_unlocked(cell) else "terrain/locked"
+			var key := Scenery.ground_key(cell, park.is_cell_unlocked(cell))
 			_ground.set_cell(cell, _tile_source[key], Vector2i.ZERO)
+	_wild_props.paint(_ground, park)
+	_island_edge.setup(_ground, park.map_size)
 
 
 func _refresh_paths() -> void:
