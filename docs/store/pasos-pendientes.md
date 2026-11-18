@@ -28,11 +28,10 @@ Copiar `~/.focus-tycoon/release.keystore` y `~/.focus-tycoon/release.env` a un l
 8. Agregar tu cuenta como tester de licencias y probar compra y restaurar desde el track interno.
 9. Para cada versión nueva: subir `version/code` en `export_presets.cfg` (preset "Android AAB") y volver a exportar.
 
-## 4. iOS (6.5, necesita Mac y USD 99 por año)
-1. Mac con Xcode y Godot 4.7.2 con templates iOS.
-2. Cuenta Apple Developer.
-3. Agregar preset iOS, export a proyecto Xcode, firmar, subir a TestFlight.
-4. Falta código: backend de compras StoreKit y notificaciones locales para iOS (hoy solo hay Android).
+## 4. iOS (6.5, USD 99 por año para publicar)
+1. Sin Mac: el workflow "iOS simulator" de GitHub Actions compila y corre el juego en el simulador en cada push a `dev` o `main`. La captura queda en el artifact `ios-simulator` de cada corrida.
+2. Para publicar: cuenta Apple Developer, poner el Team ID real en el preset "iOS" de `export_presets.cfg` y firmar. Se puede firmar en CI con certificados guardados como secrets de GitHub, sin Mac propia.
+3. Falta código: compras con StoreKit, notificaciones locales para iOS (hoy solo hay Android) y margen de safe area para el HUD bajo la Dynamic Island.
 
 ## 5. Opcional
 - El email de contacto es público en `docs/store/`. Si preferís, usar una dirección solo para soporte.
