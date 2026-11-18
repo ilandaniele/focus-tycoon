@@ -72,7 +72,7 @@
 	"focus.ambient.none": "Ninguno",
 	"focus.ambient.rain": "Lluvia",
 	"focus.ambient.forest": "Bosque",
-	"focus.ambient.brown": "Ruido suave",
+	"focus.ambient.brown": "Ruido marrón",
 	"focus.start": "Iniciar",
 	"focus.pause": "Pausar",
 	"focus.resume": "Reanudar",
@@ -240,5 +240,16 @@
 	"ach.first_animal": "Primer animal",
 	"ach.all_species": "Todas las especies",
 	"ach.meditate_7_days": "Meditaste 7 días distintos",
-	"ach.level_5": "Llegaste al nivel 5"
+	"ach.level_5": "Llegaste al nivel 5",
+	"focus.ambient.cafe": "Café",
+	"focus.ambient.library": "Biblioteca",
+	"focus.pomodoro": "Pomodoro",
+	"focus.pomodoro.option": "%d/%d x%d",
+	"med.phase.retain": "Sostén sin aire",
+	"med.phase.rest": "Respira normal",
+	"med.rounds.name": "Respiración de rondas con retención",
+	"med.rounds.desc": "Rondas de 30 respiraciones profundas, una pausa con los pulmones vacíos y una respiración de recuperación que sostienes un momento.",
+	"med.rounds.warning": "Hazlo sentado o acostado. Nunca en el agua, manejando ni de pie. Si te mareas o te sientes mal, detente y respira normal.",
+	"mode.languages": "Idiomas",
+	"mode.review": "Repaso"
 }

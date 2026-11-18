@@ -59,6 +59,7 @@ static func button(text: String, on_press: Callable, variation: String = "") -> 
 	node.text = text
 	node.theme_type_variation = variation
 	node.custom_minimum_size = Vector2(ThemeFactory.MIN_TOUCH, ThemeFactory.MIN_TOUCH)
+	node.mouse_filter = Control.MOUSE_FILTER_PASS
 	node.pressed.connect(on_press)
 	return node
 
@@ -74,6 +75,7 @@ static func secondary_button(text: String, on_press: Callable) -> Button:
 static func card(parent: Node, variation: String = "CardPanel") -> VBoxContainer:
 	var panel := PanelContainer.new()
 	panel.theme_type_variation = variation
+	panel.mouse_filter = Control.MOUSE_FILTER_PASS
 	parent.add_child(panel)
 	var body := vbox(10)
 	panel.add_child(body)
@@ -84,6 +86,13 @@ static func chips(options: Array, initial: Variant, on_select: Callable) -> Chip
 	var group := ChipGroup.new().setup(options, initial)
 	group.selected.connect(on_select)
 	return group
+
+
+static func ambient_options() -> Array:
+	var options: Array = [{"id": "none", "text": t("focus.ambient.none")}]
+	for id in AudioSynth.AMBIENT_IDS:
+		options.append({"id": id, "text": t("focus.ambient." + id)})
+	return options
 
 
 static func screen_header(title: String, on_back: Callable) -> HBoxContainer:

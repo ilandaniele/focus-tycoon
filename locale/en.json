@@ -72,7 +72,7 @@
 	"focus.ambient.none": "None",
 	"focus.ambient.rain": "Rain",
 	"focus.ambient.forest": "Forest",
-	"focus.ambient.brown": "Soft noise",
+	"focus.ambient.brown": "Brown noise",
 	"focus.start": "Start",
 	"focus.pause": "Pause",
 	"focus.resume": "Resume",
@@ -240,5 +240,16 @@
 	"ach.first_animal": "First animal",
 	"ach.all_species": "All species",
 	"ach.meditate_7_days": "Meditated on 7 different days",
-	"ach.level_5": "Reached level 5"
+	"ach.level_5": "Reached level 5",
+	"focus.ambient.cafe": "Café",
+	"focus.ambient.library": "Library",
+	"focus.pomodoro": "Pomodoro",
+	"focus.pomodoro.option": "%d/%d x%d",
+	"med.phase.retain": "Hold with empty lungs",
+	"med.phase.rest": "Breathe normally",
+	"med.rounds.name": "Round breathing with retention",
+	"med.rounds.desc": "Rounds of 30 deep breaths, a pause with empty lungs and a recovery breath you hold briefly.",
+	"med.rounds.warning": "Do it sitting or lying down. Never in water, while driving or standing. If you feel dizzy or unwell, stop and breathe normally.",
+	"mode.languages": "Languages",
+	"mode.review": "Review"
 }

@@ -3,6 +3,7 @@ extends Node
 signal finished(record: Dictionary, reward: Dictionary)
 
 var _exercise: Dictionary = {}
+var _phases: Array = []
 var _minutes: int = 0
 var _started_at: int = 0
 
@@ -13,6 +14,7 @@ func start(exercise_id: String, minutes: int) -> Dictionary:
 	if not Config.meditations.has(exercise_id):
 		return {"ok": false, "error": "invalid_exercise"}
 	_exercise = Config.meditations[exercise_id]
+	_phases = _expand(_exercise.get("phases", []))
 	_minutes = minutes
 	_started_at = GameState.now()
 	return {"ok": true, "error": ""}
@@ -48,16 +50,26 @@ func phase_at(elapsed_s: int) -> Dictionary:
 	return _guided_phase(elapsed_s)
 
 
-func _breath_phase(elapsed_s: int) -> Dictionary:
-	var phases: Array = _exercise["phases"]
-	var cycle_s := 0
+func _expand(phases: Array) -> Array:
+	var flat: Array = []
 	for phase: Dictionary in phases:
+		if phase.has("repeat"):
+			for _round in int(phase["repeat"]):
+				flat.append_array(_expand(phase["phases"]))
+		else:
+			flat.append(phase)
+	return flat
+
+
+func _breath_phase(elapsed_s: int) -> Dictionary:
+	var cycle_s := 0
+	for phase: Dictionary in _phases:
 		cycle_s += int(phase["seconds"])
 	var into_cycle: int = elapsed_s % cycle_s
-	for index in phases.size():
-		var seconds: int = int(phases[index]["seconds"])
+	for index in _phases.size():
+		var seconds: int = int(_phases[index]["seconds"])
 		if into_cycle < seconds:
-			return {"name": phases[index]["name"], "index": index, "seconds": seconds, "elapsed": into_cycle, "progress": float(into_cycle) / seconds}
+			return {"name": _phases[index]["name"], "index": index, "seconds": seconds, "elapsed": into_cycle, "progress": float(into_cycle) / seconds}
 		into_cycle -= seconds
 	return {}
 

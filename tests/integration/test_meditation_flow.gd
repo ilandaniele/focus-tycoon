@@ -74,3 +74,18 @@ func test_guided_prompts_cycle() -> void:
 	assert_eq(MeditationService.phase_at(45)["prompt"], "med.mindful.p2")
 	assert_eq(MeditationService.phase_at(45 * 6)["prompt"], "med.mindful.p1")
 	MeditationService.finish(false)
+
+
+func test_round_breathing_expands_repeated_breaths_then_retention() -> void:
+	MeditationService.start("rounds", 3)
+	assert_eq(MeditationService.phase_at(0)["name"], "inhale")
+	assert_eq(MeditationService.phase_at(2)["name"], "exhale")
+	assert_eq(MeditationService.phase_at(3)["name"], "inhale")
+	assert_eq(MeditationService.phase_at(89)["name"], "exhale")
+	assert_eq(MeditationService.phase_at(90)["name"], "retain")
+	assert_eq(MeditationService.phase_at(135)["name"], "inhale")
+	assert_eq(MeditationService.phase_at(137)["name"], "hold")
+	assert_eq(MeditationService.phase_at(152)["name"], "exhale")
+	assert_eq(MeditationService.phase_at(155)["name"], "rest")
+	assert_eq(MeditationService.phase_at(180)["name"], "inhale")
+	MeditationService.finish(false)

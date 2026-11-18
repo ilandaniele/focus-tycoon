@@ -11,8 +11,19 @@ func _build(_container: VBoxContainer) -> void:
 		return
 	var column := _add_scroll_body()
 	column.add_child(UIKit.label(UIKit.t("med.disclaimer"), "MutedLabel", true))
+	_add_ambient_card(column)
 	for id: String in Config.meditations:
 		_add_exercise_card(column, Config.meditations[id])
+
+
+func _add_ambient_card(parent: Node) -> void:
+	var card := UIKit.card(parent)
+	card.add_child(UIKit.section_title(UIKit.t("focus.ambient")))
+	card.add_child(UIKit.chips(UIKit.ambient_options(), GameState.settings.get("meditation_ambient_id", "none"), _set_ambient))
+
+
+func _set_ambient(id: String) -> void:
+	GameState.set_setting("meditation_ambient_id", id)
 
 
 func _add_exercise_card(parent: Node, exercise: Dictionary) -> void:
@@ -23,6 +34,8 @@ func _add_exercise_card(parent: Node, exercise: Dictionary) -> void:
 	var card := UIKit.card(parent)
 	card.add_child(UIKit.section_title(UIKit.t("med.%s.name" % id)))
 	card.add_child(UIKit.label(UIKit.t("med.%s.desc" % id), "MutedLabel", true))
+	if exercise.has("warning"):
+		card.add_child(UIKit.label(UIKit.t(exercise["warning"]), "", true))
 	var options: Array = []
 	for minutes: int in durations:
 		options.append({"id": minutes, "text": UIKit.fmt("ui.minutes", [minutes])})
