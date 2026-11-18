@@ -31,7 +31,7 @@ Copiar `~/.focus-tycoon/release.keystore` y `~/.focus-tycoon/release.env` a un l
 ## 4. iOS (6.5, USD 99 por año para publicar)
 1. Sin Mac: el workflow "iOS simulator" de GitHub Actions compila y corre el juego en el simulador en cada push a `dev` o `main`. La captura queda en el artifact `ios-simulator` de cada corrida.
 2. Para publicar: cuenta Apple Developer, poner el Team ID real en el preset "iOS" de `export_presets.cfg` y firmar. Se puede firmar en CI con certificados guardados como secrets de GitHub, sin Mac propia.
-3. Falta código: compras con StoreKit, y notificaciones locales para iOS (hoy solo hay Android).
+3. Plugins iOS: el workflow compila godot-storekit2 y godot-notification-scheduler v6.0 contra Godot 4.7.2 (`.github/scripts/build-ios-plugins.sh`, con caché) y los incluye en el export. En el simulador el juego arranca con los backends `AppleStore` y `PluginNotificationBackend`. Falta probar compras reales en TestFlight con productos creados en App Store Connect.
 
 ## 5. Opcional
 - El email de contacto es público en `docs/store/`. Si preferís, usar una dirección solo para soporte.
