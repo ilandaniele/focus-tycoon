@@ -63,7 +63,7 @@ func _rebuild_animated() -> void:
 
 func _fade_in(column: Control) -> void:
 	column.modulate.a = 0.0
-	var tween := column.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	var tween := column.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 	tween.tween_property(column, "modulate:a", 1.0, LIST_FADE_SECONDS)
 
 
@@ -81,7 +81,7 @@ func _fill_build(column: VBoxContainer) -> void:
 		var reason := ""
 		if item["premium"] and not Platform.store.has_entitlement(StoreService.PREMIUM):
 			reason = UIKit.t("error.premium_required")
-		CatalogCard.add(column, UIKit.t("item." + id), _item_detail(item), item["cost"], int(item["unlock_level"]), _choose_item.bind(id), reason)
+		CatalogCard.add(column, UIKit.t("item." + id), _item_detail(item), item["cost"], int(item["unlock_level"]), _choose_item.bind(id), reason, ArtRegistry.get_texture(ArtRegistry.item_key(id)))
 
 
 func _item_detail(item: Dictionary) -> String:
@@ -99,7 +99,7 @@ func _fill_animals(column: VBoxContainer) -> void:
 		if ParkService.enclosures_for(id).is_empty():
 			reason = UIKit.t("error.no_enclosure")
 		var detail := UIKit.t("biome." + str(species["biome"]))
-		CatalogCard.add(column, UIKit.t("species." + id), detail, species["cost"], int(species["unlock_level"]), _choose_species.bind(id), reason)
+		CatalogCard.add(column, UIKit.t("species." + id), detail, species["cost"], int(species["unlock_level"]), _choose_species.bind(id), reason, ArtRegistry.get_texture("animals/" + id))
 
 
 func _fill_park(column: VBoxContainer) -> void:

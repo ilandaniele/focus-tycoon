@@ -23,6 +23,7 @@ func setup(options: Array, initial: Variant, variation: String = "ChipButton", f
 		button.custom_minimum_size = Vector2(ThemeFactory.MIN_TOUCH, ThemeFactory.MIN_TOUCH)
 		button.mouse_filter = Control.MOUSE_FILTER_PASS
 		button.pressed.connect(_on_pressed.bind(option["id"]))
+		UIKit.add_press_feedback(button)
 		_buttons[option["id"]] = button
 		add_child(button)
 	select(initial)
