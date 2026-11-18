@@ -5,7 +5,6 @@ const PURGE_SQL = `DELETE FROM players WHERE id IN (
   SELECT player_id FROM player_resources WHERE updated_at < ?
 )`;
 
-export async function purgeInactivePlayers(db: D1Database, now: number): Promise<number> {
-  const result = await db.prepare(PURGE_SQL).bind(now - RETENTION_DAYS * DAY_MS).run();
-  return result.meta.changes;
+export function purgeInactivePlayers(db: D1Database, now: number): D1PreparedStatement {
+  return db.prepare(PURGE_SQL).bind(now - RETENTION_DAYS * DAY_MS);
 }

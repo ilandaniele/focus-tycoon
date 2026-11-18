@@ -70,7 +70,7 @@ API (`https://focus-tycoon-api.ilandaniele.workers.dev`):
 | `GET /v1/resources` | Server balance for the token's player |
 | `DELETE /v1/players` | Delete the token's player with its balance and ledger. Used by "Delete my server data" in Settings |
 
-A daily cron trigger (`scheduled` handler, `server/src/retention.ts`) deletes players with no activity for 730 days.
+Each `POST /v1/players` also deletes, in the same D1 batch, players with no activity for 730 days (`server/src/retention.ts`). No cron trigger: the free plan allows only 5 per account and they are in use.
 
 Server commands (run in `server/`):
 ```bash

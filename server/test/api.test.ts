@@ -1,6 +1,6 @@
 import { env, SELF } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
-import { purgeInactivePlayers, RETENTION_DAYS } from "../src/retention";
+import { RETENTION_DAYS } from "../src/retention";
 
 const BASE = "https://api.test";
 
@@ -307,14 +307,13 @@ describe("inactive player purge", () => {
     await env.DB.prepare("UPDATE player_resources SET updated_at = ? WHERE player_id = ?").bind(at, playerId).run();
   }
 
-  it("deletes players idle for longer than the retention window and keeps the rest", async () => {
-    const now = Date.UTC(2028, 0, 1);
+  it("a new signup deletes players idle for longer than the retention window and keeps the rest", async () => {
+    const now = Date.now();
     const idle = await signup();
     const active = await signup();
     await setLastActivity(idle.player_id, now - (RETENTION_DAYS + 1) * DAY_MS);
     await setLastActivity(active.player_id, now - (RETENTION_DAYS - 1) * DAY_MS);
-    const purged = await purgeInactivePlayers(env.DB, now);
-    expect(purged).toBeGreaterThanOrEqual(1);
+    await signup();
     expect(await countRows("players", "id", idle.player_id)).toBe(0);
     expect(await countRows("players", "id", active.player_id)).toBe(1);
   });
