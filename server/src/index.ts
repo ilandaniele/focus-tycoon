@@ -1,13 +1,14 @@
 import type { Env } from "./env";
+import { allowedOrigin, preflight, withCors } from "./cors";
 import { clientIp, errorResponse, HttpError } from "./http";
-import { createPlayer } from "./routes/players";
+import { createPlayer, deletePlayer } from "./routes/players";
 import { getResources } from "./routes/resources";
 import { pushTransactions } from "./routes/transactions";
 
 type Handler = (request: Request, env: Env) => Promise<Response>;
 
 const ROUTES: Record<string, Record<string, Handler>> = {
-  "/v1/players": { POST: createPlayer },
+  "/v1/players": { POST: createPlayer, DELETE: deletePlayer },
   "/v1/transactions": { POST: pushTransactions },
   "/v1/resources": { GET: getResources },
 };
@@ -17,7 +18,7 @@ export default {
     const requestId = crypto.randomUUID();
     const response = await handle(request, env, requestId);
     response.headers.set("X-Request-Id", requestId);
-    return response;
+    return withCors(response, allowedOrigin(request, env.ALLOWED_ORIGINS));
   },
 } satisfies ExportedHandler<Env>;
 
@@ -37,6 +38,7 @@ async function handle(request: Request, env: Env, requestId: string): Promise<Re
 async function route(request: Request, env: Env): Promise<Response> {
   const methods = ROUTES[new URL(request.url).pathname];
   if (!methods) throw new HttpError(404, "not_found");
+  if (request.method === "OPTIONS") return preflight(request, env.ALLOWED_ORIGINS);
   if (!Object.hasOwn(methods, request.method)) throw new HttpError(405, "method_not_allowed");
   const { success } = await env.IP_LIMITER.limit({ key: clientIp(request) });
   if (!success) throw new HttpError(429, "rate_limited");

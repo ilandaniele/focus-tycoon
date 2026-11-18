@@ -38,10 +38,29 @@ const GROUND := [1.1, 0.04, 1.1]
 const BLOSSOM := {"leafsGreen": "F4A7C0", "leafsDark": "E58DAA"}
 const SNOW := {"stone": "F2F7FA", "stoneDark": "D3E3EA"}
 const DRY_GRASS := {"grass": "C9B46A"}
+const OPEN_GRASS := "8DC26F"
+const WILD_GRASS := "6F9A63"
 
 const TILES := {
-	"terrain/grass": [{"shape": "box", "size": GROUND, "y": -0.02, "color": "8DC26F"}],
-	"terrain/locked": [{"shape": "box", "size": GROUND, "y": -0.02, "color": "6F9A63"}],
+	"terrain/grass": [{"shape": "box", "size": GROUND, "y": -0.02, "color": OPEN_GRASS}],
+	"terrain/grass_shade": [{"shape": "box", "size": GROUND, "y": -0.02, "color": "8BC06D"}],
+	"terrain/grass_tufts": [
+		{"shape": "box", "size": GROUND, "y": -0.02, "color": OPEN_GRASS},
+		{"m": "nature/grass_leafs", "at": [-0.2, 0.15], "s": 0.55, "tint": {"grass": "77B05C"}},
+		{"m": "nature/grass_leafs", "at": [0.25, -0.2], "r": 70.0, "s": 0.45, "tint": {"grass": "77B05C"}},
+	],
+	"terrain/grass_flowers": [
+		{"shape": "box", "size": GROUND, "y": -0.02, "color": OPEN_GRASS},
+		{"m": "nature/flower_yellowA", "at": [-0.18, 0.1], "s": 0.4},
+		{"m": "nature/flower_purpleA", "at": [0.2, -0.12], "s": 0.35},
+		{"m": "nature/flower_redA", "at": [0.05, 0.3], "s": 0.3},
+	],
+	"terrain/locked": [{"shape": "box", "size": GROUND, "y": -0.02, "color": WILD_GRASS}],
+	"terrain/locked_tufts": [
+		{"shape": "box", "size": GROUND, "y": -0.02, "color": WILD_GRASS},
+		{"m": "nature/grass_large", "at": [-0.15, 0.1], "s": 0.6, "tint": {"grass": "5E8A55"}},
+		{"m": "nature/grass_leafs", "at": [0.25, -0.15], "s": 0.5, "tint": {"grass": "5E8A55"}},
+	],
 	"paths/path_dirt": [
 		{"shape": "box", "size": GROUND, "y": -0.02, "color": "DDB07F"},
 		{"m": "nature/rock_smallFlatA", "at": [-0.2, 0.15], "y": 0.01, "s": 0.6, "tint": {"grass": "C9A57A"}},

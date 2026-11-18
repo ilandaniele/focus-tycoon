@@ -43,6 +43,16 @@ godot --path . --headless --export-release "Android AAB" build/android/focus-tyc
 ```
 `release.env` defines `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD`. Back up the keystore: Play rejects updates signed with a different key.
 
+## Web build
+Single-threaded export, so it runs on any static host without COOP/COEP headers. Needs the `web_nothreads_*.zip` export templates for 4.7.2. Saves go to the browser's IndexedDB; purchases and reminders fall back to the mock store and no-op notifications.
+```bash
+godot --path . --headless --export-release "Web" build/web/index.html
+node tools/web/split_wasm.mjs build/web
+python -m http.server 8060 -d build/web
+npx wrangler deploy -c tools/web/wrangler.jsonc
+```
+Cloudflare static assets reject files over 25 MiB, so `split_wasm.mjs` cuts `index.wasm` into parts and `tools/web/wasm_parts.js` (loaded through the preset's `html/head_include`) joins them in the browser. Live at https://focus-tycoon.ilandaniele.workers.dev. The sync API only answers browsers from origins listed in `ALLOWED_ORIGINS` (`server/wrangler.jsonc`).
+
 ## Platform integrations
 | Feature | Android | Without the plugin (desktop, tests) |
 |---|---|---|
@@ -58,6 +68,9 @@ API (`https://focus-tycoon-api.ilandaniele.workers.dev`):
 | `POST /v1/players` | Create an anonymous player, returns `{player_id, token}`. Rate limited per IP |
 | `POST /v1/transactions` | Upload up to 100 ledger entries, returns `{received, accepted}`. Rate limited per player |
 | `GET /v1/resources` | Server balance for the token's player |
+| `DELETE /v1/players` | Delete the token's player with its balance and ledger. Used by "Delete my server data" in Settings |
+
+Each `POST /v1/players` also deletes, in the same D1 batch, players with no activity for 730 days (`server/src/retention.ts`). No cron trigger: the free plan allows only 5 per account and they are in use.
 
 Server commands (run in `server/`):
 ```bash

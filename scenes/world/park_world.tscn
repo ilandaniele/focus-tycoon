@@ -1,11 +1,17 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/park_world.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/world/placement_controller.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/world/camera_controller.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/world/island_edge.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/world/wild_props.gd" id="5"]
 
 [node name="ParkWorld" type="Node2D"]
 script = ExtResource("1")
+
+[node name="IslandEdge" type="Node2D" parent="."]
+z_index = -4
+script = ExtResource("4")
 
 [node name="Ground" type="TileMapLayer" parent="."]
 z_index = -3
@@ -19,6 +25,10 @@ z_index = 1
 
 [node name="Entities" type="Node2D" parent="."]
 y_sort_enabled = true
+
+[node name="WildProps" type="Node2D" parent="Entities"]
+y_sort_enabled = true
+script = ExtResource("5")
 
 [node name="Ghost" type="Sprite2D" parent="."]
 visible = false

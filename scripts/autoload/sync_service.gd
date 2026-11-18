@@ -31,6 +31,22 @@ func enabled() -> bool:
 	return _sync != null
 
 
+func player_id() -> String:
+	return str(_client.session.get("player_id", "")) if enabled() else ""
+
+
+func delete_server_data() -> bool:
+	if not enabled():
+		return false
+	while _busy:
+		await get_tree().process_frame
+	_busy = true
+	var deleted: bool = await _client.delete_player()
+	_write_session(_client.session)
+	_busy = false
+	return deleted
+
+
 func sync_now() -> void:
 	if not enabled() or _busy:
 		return
