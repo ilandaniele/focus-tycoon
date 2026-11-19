@@ -87,3 +87,28 @@ func test_to_dict_roundtrip_through_json() -> void:
 	assert_eq(restored.animals_in("o_1").size(), 1)
 	assert_false(restored.can_place(ONE, Vector2i(11, 12)))
 	assert_eq(SaveCodec.checksum_of(restored.to_dict()), SaveCodec.checksum_of(park.to_dict()))
+
+
+func test_nearest_free_cell_keeps_valid_start() -> void:
+	var park := _park()
+	assert_eq(park.nearest_free_cell(ENCLOSURE, Vector2i(8, 8)), Vector2i(8, 8))
+
+
+func test_nearest_free_cell_moves_locked_start_inside_unlocked_area() -> void:
+	var park := _park()
+	var found := park.nearest_free_cell(ENCLOSURE, Vector2i(1, 1))
+	assert_true(park.can_place(ENCLOSURE, found))
+	assert_eq(found, Vector2i(6, 6))
+
+
+func test_nearest_free_cell_skips_occupied_cells() -> void:
+	var park := _park()
+	park.place("o_1", "fountain", TWO, Vector2i(8, 8))
+	var found := park.nearest_free_cell(ONE, Vector2i(8, 8))
+	assert_true(park.can_place(ONE, found))
+	assert_eq(maxi(absi(found.x - 8), absi(found.y - 8)), 1)
+
+
+func test_nearest_free_cell_returns_start_when_nothing_fits() -> void:
+	var park := ParkModel.new(4, 2)
+	assert_eq(park.nearest_free_cell(ENCLOSURE, Vector2i(0, 0)), Vector2i(0, 0))

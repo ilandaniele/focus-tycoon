@@ -52,7 +52,7 @@ func set_active(active: bool) -> void:
 
 func begin_placement(item_id: String) -> void:
 	var size := IsoGrid.size_of(Config.item(item_id))
-	var start := IsoGrid.origin_for(IsoGrid.cell_at(_ground, _camera.position), size)
+	var start := GameState.park.nearest_free_cell(size, IsoGrid.origin_for(IsoGrid.cell_at(_ground, _camera.position), size))
 	_placement.begin_item(PlacementController.Mode.PLACE, item_id, size, "", start)
 
 
