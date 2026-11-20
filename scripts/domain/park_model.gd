@@ -29,6 +29,18 @@ func can_place(size: Vector2i, cell: Vector2i, ignore_uid: String = "") -> bool:
 	return true
 
 
+func nearest_free_cell(size: Vector2i, start: Vector2i) -> Vector2i:
+	for radius in map_size:
+		for dx in range(-radius, radius + 1):
+			for dy in range(-radius, radius + 1):
+				if maxi(absi(dx), absi(dy)) != radius:
+					continue
+				var candidate := start + Vector2i(dx, dy)
+				if can_place(size, candidate):
+					return candidate
+	return start
+
+
 func place(uid: String, item_id: String, size: Vector2i, cell: Vector2i) -> bool:
 	if objects.has(uid) or not can_place(size, cell):
 		return false
