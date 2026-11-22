@@ -143,6 +143,7 @@
 	"profile.disclaimer": "La app mide el tiempo que dedicas, no tu concentración. Los ejercicios de meditación son de bienestar general y no sustituyen atención médica ni psicológica.",
 	"profile.debug_5min": "Adelantar reloj +5 min",
 	"profile.debug_1h": "Adelantar reloj +1 h",
+	"profile.debug_benchmark": "Benchmark: 150 objetos y 20 animales (no se guarda)",
 	"reminder.title": "Focus Tycoon",
 	"reminder.body": "¿Lista o listo para una sesión tranquila?",
 	"sheet.move": "Mover",

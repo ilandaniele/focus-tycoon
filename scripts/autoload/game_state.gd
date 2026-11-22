@@ -22,6 +22,7 @@ var progress: Dictionary = {}
 var settings: Dictionary = {}
 var player: Dictionary = {}
 var debug_offset_s: int = 0
+var benchmark_active: bool = false
 
 var _store: SaveStore = SaveStore.new()
 var _save_timer: Timer
@@ -55,10 +56,19 @@ func reset_for_tests(dir: String, test_clock: Clock) -> void:
 
 func save_now() -> bool:
 	_save_timer.stop()
+	if benchmark_active:
+		return true
 	var saved := _store.save(_to_data(), now())
 	if not saved:
 		push_error("save failed")
 	return saved
+
+
+func start_benchmark() -> void:
+	save_now()
+	benchmark_active = true
+	park = BenchmarkPark.build(int(Config.economy["park"]["map_size"]), Config.catalog, Config.species)
+	state_loaded.emit()
 
 
 func mark_dirty() -> void:
@@ -106,6 +116,7 @@ func _append_capped(sessions: Array, record: Dictionary) -> void:
 func _new_game() -> void:
 	var park_config: Dictionary = Config.economy["park"]
 	var created_at := now()
+	benchmark_active = false
 	player = {"id": "p_%d_%d" % [created_at, randi()], "created_at": created_at, "uid_seq": 0}
 	ledger = Ledger.new()
 	park = ParkModel.new(int(park_config["map_size"]), int(park_config["initial_unlocked"]))

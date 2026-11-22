@@ -143,6 +143,7 @@
 	"profile.disclaimer": "The app measures the time you spend, not your concentration. Meditation exercises are for general wellness and do not replace medical or psychological care.",
 	"profile.debug_5min": "Advance clock +5 min",
 	"profile.debug_1h": "Advance clock +1 h",
+	"profile.debug_benchmark": "Benchmark: 150 objects and 20 animals (not saved)",
 	"reminder.title": "Focus Tycoon",
 	"reminder.body": "Ready for a calm session?",
 	"sheet.move": "Move",
