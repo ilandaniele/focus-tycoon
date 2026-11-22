@@ -19,6 +19,7 @@ Para respaldar tus recursos y evitar trampas, la app se comunica con un servidor
 - **Identificador anónimo de jugador:** se crea al azar la primera vez. No está ligado a tu nombre, correo ni cuenta de Google.
 - **Movimientos de recursos:** cada cambio de monedas, puntos de naturaleza y experiencia, con su motivo (por ejemplo, "sesión completada" o "compra de objeto") y la hora.
 - **Saldo de recursos:** monedas, naturaleza y experiencia actuales.
+- **Comentarios (opcional):** si usás "Enviar comentario", el texto que escribas, su tipo (error, idea u otro), la versión de la app y la plataforma. Se guardan con tu identificador y se borran junto con él.
 
 El historial detallado de sesiones y el contenido de tu parque **no** se envían.
 

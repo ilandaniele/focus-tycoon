@@ -79,6 +79,44 @@ func test_rejected_token_clears_session_and_signs_up_again() -> void:
 	assert_eq(_client.session["token"], "token-2")
 
 
+func test_rejected_token_forgets_synced_keys_so_the_new_player_gets_the_full_log() -> void:
+	_client.session = {"player_id": "player-1", "token": "revoked"}
+	SyncBatch.mark_synced(_synced, _ledger.entries(), NOW)
+	_ledger.apply("focus:s2#1", {"coins": 25}, "focus", NOW + 30)
+	_transport.responses = [{"code": 401, "body": {"error": "unauthorized"}}, _signup_ok("player-2", "token-2"), _accepted(2)]
+	var failed: Dictionary = await _sync.push(_ledger.entries(), _synced, NOW)
+	assert_true(failed["reset"])
+	assert_true(_synced.is_empty())
+	await _sync.push(_ledger.entries(), _synced, NOW + 5)
+	assert_eq(_keys(_transport.requests[2]["body"]), ["starter_grant", "focus:s1#1"])
+
+
+func test_rejected_batch_is_skipped_so_later_entries_still_sync() -> void:
+	_client.session = {"player_id": "player-1", "token": "live"}
+	_transport.responses = [{"code": 400, "body": {"error": "invalid_body"}}, _accepted(1)]
+	var rejected: Dictionary = await _sync.push(_ledger.entries(), _synced, NOW)
+	assert_false(rejected["ok"])
+	assert_eq(rejected["sent"], 2)
+	await _sync.push(_ledger.entries(), _synced, NOW + 5)
+	assert_eq(_keys(_transport.requests[1]["body"]), ["buy:o_1"])
+
+
+func test_feedback_signs_up_then_posts_with_token() -> void:
+	_transport.responses = [_signup_ok("player-1", "token-1"), {"code": 204, "body": null}]
+	var feedback := {"category": "idea", "message": "More otters", "app_version": "0.1.0", "platform": "Web"}
+	assert_true(await _client.send_feedback(feedback))
+	assert_eq(_transport.paths(), [PLAYERS_PATH, "/v1/feedback"] as Array[String])
+	assert_true(_transport.requests[1]["headers"].has("Authorization: Bearer token-1"))
+	assert_eq(_transport.requests[1]["body"], feedback)
+
+
+func test_feedback_with_rejected_token_clears_session() -> void:
+	_client.session = {"player_id": "player-1", "token": "revoked"}
+	_transport.responses = [{"code": 401, "body": {"error": "unauthorized"}}]
+	assert_false(await _client.send_feedback({"category": "bug", "message": "x", "app_version": "0.1.0", "platform": "Web"}))
+	assert_true(_client.session.is_empty())
+
+
 func test_signup_failure_uploads_nothing() -> void:
 	_transport.responses = [{"code": 429, "body": {"error": "rate_limited"}}]
 	var result: Dictionary = await _sync.push(_ledger.entries(), _synced, NOW)

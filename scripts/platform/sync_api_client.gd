@@ -3,6 +3,9 @@ extends RefCounted
 
 const PLAYERS_PATH := "/v1/players"
 const TRANSACTIONS_PATH := "/v1/transactions"
+const FEEDBACK_PATH := "/v1/feedback"
+const FEEDBACK_MAX_CHARS := 1000
+const REJECTED := 400
 const UNAUTHORIZED := 401
 
 var session: Dictionary = {}
@@ -20,25 +23,34 @@ func ensure_session() -> bool:
 		return true
 	var response: Dictionary = await _transport.send(HTTPClient.METHOD_POST, _url + PLAYERS_PATH, _headers(), "")
 	var body: Variant = response["body"]
-	if not _is_success(response["code"]) or not body is Dictionary or not body.has("token"):
+	if not is_success(response["code"]) or not body is Dictionary or not body.has("token"):
 		return false
 	session = {"player_id": body["player_id"], "token": body["token"]}
 	return true
 
 
-func insert_transactions(rows: Array) -> bool:
-	var payload := JSON.stringify({"transactions": rows})
-	var response: Dictionary = await _transport.send(HTTPClient.METHOD_POST, _url + TRANSACTIONS_PATH, _auth_headers(), payload)
+func insert_transactions(rows: Array) -> int:
+	return await _post_authenticated(TRANSACTIONS_PATH, {"transactions": rows})
+
+
+func send_feedback(feedback: Dictionary) -> bool:
+	if not await ensure_session():
+		return false
+	return is_success(await _post_authenticated(FEEDBACK_PATH, feedback))
+
+
+func _post_authenticated(path: String, body: Dictionary) -> int:
+	var response: Dictionary = await _transport.send(HTTPClient.METHOD_POST, _url + path, _auth_headers(), JSON.stringify(body))
 	if response["code"] == UNAUTHORIZED:
 		session = {}
-	return _is_success(response["code"])
+	return response["code"]
 
 
 func delete_player() -> bool:
 	if not session.has("token"):
 		return true
 	var response: Dictionary = await _transport.send(HTTPClient.METHOD_DELETE, _url + PLAYERS_PATH, _auth_headers(), "")
-	if not _is_success(response["code"]) and response["code"] != UNAUTHORIZED:
+	if not is_success(response["code"]) and response["code"] != UNAUTHORIZED:
 		return false
 	session = {}
 	return true
@@ -54,5 +66,5 @@ func _headers() -> PackedStringArray:
 	return PackedStringArray(["Content-Type: application/json"])
 
 
-func _is_success(code: int) -> bool:
+static func is_success(code: int) -> bool:
 	return code >= 200 and code < 300

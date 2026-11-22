@@ -264,5 +264,19 @@
 	"mission.level": "Llega al nivel %d",
 	"mission.focus_minutes_total": "Suma %d minutos de foco",
 	"mission.meditation_days_distinct": "Medita %d días distintos",
-	"mission.species_distinct": "Ten %d especies distintas"
+	"mission.species_distinct": "Ten %d especies distintas",
+	"feedback.section": "Beta",
+	"feedback.section_body": "¿Encontraste un error o tenés una idea? Contanos.",
+	"feedback.open": "Enviar comentario",
+	"feedback.title": "Enviar comentario",
+	"feedback.body": "No incluyas datos personales. El comentario se guarda con tu ID de jugador y se borra con \"Borrar mis datos del servidor\".",
+	"feedback.cat_bug": "Error",
+	"feedback.cat_idea": "Idea",
+	"feedback.cat_other": "Otro",
+	"feedback.placeholder": "¿Qué pasó o qué te gustaría ver?",
+	"feedback.send": "Enviar",
+	"feedback.cancel": "Cancelar",
+	"feedback.empty": "Escribe un comentario primero.",
+	"feedback.sent": "¡Gracias! Comentario enviado.",
+	"feedback.failed": "No se pudo enviar. Revisa la conexión e inténtalo de nuevo."
 }

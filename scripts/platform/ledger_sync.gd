@@ -16,7 +16,14 @@ func push(entries: Array, synced: Dictionary, now: int) -> Dictionary:
 		return {"ok": true, "sent": 0}
 	if not await _client.ensure_session():
 		return {"ok": false, "sent": 0}
-	if not await _client.insert_transactions(batch.map(SyncBatch.to_row)):
+	var code: int = await _client.insert_transactions(batch.map(SyncBatch.to_row))
+	if code == SyncApiClient.UNAUTHORIZED:
+		synced.clear()
+		return {"ok": false, "sent": 0, "reset": true}
+	if code == SyncApiClient.REJECTED:
+		SyncBatch.mark_synced(synced, batch, now)
+		return {"ok": false, "sent": batch.size()}
+	if not SyncApiClient.is_success(code):
 		return {"ok": false, "sent": 0}
 	SyncBatch.mark_synced(synced, batch, now)
 	return {"ok": true, "sent": batch.size()}

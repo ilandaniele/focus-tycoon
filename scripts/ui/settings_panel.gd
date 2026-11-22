@@ -22,6 +22,7 @@ func _ready() -> void:
 	_build_comfort()
 	_build_reminders()
 	if SyncService.enabled():
+		_build_feedback()
 		_build_server_data()
 
 
@@ -65,6 +66,13 @@ func _build_reminders() -> void:
 	if not OS.has_feature("mobile"):
 		card.add_child(UIKit.label(UIKit.t("profile.reminders_desktop"), "MutedLabel", true))
 	_refresh_hour()
+
+
+func _build_feedback() -> void:
+	var card := UIKit.card(self)
+	card.add_child(UIKit.section_title(UIKit.t("feedback.section")))
+	card.add_child(UIKit.label(UIKit.t("feedback.section_body"), "MutedLabel", true))
+	card.add_child(UIKit.primary_button(UIKit.t("feedback.open"), FeedbackDialog.open.bind(self)))
 
 
 func _build_server_data() -> void:

@@ -34,6 +34,7 @@ static func build() -> Theme:
 	_style_progress(theme)
 	_style_slider(theme)
 	_style_scrollbar(theme)
+	_style_text_edit(theme)
 	return theme
 
 
@@ -198,3 +199,16 @@ static func _circle_texture(size: int, color: Color) -> ImageTexture:
 			var distance := Vector2(x + 0.5, y + 0.5).distance_to(center)
 			image.set_pixel(x, y, Color(color, clampf(radius - distance + 0.5, 0.0, 1.0)))
 	return ImageTexture.create_from_image(image)
+
+
+static func _style_text_edit(theme: Theme) -> void:
+	var normal := _box(SAND, RADIUS / 2, 16, 12)
+	var focus := _box(SAND, RADIUS / 2, 16, 12)
+	focus.set_border_width_all(3)
+	focus.border_color = MINT
+	theme.set_stylebox("normal", "TextEdit", normal)
+	theme.set_stylebox("focus", "TextEdit", focus)
+	theme.set_color("font_color", "TextEdit", INK)
+	theme.set_color("font_placeholder_color", "TextEdit", Color(INK, 0.5))
+	theme.set_color("caret_color", "TextEdit", INK)
+	theme.set_color("selection_color", "TextEdit", Color(MINT, 0.5))

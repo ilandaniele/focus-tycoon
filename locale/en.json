@@ -264,5 +264,19 @@
 	"mission.level": "Reach level %d",
 	"mission.focus_minutes_total": "Reach %d focus minutes",
 	"mission.meditation_days_distinct": "Meditate on %d different days",
-	"mission.species_distinct": "Have %d different species"
+	"mission.species_distinct": "Have %d different species",
+	"feedback.section": "Beta",
+	"feedback.section_body": "Found a bug or have an idea? Tell us.",
+	"feedback.open": "Send feedback",
+	"feedback.title": "Send feedback",
+	"feedback.body": "Do not include personal data. Feedback is stored with your player ID and deleted with \"Delete my server data\".",
+	"feedback.cat_bug": "Bug",
+	"feedback.cat_idea": "Idea",
+	"feedback.cat_other": "Other",
+	"feedback.placeholder": "What happened, or what would you like to see?",
+	"feedback.send": "Send",
+	"feedback.cancel": "Cancel",
+	"feedback.empty": "Write a comment first.",
+	"feedback.sent": "Thanks! Feedback sent.",
+	"feedback.failed": "Could not send. Check your connection and try again."
 }

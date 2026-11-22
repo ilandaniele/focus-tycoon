@@ -16,6 +16,7 @@
   "ratelimits": [
     { "name": "SIGNUP_LIMITER", "namespace_id": "7341", "simple": { "limit": 5, "period": 60 } },
     { "name": "SYNC_LIMITER", "namespace_id": "7342", "simple": { "limit": 6, "period": 60 } },
-    { "name": "IP_LIMITER", "namespace_id": "7343", "simple": { "limit": 60, "period": 60 } }
+    { "name": "IP_LIMITER", "namespace_id": "7343", "simple": { "limit": 60, "period": 60 } },
+    { "name": "FEEDBACK_LIMITER", "namespace_id": "7344", "simple": { "limit": 3, "period": 60 } }
   ]
 }

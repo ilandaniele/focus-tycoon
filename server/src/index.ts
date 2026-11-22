@@ -1,6 +1,7 @@
 import type { Env } from "./env";
 import { allowedOrigin, preflight, withCors } from "./cors";
 import { clientIp, errorResponse, HttpError } from "./http";
+import { postFeedback } from "./routes/feedback";
 import { createPlayer, deletePlayer } from "./routes/players";
 import { getResources } from "./routes/resources";
 import { pushTransactions } from "./routes/transactions";
@@ -11,6 +12,7 @@ const ROUTES: Record<string, Record<string, Handler>> = {
   "/v1/players": { POST: createPlayer, DELETE: deletePlayer },
   "/v1/transactions": { POST: pushTransactions },
   "/v1/resources": { GET: getResources },
+  "/v1/feedback": { POST: postFeedback },
 };
 
 export default {
