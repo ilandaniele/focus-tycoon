@@ -252,5 +252,17 @@
 	"med.rounds.desc": "Rounds of 30 deep breaths, a pause with empty lungs and a recovery breath you hold briefly.",
 	"med.rounds.warning": "Do it sitting or lying down. Never in water, while driving or standing. If you feel dizzy or unwell, stop and breathe normally.",
 	"mode.languages": "Languages",
-	"mode.review": "Review"
+	"mode.review": "Review",
+	"hud.missions": "Missions",
+	"chain.new_keeper": "New keeper",
+	"chain.deep_focus": "Deep focus",
+	"chain.calm_mind": "Calm mind",
+	"chain.collector": "Collector",
+	"mission.sessions_completed_total": "Complete %d focus sessions in total",
+	"mission.objects_total": "Have %d objects in your park",
+	"mission.animals_total": "Have %d animals",
+	"mission.level": "Reach level %d",
+	"mission.focus_minutes_total": "Reach %d focus minutes",
+	"mission.meditation_days_distinct": "Meditate on %d different days",
+	"mission.species_distinct": "Have %d different species"
 }

@@ -67,6 +67,25 @@ func claim_objective(id: String) -> Dictionary:
 	return {"ok": false, "error": "not_done"}
 
 
+func mission_chains() -> Array:
+	var metrics := totals()
+	var result: Array = []
+	for chain: Dictionary in Config.objectives["mission_chains"]:
+		result.append(MissionChains.current(chain, _claimed_steps(chain), metrics))
+	return result
+
+
+func claim_mission(chain_id: String) -> Dictionary:
+	var chain := _find(Config.objectives["mission_chains"], chain_id)
+	if chain.is_empty():
+		return {"ok": false, "error": "unknown_mission"}
+	var entry := MissionChains.current(chain, _claimed_steps(chain), totals())
+	if not entry.get("done", false):
+		return {"ok": false, "error": "not_done"}
+	var result := grant(_mission_key(chain_id, entry["step"]), entry["reward"], "mission")
+	return {"ok": result["ok"], "error": result["error"], "reward": entry["reward"]}
+
+
 func check_achievements() -> void:
 	if _checking_achievements:
 		return
@@ -101,6 +120,7 @@ func totals() -> Dictionary:
 		"sessions_completed_total": completed,
 		"focus_minutes_total": focus_minutes,
 		"animals_total": GameState.park.animals.size(),
+		"objects_total": GameState.park.objects.size(),
 		"species_distinct": species_ids.size(),
 		"meditation_days_distinct": Stats.distinct_meditation_days(GameState.meditation_sessions, tz, min_seconds),
 		"level": level(),
@@ -131,3 +151,14 @@ func _find(defs: Array, id: String) -> Dictionary:
 
 func _daily_key(day: String, id: String) -> String:
 	return "daily:%s:%s" % [day, id]
+
+
+func _claimed_steps(chain: Dictionary) -> int:
+	var claimed := 0
+	while claimed < chain["steps"].size() and GameState.ledger.has_key(_mission_key(chain["id"], claimed)):
+		claimed += 1
+	return claimed
+
+
+func _mission_key(chain_id: String, step: int) -> String:
+	return "mission:%s:%d" % [chain_id, step]

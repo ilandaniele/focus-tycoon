@@ -7,6 +7,30 @@
 		{"id": "meditate_3_minutes", "metric": "meditation_minutes", "target": 3, "reward": {"coins": 20, "nature": 5}},
 		{"id": "place_3_objects", "metric": "objects_placed", "target": 3, "reward": {"coins": 15}}
 	],
+	"mission_chains": [
+		{"id": "new_keeper", "steps": [
+			{"metric": "sessions_completed_total", "target": 3, "reward": {"coins": 40}},
+			{"metric": "objects_total", "target": 5, "reward": {"coins": 60}},
+			{"metric": "animals_total", "target": 2, "reward": {"coins": 80, "nature": 10}},
+			{"metric": "level", "target": 4, "reward": {"coins": 150}}
+		]},
+		{"id": "deep_focus", "steps": [
+			{"metric": "focus_minutes_total", "target": 60, "reward": {"coins": 50}},
+			{"metric": "focus_minutes_total", "target": 180, "reward": {"coins": 100}},
+			{"metric": "focus_minutes_total", "target": 480, "reward": {"coins": 200, "nature": 10}},
+			{"metric": "focus_minutes_total", "target": 1200, "reward": {"coins": 400, "nature": 20}}
+		]},
+		{"id": "calm_mind", "steps": [
+			{"metric": "meditation_days_distinct", "target": 2, "reward": {"nature": 15}},
+			{"metric": "meditation_days_distinct", "target": 5, "reward": {"nature": 30}},
+			{"metric": "meditation_days_distinct", "target": 10, "reward": {"coins": 100, "nature": 50}}
+		]},
+		{"id": "collector", "steps": [
+			{"metric": "species_distinct", "target": 2, "reward": {"coins": 60}},
+			{"metric": "species_distinct", "target": 4, "reward": {"coins": 120, "nature": 10}},
+			{"metric": "objects_total", "target": 30, "reward": {"coins": 200}}
+		]}
+	],
 	"achievements": [
 		{"id": "first_session", "metric": "sessions_completed_total", "target": 1, "reward": {"coins": 20}},
 		{"id": "focus_10_hours", "metric": "focus_minutes_total", "target": 600, "reward": {"coins": 150}},

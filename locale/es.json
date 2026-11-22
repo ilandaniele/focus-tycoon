@@ -252,5 +252,17 @@
 	"med.rounds.desc": "Rondas de 30 respiraciones profundas, una pausa con los pulmones vacíos y una respiración de recuperación que sostienes un momento.",
 	"med.rounds.warning": "Hazlo sentado o acostado. Nunca en el agua, manejando ni de pie. Si te mareas o te sientes mal, detente y respira normal.",
 	"mode.languages": "Idiomas",
-	"mode.review": "Repaso"
+	"mode.review": "Repaso",
+	"hud.missions": "Misiones",
+	"chain.new_keeper": "Cuidador novato",
+	"chain.deep_focus": "Foco profundo",
+	"chain.calm_mind": "Mente serena",
+	"chain.collector": "Coleccionista",
+	"mission.sessions_completed_total": "Completa %d sesiones de foco en total",
+	"mission.objects_total": "Ten %d objetos en tu parque",
+	"mission.animals_total": "Ten %d animales",
+	"mission.level": "Llega al nivel %d",
+	"mission.focus_minutes_total": "Suma %d minutos de foco",
+	"mission.meditation_days_distinct": "Medita %d días distintos",
+	"mission.species_distinct": "Ten %d especies distintas"
 }
