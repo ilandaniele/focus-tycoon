@@ -51,8 +51,8 @@ def render_animal(stage: dict, species_id: str, spec: dict) -> None:
     count = stage["animal_frames"]
     iso_scene.reset({**stage, "ambient": stage["animal_ambient"]})
     animals.load(os.path.join(ART_DIR, spec["model"]), spec["height"])
-    outline = stage["animal_outline"]
-    animals.add_outline(outline["width_px"] / iso_scene.pixels_per_unit(stage), outline["color"])
+    look = stage["animal_look"]
+    animals.soften(look["subdivision"], look["sheen"])
     iso_scene.frame(stage, canvas, anchor)
     for action in ("idle", "walk"):
         start, end = animals.frame_range(action)

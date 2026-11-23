@@ -93,7 +93,7 @@ def _model_path(art_dir: str, name: str) -> str:
 
 
 def _restyle(material: bpy.types.Material, tints: dict, flat: list, glow: list) -> None:
-    bsdf = _principled(material)
+    bsdf = principled(material)
     if bsdf is None:
         return
     bsdf.inputs["Roughness"].default_value = ROUGHNESS
@@ -137,7 +137,7 @@ def _socket(sockets, identifier: str) -> bpy.types.NodeSocket:
     return next(socket for socket in sockets if socket.identifier == identifier)
 
 
-def _principled(material: bpy.types.Material):
+def principled(material: bpy.types.Material):
     if not material.use_nodes:
         return None
     return next((node for node in material.node_tree.nodes if node.type == "BSDF_PRINCIPLED"), None)
@@ -164,7 +164,7 @@ def _shape(part: dict) -> bpy.types.Object:
 def _flat_material(part: dict) -> bpy.types.Material:
     material = bpy.data.materials.new("shape")
     material.use_nodes = True
-    bsdf = _principled(material)
+    bsdf = principled(material)
     color = srgb_to_linear(part.get("color", "FFFFFF"))
     bsdf.inputs["Base Color"].default_value = color
     bsdf.inputs["Roughness"].default_value = ROUGHNESS
