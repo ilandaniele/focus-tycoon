@@ -14,11 +14,18 @@ const WILD_GROUND := {
 const TALL_PROPS := {
 	"objects/tree_pine": 4,
 	"objects/tree_oak": 3,
+	"scenery/pine_tall": 3,
+	"scenery/pine_small": 2,
+	"scenery/tree_round": 3,
+	"scenery/tree_twisted": 2,
 }
 const LOW_PROPS := {
-	"objects/fern": 3,
-	"objects/rock_mossy": 2,
+	"objects/fern": 2,
 	"objects/bush_flower": 1,
+	"scenery/rock_outcrop": 2,
+	"scenery/standing_stone": 1,
+	"scenery/pebble_patch": 2,
+	"scenery/stump_mushrooms": 1,
 }
 const PROP_CHANCE := 0.45
 const TALL_SHARE := 0.6
