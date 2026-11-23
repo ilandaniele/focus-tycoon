@@ -39,6 +39,8 @@ The whole game is free to play. Premium is a one-time purchase with extra sounds
 
 Focus Tycoon is a timer with rewards: it does not measure or verify real concentration, and its breathing exercises are not a substitute for any treatment.
 
+Animal models by Poly by Google and Хмара Сергей (poly.pizza), CC-BY 3.0.
+
 ## Category and tags
 - Category: Games › Simulation (alternative: Productivity).
 - Tags: focus timer, pomodoro, building, animals, relaxing.

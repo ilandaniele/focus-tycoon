@@ -30,6 +30,7 @@ func _add_credits(column: VBoxContainer) -> void:
 	var card := UIKit.card(column)
 	card.add_child(UIKit.section_title(UIKit.t("profile.credits")))
 	card.add_child(UIKit.label(UIKit.t("profile.credits_body"), "MutedLabel", true))
+	card.add_child(UIKit.label(UIKit.t("profile.credits_art"), "MutedLabel", true))
 	card.add_child(UIKit.label(UIKit.t("profile.disclaimer"), "MutedLabel", true))
 
 

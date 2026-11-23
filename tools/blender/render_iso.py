@@ -50,15 +50,22 @@ def render_animal(stage: dict, species_id: str, spec: dict) -> None:
     anchor = (canvas[0] / 2.0, canvas[1] - stage["foot_margin"] * scale)
     count = stage["animal_frames"]
     iso_scene.reset({**stage, "ambient": stage["animal_ambient"]})
-    animals.load(os.path.join(ART_DIR, spec["model"]), spec["height"])
-    look = stage["animal_look"]
-    animals.soften(look["subdivision"], look["sheen"])
+    shape = {**stage["animal_shape"], **spec.get("shape", {})}
+    motion = animals.load(os.path.join(ART_DIR, spec["model"]), spec, shape)
+    rigged = animals.rigged()
+    if rigged:
+        look = stage["animal_look"]
+        animals.soften(look["subdivision"], look["sheen"])
+    animals.tint(spec.get("tint", 1.0))
     iso_scene.frame(stage, canvas, anchor)
     for action in ("idle", "walk"):
-        start, end = animals.frame_range(action)
         frames = []
         for index in range(count):
-            animals.play(action, start + (end - start) * index / count)
+            if rigged:
+                start, end = animals.frame_range(action)
+                animals.play(action, start + (end - start) * index / count)
+            else:
+                animals.sway(motion, action, index / count, stage["static_motion"])
             frames.append(iso_scene.capture())
         if action == "idle":
             iso_scene.save(frames[0], _target("animals/" + species_id))

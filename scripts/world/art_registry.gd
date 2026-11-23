@@ -10,7 +10,7 @@ const OBJECT_CANVAS := {
 	Vector2i(4, 4): Vector2i(512, 384),
 }
 const ANIMAL_CANVAS := Vector2i(96, 96)
-const FOOT_MARGIN := 12.0
+const FOOT_MARGIN := 20.0
 const DEFAULT_ANIMAL_COLOR := Color("C9A27E")
 
 static var _cache: Dictionary = {}
