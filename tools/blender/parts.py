@@ -11,9 +11,9 @@ CYLINDER_SEGMENTS = 24
 FENCE_JITTER = 0.004
 
 
-def build(parts: list, palette: dict, art_dir: str, flat: list) -> None:
+def build(parts: list, palette: dict, art_dir: str, flat: list, glow: list) -> None:
     for part in _expand(parts):
-        root = _model(part, palette, art_dir, flat) if "m" in part else _shape(part)
+        root = _model(part, palette, art_dir, flat, glow) if "m" in part else _shape(part)
         at = part.get("at", [0.0, 0.0])
         root.location = (at[0], -at[1], float(part.get("y", 0.0)))
         root.rotation_euler.z = math.radians(float(part.get("r", 0.0)))
@@ -74,13 +74,13 @@ def _rotate(vector: tuple, angle: float) -> tuple:
     return (vector[0] * cos - vector[1] * sin, vector[0] * sin + vector[1] * cos)
 
 
-def _model(part: dict, palette: dict, art_dir: str, flat: list) -> bpy.types.Object:
+def _model(part: dict, palette: dict, art_dir: str, flat: list, glow: list) -> bpy.types.Object:
     root = import_model(_model_path(art_dir, part["m"]))
     tints = {**palette, **part.get("tint", {})}
     for body in root.children_recursive:
         for slot in getattr(body, "material_slots", []):
             if slot.material is not None:
-                _restyle(slot.material, tints, flat)
+                _restyle(slot.material, tints, flat, glow)
     return root
 
 
@@ -92,7 +92,7 @@ def _model_path(art_dir: str, name: str) -> str:
     raise FileNotFoundError(name)
 
 
-def _restyle(material: bpy.types.Material, tints: dict, flat: list) -> None:
+def _restyle(material: bpy.types.Material, tints: dict, flat: list, glow: list) -> None:
     bsdf = _principled(material)
     if bsdf is None:
         return
@@ -111,6 +111,9 @@ def _restyle(material: bpy.types.Material, tints: dict, flat: list) -> None:
             bsdf.inputs["Emission Strength"].default_value = FOLIAGE_GLOW
     elif tint is not None:
         base.default_value = srgb_to_linear(tint)
+        if name in glow:
+            bsdf.inputs["Emission Color"].default_value = base.default_value
+            bsdf.inputs["Emission Strength"].default_value = FOLIAGE_GLOW
 
 
 def _link_texture(tree: bpy.types.NodeTree, base: bpy.types.NodeSocket, tint) -> bpy.types.NodeSocket:
