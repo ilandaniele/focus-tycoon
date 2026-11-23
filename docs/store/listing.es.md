@@ -39,6 +39,8 @@ El juego se puede jugar completo gratis. Premium es una compra única con sonido
 
 Focus Tycoon es un temporizador con recompensas: no mide ni verifica tu concentración real, y sus ejercicios de respiración no reemplazan ningún tratamiento.
 
+Modelos de animales de Poly by Google y Хмара Сергей (poly.pizza), CC-BY 3.0.
+
 ## Categoría y etiquetas
 - Categoría: Juegos › Simulación (alternativa: Productividad).
 - Etiquetas: temporizador de foco, pomodoro, construcción, animales, relajante.

@@ -16,11 +16,13 @@ Ground tiles and paths still come from Kenney models through Godot: `tools/model
 
 UI icons, placement marks and the contact shadow are hand-written SVGs in `art/ui/` and `art/fx/`, rendered by `godot --path . --headless -s res://tools/render_art.gd`.
 
-`art/` holds a `.gdignore`, so Godot does not import the sources. PNGs are rendered at `ArtRegistry.ASSET_SCALE` (2x) and loaded at their logical size, so the canvas sizes below stay the contract while zoomed-in views stay sharp. Ground tiles are scaled back to 1x for the TileSet atlas. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own. Animal strips have 8 frames each for `idle` and `walk`, sampled from the model's own animations.
+`art/` holds a `.gdignore`, so Godot does not import the sources. PNGs are rendered at `ArtRegistry.ASSET_SCALE` (2x) and loaded at their logical size, so the canvas sizes below stay the contract while zoomed-in views stay sharp. Ground tiles are scaled back to 1x for the TileSet atlas. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own. Animal strips have 8 frames each for `idle` and `walk`, sampled from the model's own animations; static models (`"size"` in `art_specs.json`) get a procedural breath and walk bob from `stage.static_motion`.
 
 ## Credits
 
-3D models, all CC0: Quaternius (quaternius.com), Stylized Nature MegaKit; Gobkit animals (see `art/gobkit/LICENSE.txt`); Kenney (www.kenney.nl), Nature Kit.
+3D models, CC0: Quaternius (quaternius.com), Stylized Nature MegaKit; Gobkit animals (see `art/gobkit/LICENSE.txt`), now only the puffin; Kenney (www.kenney.nl), Nature Kit.
+
+Animal models, CC-BY 3.0 (attribution required, also shown in the app's Profile > Credits and in the store listings): Poly by Google and Хмара Сергей, from poly.pizza. Per-model list in `art/polygoogle/CREDITS.md`.
 ## Naming
 
 `assets/<category>/<id>[_<variant>][_<anim>].png`, lowercase `snake_case`. `<id>` is identical to the id in `data/catalog.json` or `data/species.json`.

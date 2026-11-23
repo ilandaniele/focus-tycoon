@@ -4,21 +4,69 @@ import bpy
 from mathutils import Vector
 
 import parts
+import proportions
 
 FACING_DEG = 90.0
 
 
-def load(path: str, height: float) -> bpy.types.Object:
+def load(path: str, spec: dict, shape: dict) -> bpy.types.Object:
     root = parts.import_model(path)
     _drop_helpers(root)
     root.rotation_euler.z = math.radians(FACING_DEG)
-    play("idle", 0.0)
-    low, high = _bounds()
-    scale = height / (high.z - low.z)
+    if rigged():
+        proportions.reshape(shape)
+        play("idle", 0.0)
+        low, high = _bounds()
+        scale = spec["height"] / (high.z - low.z)
+    else:
+        low, high = _bounds()
+        scale = spec["size"] / max(high - low)
     center = (low + high) / 2.0
     root.scale = (scale, scale, scale)
     root.location = (-center.x * scale, -center.y * scale, -low.z * scale)
-    return root
+    motion = bpy.data.objects.new("motion", None)
+    bpy.context.scene.collection.objects.link(motion)
+    root.parent = motion
+    return motion
+
+
+def rigged() -> bool:
+    return any(body.type == "ARMATURE" for body in bpy.data.objects)
+
+
+def sway(motion: bpy.types.Object, action: str, phase: float, style: dict) -> None:
+    wave = math.sin(2.0 * math.pi * phase)
+    if action == "idle":
+        breath = 1.0 + style["breath"] * wave
+        motion.scale = (1.0, 1.0, breath)
+        motion.location.z = 0.0
+        motion.rotation_euler.y = 0.0
+    else:
+        motion.scale = (1.0, 1.0, 1.0)
+        motion.location.z = style["bob"] * abs(wave)
+        motion.rotation_euler.y = math.radians(style["rock_deg"]) * wave
+    bpy.context.view_layer.update()
+
+
+def tint(factor: float) -> None:
+    if factor == 1.0:
+        return
+    for material in bpy.data.materials:
+        bsdf = parts.principled(material)
+        if bsdf is None:
+            continue
+        color = bsdf.inputs["Base Color"]
+        if color.is_linked:
+            mix = material.node_tree.nodes.new("ShaderNodeMix")
+            mix.data_type = "RGBA"
+            mix.blend_type = "MULTIPLY"
+            mix.inputs["Factor"].default_value = 1.0
+            mix.inputs["B"].default_value = (factor, factor, factor, 1.0)
+            material.node_tree.links.new(color.links[0].from_socket, mix.inputs["A"])
+            material.node_tree.links.new(mix.outputs["Result"], color)
+        else:
+            value = color.default_value
+            color.default_value = (value[0] * factor, value[1] * factor, value[2] * factor, value[3])
 
 
 def soften(levels: int, sheen: float) -> None:
