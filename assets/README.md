@@ -20,7 +20,7 @@ UI icons, placement marks and the contact shadow are hand-written SVGs in `art/u
 
 ## Credits
 
-3D models, all CC0: Quaternius (quaternius.com), Stylized Nature MegaKit; Gobkit animals (see `art/gobkit/LICENSE.txt`); Kenney (www.kenney.nl), Nature Kit and Cube Pets.
+3D models, all CC0: Quaternius (quaternius.com), Stylized Nature MegaKit; Gobkit animals (see `art/gobkit/LICENSE.txt`); Kenney (www.kenney.nl), Nature Kit.
 ## Naming
 
 `assets/<category>/<id>[_<variant>][_<anim>].png`, lowercase `snake_case`. `<id>` is identical to the id in `data/catalog.json` or `data/species.json`.
