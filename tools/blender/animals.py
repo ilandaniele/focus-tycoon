@@ -21,6 +21,43 @@ def load(path: str, height: float) -> bpy.types.Object:
     return root
 
 
+def add_outline(width: float, color: str) -> None:
+    bpy.context.view_layer.update()
+    material = _outline_material(color)
+    for body in [body for body in bpy.data.objects if body.type == "MESH"]:
+        body.data.materials.append(material)
+        scale = sum(body.matrix_world.to_scale()) / 3.0
+        hull = body.modifiers.new("outline", "SOLIDIFY")
+        hull.thickness = width / scale
+        hull.offset = 1.0
+        hull.use_flip_normals = True
+        hull.use_rim = False
+        hull.material_offset = len(body.data.materials) - 1
+
+
+def _outline_material(color: str) -> bpy.types.Material:
+    material = bpy.data.materials.new("outline")
+    material.use_nodes = True
+    tree = material.node_tree
+    tree.nodes.clear()
+    output = tree.nodes.new("ShaderNodeOutputMaterial")
+    emission = tree.nodes.new("ShaderNodeEmission")
+    emission.inputs["Color"].default_value = parts.srgb_to_linear(color)
+    hidden = tree.nodes.new("ShaderNodeBsdfTransparent")
+    facing = tree.nodes.new("ShaderNodeNewGeometry")
+    mix = tree.nodes.new("ShaderNodeMixShader")
+    tree.links.new(facing.outputs["Backfacing"], mix.inputs["Fac"])
+    tree.links.new(emission.outputs["Emission"], mix.inputs[1])
+    tree.links.new(hidden.outputs["BSDF"], mix.inputs[2])
+    path = tree.nodes.new("ShaderNodeLightPath")
+    camera_only = tree.nodes.new("ShaderNodeMixShader")
+    tree.links.new(path.outputs["Is Camera Ray"], camera_only.inputs["Fac"])
+    tree.links.new(hidden.outputs["BSDF"], camera_only.inputs[1])
+    tree.links.new(mix.outputs["Shader"], camera_only.inputs[2])
+    tree.links.new(camera_only.outputs["Shader"], output.inputs["Surface"])
+    return material
+
+
 def frame_range(name: str) -> tuple:
     start, end = bpy.data.actions[name].frame_range
     return start, end

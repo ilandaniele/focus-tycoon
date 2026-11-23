@@ -6,6 +6,8 @@
 		"animal_canvas": [96, 96],
 		"foot_margin": 12,
 		"animal_frames": 8,
+		"animal_outline": {"width_px": 3, "color": "2E2420"},
+		"animal_ambient": 0.5,
 		"samples": 48,
 		"ambient": 0.32,
 		"sun_energy": 1.3,
