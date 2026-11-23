@@ -46,6 +46,8 @@ const IPV6_NETWORK_GROUPS = 4;
 
 export function clientIp(request: Request): string {
   const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
+  const mappedIpv4 = /^::ffff:(\d+\.\d+\.\d+\.\d+)$/i.exec(ip);
+  if (mappedIpv4) return mappedIpv4[1];
   return ip.includes(":") ? ipv6Network(ip) : ip;
 }
 

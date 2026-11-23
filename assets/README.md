@@ -4,21 +4,23 @@ Final art is dropped here. Code never changes: `ArtRegistry` loads `res://assets
 
 ## Source art
 
-World art (terrain, paths, objects, animals) is rendered from 3D models of two Kenney CC0 packs vendored in `art/kenney/` ("Nature Kit" and "Cube Pets", see each `License.txt`). `tools/model_specs.gd` composes each key from models, tints and simple shapes; `tools/render_models.gd` shoots them with an orthographic isometric camera (`tools/iso_stage.gd`) and writes the PNGs. It needs a GPU, so it runs without `--headless`:
+Objects and animals are rendered in Blender 4.5 (Cycles) from free CC0 models vendored in `art/`: Quaternius "Stylized Nature MegaKit" (`art/quaternius/`, trees, bushes, flowers, rocks), Gobkit animals (`art/gobkit/`) and Kenney "Nature Kit" (`art/kenney/nature/`, fences, palm, cactus, bamboo and props). `tools/blender/art_specs.json` composes each key from models, tints and simple shapes; `tools/blender/render_iso.py` shoots them with an orthographic isometric camera and a soft sun with a shadow catcher, and writes the PNGs:
 
 ```bash
-godot --path . -s res://tools/render_models.gd              # every key
-godot --path . -s res://tools/render_models.gd -- objects/fern animals/panda
+blender -b --python-exit-code 1 -P tools/blender/render_iso.py                          # every object and animal
+blender -b --python-exit-code 1 -P tools/blender/render_iso.py -- objects/fern animals/fox
 godot --path . --headless --import
 ```
 
+Ground tiles and paths still come from Kenney models through Godot: `tools/model_specs.gd` composes them and `tools/render_models.gd` renders them (needs a GPU, so no `--headless`): `godot --path . -s res://tools/render_models.gd`.
+
 UI icons, placement marks and the contact shadow are hand-written SVGs in `art/ui/` and `art/fx/`, rendered by `godot --path . --headless -s res://tools/render_art.gd`.
 
-`art/` holds a `.gdignore`, so Godot does not import the sources. PNGs are rendered at `ArtRegistry.ASSET_SCALE` (2x) and loaded at their logical size, so the canvas sizes below stay the contract while zoomed-in views stay sharp. Ground tiles are scaled back to 1x for the TileSet atlas. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own. Animal strips have 8 frames each for `idle` and `walk`, taken from the model's own animations.
+`art/` holds a `.gdignore`, so Godot does not import the sources. PNGs are rendered at `ArtRegistry.ASSET_SCALE` (2x) and loaded at their logical size, so the canvas sizes below stay the contract while zoomed-in views stay sharp. Ground tiles are scaled back to 1x for the TileSet atlas. Animal sprites have no ground shadow because `fx/shadow` is drawn under them; objects draw their own. Animal strips have 8 frames each for `idle` and `walk`, sampled from the model's own animations.
 
 ## Credits
 
-3D models: Kenney (www.kenney.nl), Nature Kit and Cube Pets, CC0.
+3D models, all CC0: Quaternius (quaternius.com), Stylized Nature MegaKit; Gobkit animals (see `art/gobkit/LICENSE.txt`); Kenney (www.kenney.nl), Nature Kit.
 ## Naming
 
 `assets/<category>/<id>[_<variant>][_<anim>].png`, lowercase `snake_case`. `<id>` is identical to the id in `data/catalog.json` or `data/species.json`.

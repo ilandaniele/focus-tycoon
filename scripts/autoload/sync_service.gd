@@ -38,13 +38,24 @@ func player_id() -> String:
 func delete_server_data() -> bool:
 	if not enabled():
 		return false
-	while _busy:
-		await get_tree().process_frame
-	_busy = true
+	await _acquire()
 	var deleted: bool = await _client.delete_player()
-	_write_session(_client.session)
-	_busy = false
+	_release()
 	return deleted
+
+
+func send_feedback(category: String, message: String) -> bool:
+	if not enabled():
+		return false
+	await _acquire()
+	var sent: bool = await _client.send_feedback({
+		"category": category,
+		"message": message.strip_edges().left(SyncApiClient.FEEDBACK_MAX_CHARS),
+		"app_version": str(ProjectSettings.get_setting("application/config/version", "0")),
+		"platform": OS.get_name(),
+	})
+	_release()
+	return sent
 
 
 func sync_now() -> void:
@@ -55,7 +66,18 @@ func sync_now() -> void:
 	var result: Dictionary = await _sync.push(GameState.ledger.entries(), synced, GameState.now())
 	if result["sent"] > 0:
 		GameState.progress["synced_keys"] = SyncBatch.prune(synced, GameState.ledger.entries())
+	if result["sent"] > 0 or result.get("reset", false):
 		GameState.mark_dirty()
+	_release()
+
+
+func _acquire() -> void:
+	while _busy:
+		await get_tree().process_frame
+	_busy = true
+
+
+func _release() -> void:
 	_write_session(_client.session)
 	_busy = false
 

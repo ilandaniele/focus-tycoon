@@ -8,6 +8,7 @@ const SCREEN_SCENES := {
 	"profile": "res://scenes/ui/profile_screen.tscn",
 }
 const FULLSCREEN_MAX_FPS := 30
+const BENCHMARK_FLAG := "--benchmark"
 
 @onready var _world: Variant = $ParkWorld
 @onready var _hud: Hud = $UI/HUD
@@ -22,6 +23,7 @@ var _summary_buffer: Array[Dictionary] = []
 var _modal_queue: Array[Callable] = []
 var _modal_open: bool = false
 var _saved_max_fps: int = 0
+var _perf_overlay: PerfOverlay
 
 
 func _ready() -> void:
@@ -44,6 +46,19 @@ func _ready() -> void:
 	_collect_pending_summaries()
 	_resume_ambient()
 	_tutorial.start_if_needed()
+	GameState.state_loaded.connect(_sync_perf_overlay)
+	if OS.is_debug_build() and _benchmark_requested():
+		GameState.start_benchmark()
+
+
+func _benchmark_requested() -> bool:
+	return OS.get_cmdline_user_args().has(BENCHMARK_FLAG) or OS.get_cmdline_args().has(BENCHMARK_FLAG)
+
+
+func _sync_perf_overlay() -> void:
+	if GameState.benchmark_active and _perf_overlay == null:
+		_perf_overlay = PerfOverlay.new()
+		add_child(_perf_overlay)
 
 
 func open_screen(screen_name: String) -> void:

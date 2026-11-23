@@ -19,6 +19,7 @@ To back up your resources and prevent cheating, the app talks to our own server 
 - **Anonymous player ID:** created at random on first launch. It is not linked to your name, email or Google account.
 - **Resource changes:** each change in coins, nature points and experience, with its reason (for example "session completed" or "item bought") and time.
 - **Resource balance:** your current coins, nature and experience.
+- **Feedback (optional):** if you use "Send feedback", the text you write, its type (bug, idea or other), the app version and the platform. It is stored with your player ID and deleted with it.
 
 Your detailed session history and the contents of your park are **not** sent.
 

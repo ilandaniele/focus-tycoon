@@ -110,11 +110,11 @@ Quitar un objeto devuelve 50 % de las monedas (no la naturaleza). Mover es grati
 | rabbit | meadow | 50 c + 10 n | 1 | Orejas largas, salta corto |
 | penguin | ice | 120 c + 25 n | 2 | Bamboleo lento |
 | beaver | meadow | 150 c + 30 n | 3 | Cola plana, tranquilo |
-| panda | forest | 250 c + 50 n | 5 | Blanco y negro, curioso |
+| koala | forest | 250 c + 50 n | 5 | Dormilón, paso lento |
 | elephant | savanna | 600 c + 120 n | 7 | Grande, paso lento |
-| polar_bear | ice | 200 c + 40 n | 4 | Grande, paso pesado |
+| seal | ice | 200 c + 40 n | 4 | Se desliza, paso pesado |
 | fox | forest | 320 c + 65 n | 6 | Cola con punta blanca, ágil |
-| giraffe | savanna | 800 c + 150 n | 9 | Cuello largo, trote medio |
+| zebra | savanna | 800 c + 150 n | 9 | Rayada, trote medio |
 
 Un animal se adopta dentro de un recinto de su bioma con capacidad libre. Los animales no se venden en MVP.
 
@@ -140,7 +140,7 @@ Un animal se adopta dentro de un recinto de su bioma con capacidad libre. Los an
 - Nivel 1: pradera, conejo, caminos de tierra, roble, arbusto, helecho, seto, maceta, banco.
 - Nivel 2: hielo + pingüino, piedra, pino, girasol, lavanda, cartel, roca con musgo.
 - Nivel 3: castor, farol, tulipanes, cactus, expansión 1.
-- Nivel 4: bosque, camino de madera, oso polar, bambú, estanque. Nivel 5: panda, palmera, fuente.
+- Nivel 4: bosque, camino de madera, foca, bambú, estanque. Nivel 5: koala, palmera, fuente.
 - Nivel 6: cerezo, zorro, expansión 2. Nivel 7: sabana + elefante. Nivel 8: estatua. Nivel 9: jirafa. Nivel 10: expansión 3.
 - Al subir de nivel: tarjeta "Nuevo en el catálogo" con los ítems desbloqueados.
 
@@ -164,7 +164,7 @@ Sin voz grabada en MVP; la guía es visual (círculo que se expande/contrae) + v
 - **Capas (z / y-sort):** 0 terreno (TileMapLayer) · 1 caminos (TileMapLayer) · 2 overlay de cuadrícula/fantasma · 3 objetos + animales (un `Node2D` con `y_sort_enabled`) · 4 efectos/partículas · UI en `CanvasLayer` aparte.
 - **Atlas:** un atlas por categoría (`terrain_atlas.png`, `paths_atlas.png`, `objects_<categoria>.png`, `animals_<especie>.png` como spritesheet por animación), máximo 2048×2048, con margen de 2 px para evitar sangrado.
 - **Animaciones animales:** `idle` (4–6 frames, 6 fps), `walk_ne/nw/se/sw` (6 frames, 10 fps); en MVP placeholder con squash/bob por código.
-- **Convención de nombres:** `assets/<categoria>/<id>[_<variante>][_<anim>].png`, minúsculas y `snake_case`, id idéntico al de `data/catalog.json`/`data/species.json`. Ej.: `assets/animals/panda_walk_se.png`.
+- **Convención de nombres:** `assets/<categoria>/<id>[_<variante>][_<anim>].png`, minúsculas y `snake_case`, id idéntico al de `data/catalog.json`/`data/species.json`. Ej.: `assets/animals/koala_walk_se.png`.
 - **Placeholders:** generados por código en `ArtRegistry` (rombos coloreados, árboles de círculos, animales de elipses con orejas) usando la paleta. Si existe `assets/...<id>.png`, se usa ese archivo; si no, el placeholder. Reemplazar arte = soltar PNGs con el nombre correcto, cero cambios de lógica.
 - **UI:** tarjetas crema con radio 20, sombras suaves, íconos redondeados, tipografía redondeada (Nunito o similar con licencia OFL, a incluir en hito de pulido; MVP usa la fuente por defecto de Godot).
 

@@ -83,6 +83,72 @@ describe("POST /v1/players", () => {
     }
     expect(statuses).toContain(429);
   });
+
+  it("keys IPv4-mapped IPv6 addresses by their IPv4 address", async () => {
+    const statuses: number[] = [];
+    for (let attempt = 0; attempt < 7; attempt += 1) {
+      const ip = attempt % 2 === 0 ? "::ffff:10.9.9.9" : "10.9.9.9";
+      const response = await SELF.fetch(`${BASE}/v1/players`, { method: "POST", headers: { "CF-Connecting-IP": ip } });
+      statuses.push(response.status);
+    }
+    expect(statuses).toContain(429);
+    const other = await SELF.fetch(`${BASE}/v1/players`, { method: "POST", headers: { "CF-Connecting-IP": "::ffff:10.9.9.10" } });
+    expect(other.status).toBe(201);
+  });
+});
+
+function feedback(token: string, body: unknown, ip = nextIp()): Promise<Response> {
+  return SELF.fetch(`${BASE}/v1/feedback`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "CF-Connecting-IP": ip },
+    body: JSON.stringify(body),
+  });
+}
+
+const FEEDBACK = { category: "bug", message: "The rabbit walks through the fence", app_version: "0.1.0", platform: "Web" };
+
+describe("POST /v1/feedback", () => {
+  it("stores feedback for the caller", async () => {
+    const session = await signup();
+    expect((await feedback(session.token, FEEDBACK)).status).toBe(204);
+    const row = await env.DB.prepare("SELECT category, message, platform FROM feedback WHERE player_id = ?").bind(session.player_id).first();
+    expect(row).toEqual({ category: "bug", message: FEEDBACK.message, platform: "Web" });
+  });
+
+  it("rejects missing and unknown tokens", async () => {
+    const missing = await SELF.fetch(`${BASE}/v1/feedback`, { method: "POST", headers: { "CF-Connecting-IP": nextIp() }, body: JSON.stringify(FEEDBACK) });
+    expect(missing.status).toBe(401);
+    expect((await feedback("x".repeat(43), FEEDBACK)).status).toBe(401);
+  });
+
+  it("rejects invalid bodies", async () => {
+    const invalid = [
+      { ...FEEDBACK, message: "   " },
+      { ...FEEDBACK, message: "a".repeat(1001) },
+      { ...FEEDBACK, category: "spam" },
+      { ...FEEDBACK, extra: true },
+      { category: "bug", message: "hi" },
+    ];
+    for (const body of invalid) {
+      const session = await signup();
+      expect((await feedback(session.token, body)).status).toBe(400);
+    }
+  });
+
+  it("rejects bodies over 64 KB with 413", async () => {
+    const session = await signup();
+    expect((await feedback(session.token, { ...FEEDBACK, message: "a".repeat(70_000) })).status).toBe(413);
+  });
+
+  it("rate limits feedback per player", async () => {
+    const session = await signup();
+    const statuses: number[] = [];
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      statuses.push((await feedback(session.token, FEEDBACK)).status);
+    }
+    expect(statuses.slice(0, 3)).toEqual([204, 204, 204]);
+    expect(statuses).toContain(429);
+  });
 });
 
 describe("POST /v1/transactions", () => {
@@ -260,14 +326,16 @@ async function countRows(table: string, playerColumn: string, playerId: string):
 }
 
 describe("DELETE /v1/players", () => {
-  it("deletes the player, balance and ledger", async () => {
+  it("deletes the player, balance, ledger and feedback", async () => {
     const session = await signup();
     expect((await push(session.token, { transactions: [transaction("a")] })).status).toBe(200);
+    expect((await feedback(session.token, FEEDBACK)).status).toBe(204);
     const response = await deletePlayer(session.token);
     expect(response.status).toBe(204);
     expect(await countRows("players", "id", session.player_id)).toBe(0);
     expect(await countRows("player_resources", "player_id", session.player_id)).toBe(0);
     expect(await countRows("resource_transactions", "player_id", session.player_id)).toBe(0);
+    expect(await countRows("feedback", "player_id", session.player_id)).toBe(0);
     const after = await SELF.fetch(`${BASE}/v1/resources`, {
       headers: { Authorization: `Bearer ${session.token}`, "CF-Connecting-IP": nextIp() },
     });

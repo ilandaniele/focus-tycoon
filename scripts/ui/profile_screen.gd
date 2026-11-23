@@ -36,6 +36,7 @@ func _add_credits(column: VBoxContainer) -> void:
 func _add_debug(column: VBoxContainer) -> void:
 	for step in DEBUG_STEPS:
 		column.add_child(UIKit.button(UIKit.t(step["label"]), _advance_clock.bind(int(step["seconds"]))))
+	column.add_child(UIKit.button(UIKit.t("profile.debug_benchmark"), GameState.start_benchmark))
 
 
 func _restore() -> void:

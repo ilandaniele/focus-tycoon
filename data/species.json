@@ -3,10 +3,10 @@
 		{"id": "rabbit", "biome": "meadow", "cost": {"coins": 50, "nature": 10}, "unlock_level": 1, "speed": 0.8, "scale": 0.8, "color": "#E8DCCB"},
 		{"id": "penguin", "biome": "ice", "cost": {"coins": 120, "nature": 25}, "unlock_level": 2, "speed": 0.4, "scale": 0.85, "color": "#4A5568"},
 		{"id": "beaver", "biome": "meadow", "cost": {"coins": 150, "nature": 30}, "unlock_level": 3, "speed": 0.3, "scale": 0.9, "color": "#A0643C"},
-		{"id": "panda", "biome": "forest", "cost": {"coins": 250, "nature": 50}, "unlock_level": 5, "speed": 0.6, "scale": 1.0, "color": "#F2F2F2"},
+		{"id": "koala", "biome": "forest", "cost": {"coins": 250, "nature": 50}, "unlock_level": 5, "speed": 0.3, "scale": 0.9, "color": "#9AA0A6"},
 		{"id": "elephant", "biome": "savanna", "cost": {"coins": 600, "nature": 120}, "unlock_level": 7, "speed": 0.35, "scale": 1.3, "color": "#9AA0A6"},
-		{"id": "polar_bear", "biome": "ice", "cost": {"coins": 200, "nature": 40}, "unlock_level": 4, "speed": 0.25, "scale": 1.1, "color": "#F4F7FA"},
+		{"id": "seal", "biome": "ice", "cost": {"coins": 200, "nature": 40}, "unlock_level": 4, "speed": 0.25, "scale": 1.0, "color": "#8C9BA5"},
 		{"id": "fox", "biome": "forest", "cost": {"coins": 320, "nature": 65}, "unlock_level": 6, "speed": 0.7, "scale": 0.85, "color": "#E07B39"},
-		{"id": "giraffe", "biome": "savanna", "cost": {"coins": 800, "nature": 150}, "unlock_level": 9, "speed": 0.5, "scale": 1.3, "color": "#F2C14E"}
+		{"id": "zebra", "biome": "savanna", "cost": {"coins": 800, "nature": 150}, "unlock_level": 9, "speed": 0.6, "scale": 1.2, "color": "#F2F2F2"}
 	]
 }
