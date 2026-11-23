@@ -11,9 +11,9 @@ CYLINDER_SEGMENTS = 24
 FENCE_JITTER = 0.004
 
 
-def build(parts: list, palette: dict, art_dir: str) -> None:
+def build(parts: list, palette: dict, art_dir: str, flat: list) -> None:
     for part in _expand(parts):
-        root = _model(part, palette, art_dir) if "m" in part else _shape(part)
+        root = _model(part, palette, art_dir, flat) if "m" in part else _shape(part)
         at = part.get("at", [0.0, 0.0])
         root.location = (at[0], -at[1], float(part.get("y", 0.0)))
         root.rotation_euler.z = math.radians(float(part.get("r", 0.0)))
@@ -74,13 +74,13 @@ def _rotate(vector: tuple, angle: float) -> tuple:
     return (vector[0] * cos - vector[1] * sin, vector[0] * sin + vector[1] * cos)
 
 
-def _model(part: dict, palette: dict, art_dir: str) -> bpy.types.Object:
+def _model(part: dict, palette: dict, art_dir: str, flat: list) -> bpy.types.Object:
     root = import_model(_model_path(art_dir, part["m"]))
     tints = {**palette, **part.get("tint", {})}
     for body in root.children_recursive:
         for slot in getattr(body, "material_slots", []):
             if slot.material is not None:
-                _restyle(slot.material, tints)
+                _restyle(slot.material, tints, flat)
     return root
 
 
@@ -92,14 +92,18 @@ def _model_path(art_dir: str, name: str) -> str:
     raise FileNotFoundError(name)
 
 
-def _restyle(material: bpy.types.Material, tints: dict) -> None:
+def _restyle(material: bpy.types.Material, tints: dict, flat: list) -> None:
     bsdf = _principled(material)
     if bsdf is None:
         return
     bsdf.inputs["Roughness"].default_value = ROUGHNESS
     bsdf.inputs["Metallic"].default_value = 0.0
-    tint = tints.get(material.name.split(".")[0])
+    name = material.name.split(".")[0]
+    tint = tints.get(name)
     base = bsdf.inputs["Base Color"]
+    if name in flat:
+        for link in list(base.links):
+            material.node_tree.links.remove(link)
     if base.is_linked:
         color = _link_texture(material.node_tree, base, tint)
         if bsdf.inputs["Alpha"].is_linked:
