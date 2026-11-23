@@ -38,7 +38,7 @@ def render_object(stage: dict, palette: dict, key: str, spec: dict) -> None:
     canvas = (base[0] * stage["asset_scale"], base[1] * stage["asset_scale"])
     anchor = (canvas[0] / 2.0, canvas[1] - (width + depth) * 16.0 * stage["asset_scale"])
     iso_scene.reset(stage)
-    parts.build(spec["parts"], palette, ART_DIR, stage["flat_materials"])
+    parts.build(spec["parts"], palette, ART_DIR, stage["flat_materials"], stage["glow_materials"])
     parts.add_shadow_catcher(width, depth)
     iso_scene.frame(stage, canvas, anchor)
     iso_scene.save(iso_scene.fade_shadow_floor(iso_scene.capture(), stage["shadow_floor"]), _target(key))

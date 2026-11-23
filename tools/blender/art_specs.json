@@ -12,7 +12,7 @@
 		"sun_softness_deg": 4.0,
 		"sun_direction": [-0.196, 0.539, -0.819],
 		"shadow_floor": 0.07,
-		"flat_materials": ["Rocks", "PathRocks"]
+		"flat_materials": ["Rocks", "PathRocks", "Grass"], "glow_materials": ["Grass"]
 	},
 	"palette": {
 		"grass": "5E9E4C", "leafsGreen": "6DB35A", "leafsDark": "4E9A4F", "leafsFall": "F2A65A",
@@ -131,18 +131,16 @@
 		"objects/pond": {"size": [2, 2], "parts": [
 			{"shape": "cylinder", "size": [0.86, 0.02], "y": 0.01, "color": "C9A57A"},
 			{"shape": "cylinder", "size": [0.78, 0.03], "y": 0.015, "color": "7EC8E3"},
-			{"m": "kenney/nature/lily_large", "at": [0.2, 0.15], "s": 1.6},
-			{"m": "kenney/nature/lily_small", "at": [-0.25, 0.3], "s": 1.6},
 			{"m": "quaternius/Rock_Medium_2", "at": [0.75, -0.25], "s": 0.09},
 			{"m": "quaternius/Pebble_Round_1", "at": [-0.6, 0.55], "s": 0.5},
-			{"m": "quaternius/Grass_Wispy_Tall", "at": [-0.6, -0.5], "s": 0.3},
-			{"m": "quaternius/Grass_Wispy_Tall", "at": [0.45, 0.65], "s": 0.25}
+			{"m": "quaternius/Grass_Common_Short", "at": [-0.6, -0.5], "s": 0.5},
+			{"m": "quaternius/Grass_Common_Short", "at": [0.5, 0.65], "s": 0.4}
 		]},
 		"objects/enclosure_meadow": {"size": [3, 3], "parts": [
 			{"shape": "box", "size": [3.0, 0.04, 3.0], "y": 0.02, "color": "A5CF7A"},
 			{"fence": "kenney/nature/fence_simpleLow", "span": 3},
 			{"m": "quaternius/Flower_3_Group", "at": [-1.0, -0.95], "s": 0.3},
-			{"m": "quaternius/Grass_Wispy_Tall", "at": [1.0, -1.0], "s": 0.35},
+			{"m": "quaternius/Grass_Common_Short", "at": [1.0, -1.0], "s": 0.6},
 			{"m": "quaternius/Bush_Common_Flowers", "at": [-1.0, 0.95], "s": 0.35}
 		]},
 		"objects/enclosure_forest": {"size": [3, 3], "parts": [
@@ -165,8 +163,8 @@
 			{"fence": "kenney/nature/fence_simpleLow", "span": 4},
 			{"m": "kenney/nature/tree_plateau", "at": [-1.4, -1.3], "s": 1.3, "tint": {"leafsGreen": "8DB85A", "leafsDark": "79A54C"}},
 			{"m": "quaternius/Rock_Medium_2", "at": [1.3, -1.4], "s": 0.18},
-			{"m": "quaternius/Grass_Wispy_Tall", "at": [-1.4, 1.3], "s": 0.4, "tint": {"Grass": "C9B46A"}},
-			{"m": "quaternius/Grass_Wispy_Tall", "at": [1.3, 1.2], "s": 0.34, "tint": {"Grass": "C9B46A"}}
+			{"m": "quaternius/Grass_Common_Short", "at": [-1.4, 1.3], "s": 0.7, "tint": {"Grass": "D8C27A"}},
+			{"m": "quaternius/Grass_Common_Short", "at": [1.3, 1.2], "s": 0.6, "tint": {"Grass": "D8C27A"}}
 		]}
 	}
 }
