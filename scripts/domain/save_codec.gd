@@ -1,7 +1,8 @@
 class_name SaveCodec
 extends RefCounted
 
-const SCHEMA_VERSION := 1
+const SCHEMA_VERSION := 2
+const RENAMED_SPECIES_V2 := {"panda": "koala", "polar_bear": "seal", "giraffe": "zebra"}
 
 
 static func encode(data: Dictionary, at: int) -> String:
@@ -30,8 +31,19 @@ static func checksum_of(data: Dictionary) -> String:
 	return JSON.stringify(normalized, "", true).sha256_text()
 
 
-static func _migrate(data: Dictionary, _from_version: int) -> Dictionary:
+static func _migrate(data: Dictionary, from_version: int) -> Dictionary:
+	if from_version < 2:
+		_rename_species(data, RENAMED_SPECIES_V2)
 	return data
+
+
+static func _rename_species(data: Dictionary, renames: Dictionary) -> void:
+	var animals: Variant = data.get("park", {}).get("animals", {})
+	if typeof(animals) != TYPE_DICTIONARY:
+		return
+	for animal: Variant in animals.values():
+		if typeof(animal) == TYPE_DICTIONARY and renames.has(animal.get("species_id")):
+			animal["species_id"] = renames[animal["species_id"]]
 
 
 static func _failure(error: String) -> Dictionary:

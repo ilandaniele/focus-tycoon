@@ -16,8 +16,6 @@ static func draw(species_id: String, color: Color, canvas_size: Vector2i, foot_m
 			_penguin(canvas, base, color)
 		"beaver":
 			_beaver(canvas, base, color)
-		"panda":
-			_panda(canvas, base, color)
 		"elephant":
 			_elephant(canvas, base, color)
 		_:
@@ -74,25 +72,6 @@ static func _beaver(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
 	canvas.ellipse(base + Vector2(41, -27), Vector2(2.4, 2), INK)
 	canvas.ellipse(base + Vector2(17, -41), Vector2(4, 5), color.darkened(0.25))
 	_eye(canvas, base + Vector2(27, -32))
-
-
-static func _panda(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
-	_shadow(canvas, base, Vector2(30, 7))
-	var rings := [Vector2(-26, -22), Vector2(-33, -30), Vector2(-36, -40), Vector2(-33, -50), Vector2(-27, -58)]
-	for i in rings.size():
-		canvas.ellipse(base + rings[i], Vector2(9, 9), color if i % 2 == 0 else Color("5A2E1C"))
-	canvas.ellipse(base + Vector2(-8, -3), Vector2(7, 4.5), Color("5A2E1C"))
-	canvas.ellipse(base + Vector2(12, -3), Vector2(7, 4.5), Color("5A2E1C"))
-	canvas.ellipse(base + Vector2(-2, -22), Vector2(20, 16), color)
-	canvas.ellipse(base + Vector2(0, -14), Vector2(13, 8), Color("5A2E1C"))
-	canvas.ellipse(base + Vector2(9, -52), Vector2(5, 6), color)
-	canvas.ellipse(base + Vector2(25, -52), Vector2(5, 6), color)
-	canvas.ellipse(base + Vector2(9, -52), Vector2(2.5, 3.5), Color.WHITE)
-	canvas.ellipse(base + Vector2(25, -52), Vector2(2.5, 3.5), Color.WHITE)
-	canvas.ellipse(base + Vector2(17, -40), Vector2(14, 12), color)
-	canvas.ellipse(base + Vector2(23, -35), Vector2(8, 6), Color.WHITE)
-	_eye(canvas, base + Vector2(21, -42))
-	canvas.ellipse(base + Vector2(28, -37), Vector2(2.4, 1.8), INK)
 
 
 static func _elephant(canvas: PixelCanvas, base: Vector2, color: Color) -> void:
