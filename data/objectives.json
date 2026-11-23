@@ -35,7 +35,7 @@
 		{"id": "first_session", "metric": "sessions_completed_total", "target": 1, "reward": {"coins": 20}},
 		{"id": "focus_10_hours", "metric": "focus_minutes_total", "target": 600, "reward": {"coins": 150}},
 		{"id": "first_animal", "metric": "animals_total", "target": 1, "reward": {"nature": 30}},
-		{"id": "all_species", "metric": "species_distinct", "target": 8, "reward": {"coins": 300}},
+		{"id": "all_species", "metric": "species_distinct", "target": 17, "reward": {"coins": 300}},
 		{"id": "meditate_7_days", "metric": "meditation_days_distinct", "target": 7, "reward": {"nature": 50}},
 		{"id": "level_5", "metric": "level", "target": 5, "reward": {"coins": 100}}
 	]

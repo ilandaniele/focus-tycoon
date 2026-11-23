@@ -24,7 +24,7 @@ Guided breathing (box 4-4, 4-7-8, coherent 5-5) and 3, 5 or 10 minute mindfulnes
 
 **Your zoo**
 - A 24×24 tile map you expand step by step.
-- Eight species: rabbit, penguin, beaver, panda, elephant, polar bear, fox and giraffe.
+- Seventeen species across four biomes: rabbit, beaver, hedgehog and duck in the meadow; penguin, seal and puffin on the ice; koala, fox, squirrel and owl in the forest; elephant, zebra, flamingo, lion, hippo and rhino on the savanna.
 - Trees, flowers, shrubs, paths, decorations and habitats for every biome.
 - Fifteen levels with new items to unlock.
 

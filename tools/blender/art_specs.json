@@ -32,7 +32,16 @@
 		"elephant": {"model": "gobkit/animals/Elephant.glb", "height": 0.92},
 		"seal": {"model": "gobkit/animalsB/Seal.glb", "height": 0.38},
 		"fox": {"model": "gobkit/animals/Fox.glb", "height": 0.6},
-		"zebra": {"model": "gobkit/animals/Zebra.glb", "height": 0.85}
+		"zebra": {"model": "gobkit/animals/Zebra.glb", "height": 0.85},
+		"hedgehog": {"model": "gobkit/animals/Hedgehog.glb", "height": 0.36},
+		"duck": {"model": "gobkit/animals/Duck.glb", "height": 0.45},
+		"squirrel": {"model": "gobkit/animals/Squirrel.glb", "height": 0.45},
+		"owl": {"model": "gobkit/animals/Owl.glb", "height": 0.5},
+		"puffin": {"model": "gobkit/animals/Puffin.glb", "height": 0.45},
+		"lion": {"model": "gobkit/animals/Lion.glb", "height": 0.8},
+		"hippo": {"model": "gobkit/animals/Hippo.glb", "height": 0.8},
+		"flamingo": {"model": "gobkit/animals/Flamingo.glb", "height": 0.85},
+		"rhino": {"model": "gobkit/animals/Rhino.glb", "height": 0.85}
 	},
 	"objects": {
 		"objects/tree_oak": {"size": [1, 1], "parts": [{"m": "quaternius/CommonTree_1", "s": 0.19}]},

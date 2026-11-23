@@ -7,17 +7,13 @@ const ANIMAL_COUNT := 20
 
 static func build(map_size: int, catalog: Dictionary, species: Dictionary) -> ParkModel:
 	var park := ParkModel.new(map_size, map_size)
-	var enclosures := _sorted_items(catalog, func(item: Dictionary) -> bool: return item["category"] == "enclosure")
+	var enclosures := _enclosures_by_biome(catalog)
 	var decorations := _sorted_items(catalog, func(item: Dictionary) -> bool: return item["category"] != "enclosure")
-	var species_by_biome := _species_by_biome(species)
-	var adopted := 0
-	while adopted < ANIMAL_COUNT:
-		var enclosure: Dictionary = enclosures[park.objects.size() % enclosures.size()]
-		var uid := _place(park, enclosure)
-		var residents: Array = species_by_biome[enclosure["biome"]]
-		for slot in mini(int(enclosure["capacity"]), ANIMAL_COUNT - adopted):
-			park.add_animal("b_a_%d" % (adopted + slot), residents[(adopted + slot) % residents.size()], uid)
-		adopted = park.animals.size()
+	var species_ids: Array = species.keys()
+	for index in ANIMAL_COUNT:
+		var species_id: String = species_ids[index % species_ids.size()]
+		var uid := _enclosure_with_room(park, enclosures[species[species_id]["biome"]])
+		park.add_animal("b_a_%d" % index, species_id, uid)
 	while park.objects.size() < OBJECT_COUNT:
 		_place(park, decorations[park.objects.size() % decorations.size()])
 	return park
@@ -36,10 +32,16 @@ static func _sorted_items(catalog: Dictionary, keep: Callable) -> Array:
 	return items
 
 
-static func _species_by_biome(species: Dictionary) -> Dictionary:
+static func _enclosure_with_room(park: ParkModel, enclosure: Dictionary) -> String:
+	for uid: String in park.objects:
+		if park.objects[uid]["item_id"] == enclosure["id"] and park.animals_in(uid).size() < int(enclosure["capacity"]):
+			return uid
+	return _place(park, enclosure)
+
+
+static func _enclosures_by_biome(catalog: Dictionary) -> Dictionary:
 	var result: Dictionary = {}
-	for definition: Dictionary in species.values():
-		if not result.has(definition["biome"]):
-			result[definition["biome"]] = []
-		result[definition["biome"]].append(definition["id"])
+	for item: Dictionary in catalog.values():
+		if item["category"] == "enclosure":
+			result[item["biome"]] = item
 	return result

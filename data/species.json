@@ -7,6 +7,15 @@
 		{"id": "elephant", "biome": "savanna", "cost": {"coins": 600, "nature": 120}, "unlock_level": 7, "speed": 0.35, "scale": 1.3, "color": "#9AA0A6"},
 		{"id": "seal", "biome": "ice", "cost": {"coins": 200, "nature": 40}, "unlock_level": 4, "speed": 0.25, "scale": 1.0, "color": "#8C9BA5"},
 		{"id": "fox", "biome": "forest", "cost": {"coins": 320, "nature": 65}, "unlock_level": 6, "speed": 0.7, "scale": 0.85, "color": "#E07B39"},
-		{"id": "zebra", "biome": "savanna", "cost": {"coins": 800, "nature": 150}, "unlock_level": 9, "speed": 0.6, "scale": 1.2, "color": "#F2F2F2"}
+		{"id": "zebra", "biome": "savanna", "cost": {"coins": 800, "nature": 150}, "unlock_level": 9, "speed": 0.6, "scale": 1.2, "color": "#F2F2F2"},
+		{"id": "hedgehog", "biome": "meadow", "cost": {"coins": 90, "nature": 18}, "unlock_level": 2, "speed": 0.5, "scale": 0.75, "color": "#8B6B4E"},
+		{"id": "duck", "biome": "meadow", "cost": {"coins": 180, "nature": 35}, "unlock_level": 3, "speed": 0.6, "scale": 0.8, "color": "#C9D24A"},
+		{"id": "puffin", "biome": "ice", "cost": {"coins": 280, "nature": 55}, "unlock_level": 5, "speed": 0.45, "scale": 0.8, "color": "#2D2D2D"},
+		{"id": "squirrel", "biome": "forest", "cost": {"coins": 360, "nature": 70}, "unlock_level": 6, "speed": 0.9, "scale": 0.8, "color": "#B5532E"},
+		{"id": "owl", "biome": "forest", "cost": {"coins": 450, "nature": 90}, "unlock_level": 8, "speed": 0.3, "scale": 0.85, "color": "#C08060"},
+		{"id": "flamingo", "biome": "savanna", "cost": {"coins": 700, "nature": 140}, "unlock_level": 10, "speed": 0.4, "scale": 1.1, "color": "#E98AA0"},
+		{"id": "lion", "biome": "savanna", "cost": {"coins": 1000, "nature": 190}, "unlock_level": 11, "speed": 0.5, "scale": 1.2, "color": "#D9A441"},
+		{"id": "hippo", "biome": "savanna", "cost": {"coins": 1200, "nature": 230}, "unlock_level": 12, "speed": 0.25, "scale": 1.3, "color": "#7A5545"},
+		{"id": "rhino", "biome": "savanna", "cost": {"coins": 1400, "nature": 260}, "unlock_level": 13, "speed": 0.3, "scale": 1.3, "color": "#6F7FB0"}
 	]
 }
