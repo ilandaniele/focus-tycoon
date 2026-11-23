@@ -24,7 +24,7 @@ Ejercicios guiados de respiración (caja 4-4, 4-7-8, coherente 5-5) y atención 
 
 **Tu zoológico**
 - Mapa de 24×24 casillas para ampliar de a poco.
-- Ocho especies: conejo, pingüino, castor, panda, elefante, oso polar, zorro y jirafa.
+- Diecisiete especies en cuatro biomas: conejo, castor, erizo y pato en la pradera; pingüino, foca y frailecillo en el hielo; koala, zorro, ardilla y búho en el bosque; elefante, cebra, flamenco, león, hipopótamo y rinoceronte en la sabana.
 - Árboles, flores, arbustos, caminos, decoraciones y recintos para cada bioma.
 - Quince niveles con nuevos objetos para desbloquear.
 

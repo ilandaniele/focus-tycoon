@@ -20,7 +20,7 @@ Copiar `~/.focus-tycoon/release.keystore` y `~/.focus-tycoon/release.env` a un l
 ## 3. Google Play (6.6 Android, USD 25 una vez)
 1. Crear cuenta en https://play.google.com/console (verificación de identidad; cuentas personales nuevas deben hacer una prueba cerrada con 12 testers durante 14 días antes de producción).
 2. Crear app "Focus Tycoon", paquete `com.focustycoon.game`.
-3. Ficha: copiar `docs/store/listing.es.md` y `docs/store/listing.en.md`. Capturas: sacar del juego en teléfono.
+3. Ficha: copiar `docs/store/listing.es.md` y `docs/store/listing.en.md`. Gráficos: correr `godot --path . -s res://tools/store_shots.gd -- --benchmark` (con ventana) y subir de `build/store/` el ícono `icon_512.png`, el gráfico destacado `feature_graphic.png` y las capturas `play_*.png` (mínimo 2; la de progreso sale vacía, mejor omitirla).
 4. Política de privacidad: https://github.com/ilandaniele/focus-tycoon/blob/main/docs/store/privacy.es.md
 5. Clasificación de contenido y seguridad de datos: respuestas en `docs/store/listing.*.md`.
 6. Subir `build/android/focus-tycoon-release.aab` a Pruebas internas. Aceptar Play App Signing.
@@ -30,8 +30,9 @@ Copiar `~/.focus-tycoon/release.keystore` y `~/.focus-tycoon/release.env` a un l
 
 ## 4. iOS (6.5, USD 99 por año para publicar)
 1. Sin Mac: el workflow "iOS simulator" de GitHub Actions compila y corre el juego en el simulador en cada push a `dev` o `main`. La captura queda en el artifact `ios-simulator` de cada corrida.
-2. Para publicar: cuenta Apple Developer, poner el Team ID real en el preset "iOS" de `export_presets.cfg` y firmar. Se puede firmar en CI con certificados guardados como secrets de GitHub, sin Mac propia.
-3. Plugins iOS: el workflow compila godot-storekit2 y godot-notification-scheduler v6.0 contra Godot 4.7.2 (`.github/scripts/build-ios-plugins.sh`, con caché) y los incluye en el export. En el simulador el juego arranca con los backends `AppleStore` y `PluginNotificationBackend`. Falta probar compras reales en TestFlight con productos creados en App Store Connect.
+2. Capturas de App Store Connect (6,9"): `build/store/appstore_*.png`, mismo comando que arriba.
+3. Para publicar: cuenta Apple Developer, poner el Team ID real en el preset "iOS" de `export_presets.cfg` y firmar. Se puede firmar en CI con certificados guardados como secrets de GitHub, sin Mac propia.
+4. Plugins iOS: el workflow compila godot-storekit2 y godot-notification-scheduler v6.0 contra Godot 4.7.2 (`.github/scripts/build-ios-plugins.sh`, con caché) y los incluye en el export. En el simulador el juego arranca con los backends `AppleStore` y `PluginNotificationBackend`. Falta probar compras reales en TestFlight con productos creados en App Store Connect.
 
 ## 5. Opcional
 - El email de contacto es público en `docs/store/`. Si preferís, usar una dirección solo para soporte.

@@ -57,7 +57,7 @@ func test_expansions_match_gdd() -> void:
 
 
 func test_species_match_gdd_and_are_visually_distinct() -> void:
-	assert_eq(Config.species.keys(), ["rabbit", "penguin", "beaver", "koala", "elephant", "seal", "fox", "zebra"])
+	assert_eq(Config.species.keys(), ["rabbit", "penguin", "beaver", "koala", "elephant", "seal", "fox", "zebra", "hedgehog", "duck", "puffin", "squirrel", "owl", "flamingo", "lion", "hippo", "rhino"])
 	assert_eq(Ints.of(Config.species["rabbit"]["cost"]), {"coins": 50, "nature": 10})
 	assert_eq(Config.species["elephant"]["biome"], "savanna")
 	assert_eq(Config.species["koala"]["unlock_level"], 5)
@@ -66,7 +66,7 @@ func test_species_match_gdd_and_are_visually_distinct() -> void:
 		var species: Dictionary = Config.species[id]
 		looks["%s|%s|%s" % [species["speed"], species["scale"], species["color"]]] = true
 		assert_true(str(species["color"]).begins_with("#"), id)
-	assert_eq(looks.size(), 8)
+	assert_eq(looks.size(), Config.species.size())
 
 
 func test_every_species_has_a_matching_enclosure_biome() -> void:
