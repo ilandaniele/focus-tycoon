@@ -24,7 +24,7 @@ Ejercicios guiados de respiración (caja 4-4, 4-7-8, coherente 5-5) y atención 
 
 **Tu zoológico**
 - Mapa de 34×34 casillas para ampliar de a poco.
-- Treinta y dos especies en seis biomas: pradera, bosque, nieve, sabana, desierto (camello, tortuga, geco, escorpión) y un acuario con pez payaso, cangrejo, tortuga marina, medusa, pulpo, delfín, tiburón y orca.
+- Setenta y cinco especies en siete biomas: pradera (oveja, cerdo, vaca, rana), bosque (oso, lobo, corzo, panda, gorila, tucán), nieve, sabana (jirafa, canguro, bisonte), desierto, un insectario con mariquitas, mariposas, abejas y escarabajos, y un acuario hasta la ballena jorobada. Los recintos crecen casilla por casilla con la forma que quieras.
 - Árboles, flores, arbustos, caminos, decoraciones y recintos para cada bioma.
 - Quince niveles con nuevos objetos para desbloquear.
 
@@ -39,7 +39,7 @@ El juego se puede jugar completo gratis. Premium es una compra única con sonido
 
 Focus Tycoon es un temporizador con recompensas: no mide ni verifica tu concentración real, y sus ejercicios de respiración no reemplazan ningún tratamiento.
 
-Modelos de animales de Poly by Google, Хмара Сергей, jeremy y Anonymous (poly.pizza), CC-BY 3.0.
+Modelos de animales de Poly by Google, Хмара Сергей, jeremy, madtrollstudio y Anonymous (poly.pizza), CC-BY 3.0.
 
 ## Categoría y etiquetas
 - Categoría: Juegos › Simulación (alternativa: Productividad).

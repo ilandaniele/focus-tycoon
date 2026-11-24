@@ -24,7 +24,7 @@ Guided breathing (box 4-4, 4-7-8, coherent 5-5) and 3, 5 or 10 minute mindfulnes
 
 **Your zoo**
 - A 34×34 tile map you expand step by step.
-- Thirty-two species across six biomes: meadow, forest, snow, savanna, desert (camel, tortoise, gecko, scorpion) and an aquarium with clownfish, crab, sea turtle, jellyfish, octopus, dolphin, shark and orca.
+- Seventy-five species across seven biomes: meadow (sheep, pig, cow, frog), forest (bear, wolf, deer, panda, gorilla, toucan), snow, savanna (giraffe, kangaroo, bison), desert, an insectarium with ladybugs, butterflies, bees and beetles, and an aquarium up to a humpback whale. Enclosures grow tile by tile into any shape.
 - Trees, flowers, shrubs, paths, decorations and habitats for every biome.
 - Fifteen levels with new items to unlock.
 
@@ -39,7 +39,7 @@ The whole game is free to play. Premium is a one-time purchase with extra sounds
 
 Focus Tycoon is a timer with rewards: it does not measure or verify real concentration, and its breathing exercises are not a substitute for any treatment.
 
-Animal models by Poly by Google, Хмара Сергей, jeremy and Anonymous (poly.pizza), CC-BY 3.0.
+Animal models by Poly by Google, Хмара Сергей, jeremy, madtrollstudio and Anonymous (poly.pizza), CC-BY 3.0.
 
 ## Category and tags
 - Category: Games › Simulation (alternative: Productivity).

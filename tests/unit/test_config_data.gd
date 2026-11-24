@@ -25,7 +25,7 @@ func test_economy_matches_gdd() -> void:
 
 
 func test_catalog_matches_gdd() -> void:
-	assert_eq(Config.catalog.size(), 66)
+	assert_eq(Config.catalog.size(), 93)
 	assert_eq(Config.item("tree_oak")["cost"]["coins"], 25)
 	assert_eq(Config.item("path_wood")["unlock_level"], 4)
 	assert_eq(Ints.of(Config.item("fountain")["size"]), [2, 2])
@@ -35,9 +35,9 @@ func test_catalog_matches_gdd() -> void:
 	assert_eq(Config.item("enclosure_savanna")["capacity"], 2)
 	assert_eq(Config.item("enclosure_meadow")["capacity"], 3)
 	assert_true(Config.item("lantern_premium")["premium"])
-	assert_eq(Config.items_in("enclosure").size(), 6)
+	assert_eq(Config.items_in("enclosure").size(), 7)
 	assert_eq(Config.items_in("path").size(), 3)
-	assert_eq(Config.items_in("plant").size(), 39)
+	assert_eq(Config.items_in("plant").size(), 65)
 	assert_eq(Config.items_in("building").size(), 5)
 	assert_eq(Config.item("hedge")["unlock_level"], 1)
 	assert_true(Config.item("missing").is_empty())
@@ -58,7 +58,7 @@ func test_expansions_match_gdd() -> void:
 
 
 func test_species_match_gdd_and_are_visually_distinct() -> void:
-	assert_eq(Config.species.keys(), ["rabbit", "penguin", "beaver", "koala", "elephant", "seal", "fox", "zebra", "hedgehog", "duck", "puffin", "squirrel", "owl", "flamingo", "lion", "hippo", "rhino", "tortoise", "arctic_fox", "gecko", "clownfish", "crab", "walrus", "sea_turtle", "scorpion", "jellyfish", "reindeer", "octopus", "camel", "dolphin", "shark", "orca"])
+	assert_eq(Config.species.keys(), ["rabbit", "penguin", "beaver", "koala", "elephant", "seal", "fox", "zebra", "hedgehog", "duck", "puffin", "squirrel", "owl", "flamingo", "lion", "hippo", "rhino", "tortoise", "arctic_fox", "gecko", "clownfish", "crab", "walrus", "sea_turtle", "scorpion", "jellyfish", "reindeer", "octopus", "camel", "dolphin", "shark", "orca", "ladybug", "butterfly", "bee", "snail", "caterpillar", "ant", "grasshopper", "dragonfly", "stag_beetle", "spider", "frog", "sheep", "pig", "cow", "raccoon", "parrot", "deer", "toucan", "wolf", "monkey", "stag", "bear", "panda", "gorilla", "ermine", "husky", "snowy_owl", "snow_leopard", "vulture", "kangaroo", "bison", "giraffe", "lizard", "armadillo", "snake", "roadrunner", "blue_tang", "angelfish", "pufferfish", "seahorse", "lobster", "manta_ray", "humpback_whale"])
 	assert_eq(Ints.of(Config.species["rabbit"]["cost"]), {"coins": 50, "nature": 10})
 	assert_eq(Config.species["elephant"]["biome"], "savanna")
 	assert_eq(Config.species["koala"]["unlock_level"], 5)

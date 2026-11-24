@@ -3,6 +3,7 @@ extends Node
 signal object_placed(uid: String)
 signal object_moved(uid: String)
 signal object_removed(uid: String)
+signal object_resized(uid: String)
 signal animal_adopted(uid: String)
 signal park_expanded(size: int)
 
@@ -41,13 +42,64 @@ func remove_object(uid: String) -> Dictionary:
 		return _fail("invalid_uid")
 	if not GameState.park.animals_in(uid).is_empty():
 		return _fail("enclosure_not_empty")
-	var entry := GameState.park.remove(uid)
-	var item := Config.item(entry["item_id"])
-	var refund: int = floori(int(item["cost"].get("coins", 0)) * float(Config.economy["refund_ratio"]))
+	var refund := refund_for(uid)
+	GameState.park.remove(uid)
 	Economy.grant("refund:" + uid, {"coins": refund}, "refund")
 	GameState.mark_dirty()
 	object_removed.emit(uid)
 	return {"ok": true, "error": "", "refund": refund}
+
+
+func refund_for(uid: String) -> int:
+	var entry: Dictionary = GameState.park.objects[uid]
+	var value := EnclosureSizing.value_coins(Config.item(entry["item_id"]), entry["extra"].size(), _growth_tuning())
+	return floori(value * float(Config.economy["refund_ratio"]))
+
+
+func capacity_of(uid: String) -> int:
+	return EnclosureSizing.capacity(_item_of(uid), GameState.park.cells_of(uid).size())
+
+
+func cell_cost_of(uid: String) -> Dictionary:
+	return EnclosureSizing.cell_cost(_item_of(uid), _growth_tuning())
+
+
+func add_enclosure_cell(uid: String, cell: Vector2i) -> Dictionary:
+	if not _is_enclosure(uid):
+		return _fail("invalid_uid")
+	if GameState.park.cells_of(uid).size() >= int(_growth_tuning()["max_cells"]) or not GameState.park.shape_candidates(uid).has(cell):
+		return _fail("no_room")
+	var cost := cell_cost_of(uid)
+	if not GameState.ledger.can_afford(cost):
+		return _fail("insufficient_funds")
+	GameState.park.add_cell(uid, cell)
+	Economy.spend("shape:%s:%d" % [uid, GameState.ledger.entries().size()], cost, "grow:" + GameState.park.objects[uid]["item_id"])
+	GameState.mark_dirty()
+	object_resized.emit(uid)
+	return {"ok": true, "error": ""}
+
+
+func remove_enclosure_cell(uid: String, cell: Vector2i) -> Dictionary:
+	if not _is_enclosure(uid):
+		return _fail("invalid_uid")
+	var remaining := GameState.park.cells_of(uid).size() - 1
+	if EnclosureSizing.capacity(_item_of(uid), remaining) < GameState.park.animals_in(uid).size():
+		return _fail("enclosure_full")
+	if not GameState.park.remove_cell(uid, cell):
+		return _fail("cannot_shrink")
+	var refund := floori(int(cell_cost_of(uid).get("coins", 0)) * float(Config.economy["refund_ratio"]))
+	Economy.grant("unshape:%s:%d" % [uid, GameState.ledger.entries().size()], {"coins": refund}, "refund")
+	GameState.mark_dirty()
+	object_resized.emit(uid)
+	return {"ok": true, "error": ""}
+
+
+func _is_enclosure(uid: String) -> bool:
+	return GameState.park.objects.has(uid) and _item_of(uid)["category"] == "enclosure"
+
+
+func _item_of(uid: String) -> Dictionary:
+	return Config.item(GameState.park.objects[uid]["item_id"])
 
 
 func adopt(species_id: String, enclosure_uid: String) -> Dictionary:
@@ -105,14 +157,17 @@ func _is_matching_enclosure(species: Dictionary, uid: String) -> bool:
 
 
 func _free_capacity(enclosure_uid: String) -> int:
-	var item := Config.item(GameState.park.objects[enclosure_uid]["item_id"])
-	return int(item["capacity"]) - GameState.park.animals_in(enclosure_uid).size()
+	return capacity_of(enclosure_uid) - GameState.park.animals_in(enclosure_uid).size()
 
 
 func _count_placement() -> void:
 	var placed: Dictionary = GameState.progress["objects_placed_by_day"]
 	var day := GameState.today()
 	placed[day] = int(placed.get(day, 0)) + 1
+
+
+func _growth_tuning() -> Dictionary:
+	return Config.economy["enclosure_growth"]
 
 
 func _size_of(item: Dictionary) -> Vector2i:

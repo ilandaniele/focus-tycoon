@@ -36,7 +36,7 @@ def main(only: list) -> None:
 
 def render_object(stage: dict, palette: dict, key: str, spec: dict) -> None:
     width, depth = spec["size"]
-    base = stage["object_canvas"]["%dx%d" % (width, depth)]
+    base = spec.get("canvas", stage["object_canvas"]["%dx%d" % (width, depth)])
     canvas = (base[0] * stage["asset_scale"], base[1] * stage["asset_scale"])
     anchor = (canvas[0] / 2.0, canvas[1] - (width + depth) * 16.0 * stage["asset_scale"])
     iso_scene.reset(stage)

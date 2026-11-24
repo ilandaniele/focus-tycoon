@@ -105,6 +105,26 @@ func test_adopt_flow_and_errors() -> void:
 	assert_true(GameState.park.objects.has(enclosure))
 
 
+func test_shape_enclosure_spends_per_cell_and_refunds() -> void:
+	_fund(269)
+	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(13, 13))["uid"]
+	assert_eq(ParkService.capacity_of(enclosure), 3)
+	for cell: Vector2i in [Vector2i(16, 13), Vector2i(17, 13), Vector2i(16, 14)]:
+		assert_true(ParkService.add_enclosure_cell(enclosure, cell)["ok"], str(cell))
+	assert_eq(Economy.balance("coins"), 0)
+	assert_eq(ParkService.capacity_of(enclosure), 4)
+	assert_eq(ParkService.add_enclosure_cell(enclosure, Vector2i(18, 13))["error"], "insufficient_funds")
+	assert_eq(ParkService.add_enclosure_cell(enclosure, Vector2i(20, 13))["error"], "no_room")
+	assert_eq(ParkService.add_enclosure_cell("missing", Vector2i(16, 13))["error"], "invalid_uid")
+	assert_eq(ParkService.remove_enclosure_cell(enclosure, Vector2i(16, 13))["error"], "cannot_shrink")
+	assert_true(ParkService.remove_enclosure_cell(enclosure, Vector2i(17, 13))["ok"])
+	assert_eq(Economy.balance("coins"), 11)
+	GameState.save_now()
+	GameState.load_or_new()
+	assert_eq(GameState.park.cells_of(enclosure).size(), 11)
+	assert_eq(ParkService.remove_object(enclosure)["refund"], floori((200 + 2 * 23) * 0.5))
+
+
 func test_adopt_requires_level_and_funds() -> void:
 	_fund(200, 10)
 	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(13, 13))["uid"]

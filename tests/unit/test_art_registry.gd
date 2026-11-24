@@ -15,8 +15,9 @@ func test_every_catalog_item_has_texture_with_canvas_size() -> void:
 		if item["category"] == "path":
 			assert_eq(texture.get_size(), Vector2(128, 64), item["id"])
 		else:
-			var side := IsoGrid.size_of(item).x
-			assert_eq(texture.get_size(), Vector2(OBJECT_SIZES[side]), item["id"])
+			var expected := Vector2(OBJECT_SIZES[IsoGrid.size_of(item).x])
+			assert_eq(texture.get_width(), int(expected.x), item["id"])
+			assert_true(texture.get_height() >= int(expected.y), "tall canvas %s" % item["id"])
 
 
 func test_every_species_has_texture_with_canvas_size() -> void:
