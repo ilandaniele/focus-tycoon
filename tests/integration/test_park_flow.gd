@@ -19,50 +19,50 @@ func _snapshot() -> String:
 
 func test_buy_place_save_reload_is_identical() -> void:
 	Economy.grant("starter_grant", Config.economy["starter_grant"], "tutorial")
-	var bought := ParkService.buy_and_place("tree_oak", Vector2i(10, 10))
+	var bought := ParkService.buy_and_place("tree_oak", Vector2i(15, 15))
 	assert_true(bought["ok"])
 	assert_eq(Economy.balance("coins"), 275)
 	var before := _snapshot()
 	assert_true(GameState.save_now())
 	GameState.load_or_new()
 	assert_eq(_snapshot(), before)
-	assert_eq(GameState.park.object_at(Vector2i(10, 10)), bought["uid"])
+	assert_eq(GameState.park.object_at(Vector2i(15, 15)), bought["uid"])
 	assert_eq(Economy.balance("coins"), 275)
 	assert_true(GameState.ledger.has_key("buy:" + bought["uid"]))
 
 
 func test_uids_are_never_reused_after_removal_and_reload() -> void:
 	_fund(100)
-	var first := ParkService.buy_and_place("path_dirt", Vector2i(10, 10))
+	var first := ParkService.buy_and_place("path_dirt", Vector2i(15, 15))
 	ParkService.remove_object(first["uid"])
 	GameState.save_now()
 	GameState.load_or_new()
-	var second := ParkService.buy_and_place("path_dirt", Vector2i(10, 10))
+	var second := ParkService.buy_and_place("path_dirt", Vector2i(15, 15))
 	assert_true(first["uid"] != second["uid"])
 	assert_true(second["ok"])
 
 
 func test_buy_validation_errors() -> void:
-	assert_eq(ParkService.buy_and_place("tree_oak", Vector2i(10, 10))["error"], "insufficient_funds")
+	assert_eq(ParkService.buy_and_place("tree_oak", Vector2i(15, 15))["error"], "insufficient_funds")
 	_fund(5000)
-	assert_eq(ParkService.buy_and_place("fountain", Vector2i(10, 10))["error"], "locked_level")
+	assert_eq(ParkService.buy_and_place("fountain", Vector2i(15, 15))["error"], "locked_level")
 	assert_eq(ParkService.buy_and_place("tree_oak", Vector2i(0, 0))["error"], "invalid_cell")
-	assert_eq(ParkService.buy_and_place("lantern_premium", Vector2i(10, 10))["error"], "premium_required")
-	assert_true(ParkService.buy_and_place("tree_oak", Vector2i(10, 10))["ok"])
-	assert_eq(ParkService.buy_and_place("tree_oak", Vector2i(10, 10))["error"], "invalid_cell")
+	assert_eq(ParkService.buy_and_place("lantern_premium", Vector2i(15, 15))["error"], "premium_required")
+	assert_true(ParkService.buy_and_place("tree_oak", Vector2i(15, 15))["ok"])
+	assert_eq(ParkService.buy_and_place("tree_oak", Vector2i(15, 15))["error"], "invalid_cell")
 	assert_eq(Economy.balance("coins"), 5000 - 25)
 
 
 func test_premium_item_with_entitlement() -> void:
 	GameState.progress["entitlements"].append("premium")
-	var result := ParkService.buy_and_place("lantern_premium", Vector2i(10, 10))
+	var result := ParkService.buy_and_place("lantern_premium", Vector2i(15, 15))
 	assert_true(result["ok"])
 	assert_eq(Economy.balance("coins"), 0)
 
 
 func test_failed_purchase_changes_nothing() -> void:
 	_fund(20)
-	var result := ParkService.buy_and_place("tree_oak", Vector2i(10, 10))
+	var result := ParkService.buy_and_place("tree_oak", Vector2i(15, 15))
 	assert_false(result["ok"])
 	assert_eq(Economy.balance("coins"), 20)
 	assert_true(GameState.park.objects.is_empty())
@@ -71,7 +71,7 @@ func test_failed_purchase_changes_nothing() -> void:
 
 func test_remove_refunds_half_of_coins_once() -> void:
 	_fund(100)
-	var uid: String = ParkService.buy_and_place("tree_oak", Vector2i(10, 10))["uid"]
+	var uid: String = ParkService.buy_and_place("tree_oak", Vector2i(15, 15))["uid"]
 	var removed := ParkService.remove_object(uid)
 	assert_true(removed["ok"])
 	assert_eq(removed["refund"], 12)
@@ -83,15 +83,15 @@ func test_remove_refunds_half_of_coins_once() -> void:
 
 func test_move_object() -> void:
 	_fund(100)
-	var uid: String = ParkService.buy_and_place("tree_oak", Vector2i(10, 10))["uid"]
-	assert_true(ParkService.move_object(uid, Vector2i(11, 11)))
+	var uid: String = ParkService.buy_and_place("tree_oak", Vector2i(15, 15))["uid"]
+	assert_true(ParkService.move_object(uid, Vector2i(16, 16)))
 	assert_false(ParkService.move_object(uid, Vector2i(0, 0)))
-	assert_eq(GameState.park.object_at(Vector2i(11, 11)), uid)
+	assert_eq(GameState.park.object_at(Vector2i(16, 16)), uid)
 
 
 func test_adopt_flow_and_errors() -> void:
 	_fund(2000, 200, 250)
-	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(8, 8))["uid"]
+	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(13, 13))["uid"]
 	assert_eq(ParkService.adopt("rabbit", "missing")["error"], "no_enclosure")
 	assert_eq(ParkService.adopt("penguin", enclosure)["error"], "no_enclosure")
 	assert_eq(ParkService.enclosures_for("rabbit"), [enclosure])
@@ -105,9 +105,29 @@ func test_adopt_flow_and_errors() -> void:
 	assert_true(GameState.park.objects.has(enclosure))
 
 
+func test_shape_enclosure_spends_per_cell_and_refunds() -> void:
+	_fund(269)
+	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(13, 13))["uid"]
+	assert_eq(ParkService.capacity_of(enclosure), 3)
+	for cell: Vector2i in [Vector2i(16, 13), Vector2i(17, 13), Vector2i(16, 14)]:
+		assert_true(ParkService.add_enclosure_cell(enclosure, cell)["ok"], str(cell))
+	assert_eq(Economy.balance("coins"), 0)
+	assert_eq(ParkService.capacity_of(enclosure), 4)
+	assert_eq(ParkService.add_enclosure_cell(enclosure, Vector2i(18, 13))["error"], "insufficient_funds")
+	assert_eq(ParkService.add_enclosure_cell(enclosure, Vector2i(20, 13))["error"], "no_room")
+	assert_eq(ParkService.add_enclosure_cell("missing", Vector2i(16, 13))["error"], "invalid_uid")
+	assert_eq(ParkService.remove_enclosure_cell(enclosure, Vector2i(16, 13))["error"], "cannot_shrink")
+	assert_true(ParkService.remove_enclosure_cell(enclosure, Vector2i(17, 13))["ok"])
+	assert_eq(Economy.balance("coins"), 11)
+	GameState.save_now()
+	GameState.load_or_new()
+	assert_eq(GameState.park.cells_of(enclosure).size(), 11)
+	assert_eq(ParkService.remove_object(enclosure)["refund"], floori((200 + 2 * 23) * 0.5))
+
+
 func test_adopt_requires_level_and_funds() -> void:
 	_fund(200, 10)
-	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(8, 8))["uid"]
+	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(13, 13))["uid"]
 	assert_eq(ParkService.adopt("beaver", enclosure)["error"], "locked_level")
 	assert_eq(ParkService.adopt("rabbit", enclosure)["error"], "insufficient_funds")
 	_fund(100)
@@ -123,7 +143,7 @@ func test_buy_expansion() -> void:
 	assert_true(ParkService.buy_expansion("expand_1")["ok"])
 	assert_eq(GameState.park.unlocked_size, 16)
 	assert_eq(ParkService.buy_expansion("expand_1")["error"], "already_owned")
-	assert_true(ParkService.buy_and_place("path_dirt", Vector2i(4, 4))["ok"])
+	assert_true(ParkService.buy_and_place("path_dirt", Vector2i(9, 9))["ok"])
 	assert_eq(Economy.balance("coins"), 5000 - 800 - 3)
 
 
@@ -150,7 +170,7 @@ func test_level_up_signal_lists_unlocked_ids() -> void:
 
 func test_first_animal_achievement_is_granted_once() -> void:
 	_fund(1000, 100)
-	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(8, 8))["uid"]
+	var enclosure: String = ParkService.buy_and_place("enclosure_meadow", Vector2i(13, 13))["uid"]
 	var nature_before := Economy.balance("nature")
 	ParkService.adopt("rabbit", enclosure)
 	assert_true(GameState.progress["achievements"].has("first_animal"))

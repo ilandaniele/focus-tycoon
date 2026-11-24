@@ -172,7 +172,7 @@ func _on_focus_finished(_record: Dictionary, _reward: Dictionary) -> void:
 func _on_placement_changed(active: bool, valid: bool) -> void:
 	_nav.visible = not active
 	_placement.visible = active
-	_placement.set_valid(valid)
+	_placement.set_valid(valid, _world.placement_hint())
 
 
 func _on_confirm_placement() -> void:

@@ -2,7 +2,7 @@ class_name BenchmarkPark
 extends RefCounted
 
 const OBJECT_COUNT := 150
-const ANIMAL_COUNT := 20
+const ANIMAL_COUNT := 75
 
 
 static func build(map_size: int, catalog: Dictionary, species: Dictionary) -> ParkModel:

@@ -7,7 +7,7 @@ func before_each() -> void:
 
 func test_benchmark_replaces_park_without_touching_save() -> void:
 	Economy.grant("test:fund", {"coins": 100}, "test")
-	assert_true(ParkService.buy_and_place("path_dirt", Vector2i(10, 10))["ok"])
+	assert_true(ParkService.buy_and_place("path_dirt", Vector2i(15, 15))["ok"])
 	var saved_park := GameState.park.to_dict()
 	GameState.start_benchmark()
 	assert_true(GameState.benchmark_active)

@@ -12,6 +12,20 @@ static func path_cells(park: ParkModel, catalog: Dictionary) -> Array[Vector2i]:
 	return cells
 
 
+static func route_cells(park: ParkModel, catalog: Dictionary) -> Array[Vector2i]:
+	var cells := path_cells(park, catalog)
+	cells.append_array(park.entrance_cells())
+	return cells
+
+
+static func spawn_cells(park: ParkModel, catalog: Dictionary) -> Array[Vector2i]:
+	var cells := path_cells(park, catalog)
+	var entrance := park.entrance_cells()
+	if entrance.is_empty() or not cells.has(park.gate_cell()):
+		return cells
+	return [entrance.back()]
+
+
 static func neighbors(cell: Vector2i, cells: Array[Vector2i]) -> Array[Vector2i]:
 	var found: Array[Vector2i] = []
 	for step in STEPS:

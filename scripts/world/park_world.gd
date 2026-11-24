@@ -3,7 +3,7 @@ extends Node2D
 
 signal object_tapped(uid: String)
 signal placement_changed(active: bool, valid: bool)
-signal adopt_resolved(result: Dictionary)
+signal tap_resolved(result: Dictionary)
 
 const ANIMAL_SCENE := preload("res://scenes/world/animal_actor.tscn")
 
@@ -39,6 +39,7 @@ func _ready() -> void:
 	ParkService.object_placed.connect(_on_object_placed)
 	ParkService.object_moved.connect(_on_object_moved)
 	ParkService.object_removed.connect(_on_object_removed)
+	ParkService.object_resized.connect(_on_object_resized)
 	ParkService.animal_adopted.connect(_on_animal_adopted)
 	ParkService.park_expanded.connect(_on_park_expanded)
 	rebuild()
@@ -62,6 +63,16 @@ func begin_move(uid: String) -> void:
 	_placement.begin_item(PlacementController.Mode.MOVE, entry["item_id"], entry["size"], uid, entry["cell"])
 
 
+func begin_shape(uid: String) -> void:
+	_placement.begin_shape(uid)
+
+
+func placement_hint() -> String:
+	if _placement.mode != PlacementController.Mode.SHAPE:
+		return ""
+	return UIKit.fmt("build.shape_hint", [int(ParkService.cell_cost_of(_placement.uid).get("coins", 0))])
+
+
 func begin_adopt_target(species_id: String) -> void:
 	var targets: Array[String] = []
 	targets.assign(ParkService.enclosures_for(species_id))
@@ -69,6 +80,9 @@ func begin_adopt_target(species_id: String) -> void:
 
 
 func confirm_placement() -> Dictionary:
+	if _placement.mode == PlacementController.Mode.SHAPE:
+		_placement.cancel()
+		return {"ok": true, "error": ""}
 	if _placement.mode == PlacementController.Mode.ADOPT and not _placement.adopt_targets.is_empty():
 		return _adopt_into(_placement.adopt_targets[0])
 	if not _placement.is_placing():
@@ -127,6 +141,8 @@ func _paint_ground() -> void:
 
 func _refresh_paths() -> void:
 	_paths.clear()
+	for cell in GameState.park.entrance_cells():
+		_paths.set_cell(cell, _tile_source[Scenery.ENTRANCE_TILE], Vector2i.ZERO)
 	for entry: Dictionary in GameState.park.objects.values():
 		var item_id: String = entry["item_id"]
 		if ArtRegistry.is_path(item_id):
@@ -134,10 +150,15 @@ func _refresh_paths() -> void:
 
 
 func _spawn_object(uid: String) -> void:
-	var node := PlacedObject.new()
+	var entry: Dictionary = GameState.park.objects[uid]
+	var node: Node2D = EnclosureView.new() if _is_enclosure(entry) else PlacedObject.new()
 	_entities.add_child(node)
-	node.setup(_ground, GameState.park.objects[uid])
+	node.setup(_ground, entry)
 	_objects[uid] = node
+
+
+func _is_enclosure(entry: Dictionary) -> bool:
+	return Config.item(entry["item_id"])["category"] == "enclosure"
 
 
 func _spawn_animal(uid: String) -> void:
@@ -154,7 +175,12 @@ func _refresh_visitors() -> void:
 
 func _enclosure_points(enclosure_uid: String) -> Array[Vector2]:
 	var enclosure: Dictionary = GameState.park.objects[enclosure_uid]
-	return IsoGrid.cell_centers(_ground, enclosure["cell"], enclosure["size"])
+	var decor := EnclosureView.decor_cells(enclosure["item_id"], enclosure["size"])
+	var points: Array[Vector2] = []
+	for covered in GameState.park.cells_of(enclosure_uid):
+		if not decor.has(covered - enclosure["cell"]):
+			points.append(_ground.map_to_local(covered))
+	return points
 
 
 func _on_object_placed(uid: String) -> void:
@@ -180,9 +206,18 @@ func _on_object_moved(uid: String) -> void:
 		_refresh_paths()
 		return
 	_objects[uid].place(_ground, GameState.park.objects[uid]["cell"])
+	_refresh_actor_points(uid)
+
+
+func _on_object_resized(uid: String) -> void:
+	_objects[uid].place(_ground, GameState.park.objects[uid]["cell"])
+	_refresh_actor_points(uid)
+
+
+func _refresh_actor_points(enclosure_uid: String) -> void:
 	for actor: AnimalActor in _actors.values():
-		if actor.enclosure_uid == uid:
-			actor.set_points(_enclosure_points(uid))
+		if actor.enclosure_uid == enclosure_uid:
+			actor.set_points(_enclosure_points(enclosure_uid))
 
 
 func _on_object_removed(uid: String) -> void:
@@ -196,6 +231,8 @@ func _on_object_removed(uid: String) -> void:
 
 func _on_park_expanded(_size: int) -> void:
 	_paint_ground()
+	_refresh_paths()
+	_refresh_visitors()
 	_grid_overlay.queue_redraw()
 
 
@@ -206,6 +243,8 @@ func _on_tapped(world_pos: Vector2) -> void:
 			_tap_object(cell)
 		PlacementController.Mode.ADOPT:
 			_tap_adopt_target(cell)
+		PlacementController.Mode.SHAPE:
+			_tap_shape(cell)
 		_:
 			_move_ghost_to(cell)
 
@@ -227,7 +266,16 @@ func _tap_object(cell: Vector2i) -> void:
 func _tap_adopt_target(cell: Vector2i) -> void:
 	var uid := GameState.park.object_at(cell)
 	if _placement.adopt_targets.has(uid):
-		adopt_resolved.emit(_adopt_into(uid))
+		tap_resolved.emit(_adopt_into(uid))
+
+
+func _tap_shape(cell: Vector2i) -> void:
+	var uid := _placement.uid
+	var owned := GameState.park.object_at(cell) == uid
+	var result := ParkService.remove_enclosure_cell(uid, cell) if owned else ParkService.add_enclosure_cell(uid, cell)
+	if result["ok"]:
+		_placement.refresh()
+	tap_resolved.emit(result)
 
 
 func _adopt_into(enclosure_uid: String) -> Dictionary:

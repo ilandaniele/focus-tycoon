@@ -3,11 +3,12 @@ extends Node
 
 signal changed(active: bool, valid: bool)
 
-enum Mode { NONE, PLACE, MOVE, ADOPT }
+enum Mode { NONE, PLACE, MOVE, ADOPT, SHAPE }
 
 const VALID_TINT := Color(0.45, 1.0, 0.55, 0.7)
 const INVALID_TINT := Color(1.0, 0.4, 0.35, 0.7)
 const GRID_TINT := Color(1, 1, 1, 0.35)
+const CANDIDATE_TINT := Color(0.55, 0.85, 1.0, 0.75)
 const MARKER_LIFT := Vector2(0, -56)
 
 var mode := Mode.NONE
@@ -43,7 +44,7 @@ func begin_item(new_mode: Mode, new_item_id: String, new_size: Vector2i, new_uid
 	adopt_targets.clear()
 	var texture := ArtRegistry.get_texture(ArtRegistry.item_key(item_id))
 	_ghost.texture = texture
-	_ghost.offset = -ArtRegistry.object_pivot(texture, size)
+	_ghost.offset = -ArtRegistry.object_pivot(texture, IsoGrid.size_of(Config.item(item_id)))
 	_show()
 	move_to(start_cell)
 
@@ -57,6 +58,20 @@ func begin_adopt(species_id: String, targets: Array[String]) -> void:
 	_ghost.visible = false
 	_overlay.queue_redraw()
 	changed.emit(true, not targets.is_empty())
+
+
+func begin_shape(enclosure_uid: String) -> void:
+	cancel()
+	mode = Mode.SHAPE
+	uid = enclosure_uid
+	_show()
+	_ghost.visible = false
+	refresh()
+
+
+func refresh() -> void:
+	_overlay.queue_redraw()
+	changed.emit(true, true)
 
 
 func move_to(new_cell: Vector2i) -> void:
@@ -85,7 +100,7 @@ func is_placing() -> bool:
 
 
 func hits_ghost(world_pos: Vector2) -> bool:
-	return is_placing() and IsoGrid.cells_of(cell, size).has(IsoGrid.cell_at(_ground, world_pos))
+	return is_placing() and _footprint().has(IsoGrid.cell_at(_ground, world_pos))
 
 
 func _show() -> void:
@@ -94,7 +109,17 @@ func _show() -> void:
 
 
 func _is_valid() -> bool:
-	return GameState.park.can_place(size, cell, uid)
+	return GameState.park.can_move(uid, cell) if mode == Mode.MOVE else GameState.park.can_place(size, cell)
+
+
+func _footprint() -> Array[Vector2i]:
+	if mode != Mode.MOVE:
+		return IsoGrid.cells_of(cell, size)
+	var shift: Vector2i = cell - GameState.park.objects[uid]["cell"]
+	var cells: Array[Vector2i] = []
+	for covered in GameState.park.cells_of(uid):
+		cells.append(covered + shift)
+	return cells
 
 
 func _draw_overlay() -> void:
@@ -105,12 +130,16 @@ func _draw_overlay() -> void:
 			if park.is_cell_unlocked(Vector2i(x, y)):
 				_draw_cell(texture, Vector2i(x, y), GRID_TINT)
 	if is_placing():
-		for footprint_cell in IsoGrid.cells_of(cell, size):
+		for footprint_cell in _footprint():
 			_draw_cell(texture, footprint_cell, VALID_TINT if valid else INVALID_TINT)
 	for enclosure_uid in adopt_targets:
-		var enclosure: Dictionary = park.objects[enclosure_uid]
-		for footprint_cell in IsoGrid.cells_of(enclosure["cell"], enclosure["size"]):
+		for footprint_cell in park.cells_of(enclosure_uid):
 			_draw_cell(texture, footprint_cell, VALID_TINT)
+	if mode == Mode.SHAPE:
+		for footprint_cell in park.cells_of(uid):
+			_draw_cell(texture, footprint_cell, VALID_TINT)
+		for candidate in park.shape_candidates(uid):
+			_draw_cell(texture, candidate, CANDIDATE_TINT)
 
 
 func _draw_cell(texture: Texture2D, grid_cell: Vector2i, tint: Color) -> void:

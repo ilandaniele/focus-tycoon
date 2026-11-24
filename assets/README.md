@@ -22,7 +22,7 @@ UI icons, placement marks and the contact shadow are hand-written SVGs in `art/u
 
 3D models, CC0: Quaternius (quaternius.com), Stylized Nature MegaKit; Gobkit animals (see `art/gobkit/LICENSE.txt`), now only the puffin; Kenney (www.kenney.nl), Nature Kit.
 
-Animal models, CC-BY 3.0 (attribution required, also shown in the app's Profile > Credits and in the store listings): Poly by Google and Хмара Сергей, from poly.pizza. Per-model list in `art/polygoogle/CREDITS.md`.
+Animal models, CC-BY 3.0 (attribution required, also shown in the app's Profile > Credits and in the store listings): Poly by Google, Хмара Сергей, jeremy, madtrollstudio and Anonymous, from poly.pizza. Per-model list in `art/polygoogle/CREDITS.md`.
 ## Naming
 
 `assets/<category>/<id>[_<variant>][_<anim>].png`, lowercase `snake_case`. `<id>` is identical to the id in `data/catalog.json` or `data/species.json`.

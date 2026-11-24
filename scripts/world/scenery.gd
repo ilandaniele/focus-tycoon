@@ -27,6 +27,8 @@ const LOW_PROPS := {
 	"scenery/pebble_patch": 2,
 	"scenery/stump_mushrooms": 1,
 }
+const ENTRANCE_TILE := "paths/path_stone"
+const GATE_PROP := "scenery/park_gate"
 const PROP_CHANCE := 0.45
 const TALL_SHARE := 0.6
 const PROP_TINT := Color(0.86, 0.92, 0.86)

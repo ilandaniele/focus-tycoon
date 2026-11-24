@@ -24,9 +24,9 @@ func _ready() -> void:
 	set_valid(false)
 
 
-func set_valid(valid: bool) -> void:
+func set_valid(valid: bool, hint: String = "") -> void:
 	_icon.valid = valid
-	_hint.text = UIKit.t("build.valid" if valid else "build.invalid")
+	_hint.text = hint if hint != "" else UIKit.t("build.valid" if valid else "build.invalid")
 	_confirm.disabled = not valid
 
 

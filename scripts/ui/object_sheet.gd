@@ -25,21 +25,29 @@ func _ready() -> void:
 	var column := UIKit.vbox(10)
 	add_child(column)
 	column.add_child(UIKit.label(UIKit.t("item." + item_id), "HeaderLabel"))
+	if Config.item(item_id)["category"] == "enclosure":
+		_add_growth(column)
 	var row := UIKit.hbox(10)
 	column.add_child(row)
 	row.add_child(UIKit.secondary_button(UIKit.t("sheet.move"), _move))
-	var remove_label := UIKit.fmt("sheet.remove", [_refund(item_id)])
+	var remove_label := UIKit.fmt("sheet.remove", [ParkService.refund_for(_uid)])
 	row.add_child(UIKit.button(remove_label, _remove))
 	column.add_child(UIKit.button(UIKit.t("ui.close"), _dismiss))
 
 
-func _refund(item_id: String) -> int:
-	var coins: int = Config.item(item_id).get("cost", {}).get("coins", 0)
-	return floori(coins * float(Config.economy.get("refund_ratio", 0.5)))
+func _add_growth(column: VBoxContainer) -> void:
+	var residents := GameState.park.animals_in(_uid).size()
+	column.add_child(UIKit.label(UIKit.fmt("sheet.enclosure_info", [GameState.park.cells_of(_uid).size(), residents, ParkService.capacity_of(_uid)])))
+	column.add_child(UIKit.secondary_button(UIKit.t("sheet.shape"), _shape))
 
 
 func _move() -> void:
 	_world.begin_move(_uid)
+	_dismiss()
+
+
+func _shape() -> void:
+	_world.begin_shape(_uid)
 	_dismiss()
 
 

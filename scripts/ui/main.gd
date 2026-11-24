@@ -37,7 +37,7 @@ func _ready() -> void:
 	_hud.open_requested.connect(open_screen)
 	_tutorial.bind(_hud)
 	_world.object_tapped.connect(_on_object_tapped)
-	_world.adopt_resolved.connect(_on_adopt_resolved)
+	_world.tap_resolved.connect(_on_tap_resolved)
 	Economy.level_up.connect(_on_level_up)
 	Economy.achievement_earned.connect(_on_achievement)
 	FocusService.focus_finished.connect(_on_focus_finished)
@@ -131,7 +131,7 @@ func _begin_adopt(species_id: String) -> void:
 	_world.begin_adopt_target(species_id)
 
 
-func _on_adopt_resolved(result: Dictionary) -> void:
+func _on_tap_resolved(result: Dictionary) -> void:
 	if not result.get("ok", false):
 		UIKit.toast_error(self, str(result.get("error", "")))
 

@@ -16,10 +16,10 @@ def load(path: str, spec: dict, shape: dict) -> bpy.types.Object:
     if rigged():
         proportions.reshape(shape)
         play(clip(spec, "idle"), 0.0)
-        low, high = _bounds()
+    low, high = _bounds()
+    if "height" in spec:
         scale = spec["height"] / (high.z - low.z)
     else:
-        low, high = _bounds()
         scale = spec["size"] / max(high - low)
     center = (low + high) / 2.0
     root.scale = (scale, scale, scale)
@@ -81,6 +81,7 @@ def soften(levels: int, sheen: float) -> None:
         bsdf = parts.principled(material)
         if bsdf is not None:
             bsdf.inputs["Sheen Weight"].default_value = sheen
+            bsdf.inputs["Metallic"].default_value = 0.0
 
 
 def _crease_open_edges(mesh: bpy.types.Mesh) -> None:

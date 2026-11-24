@@ -16,13 +16,6 @@ static func footprint_center(layer: TileMapLayer, cell: Vector2i, size: Vector2i
 	return (layer.map_to_local(cell) + layer.map_to_local(cell + size - Vector2i.ONE)) / 2.0
 
 
-static func cell_centers(layer: TileMapLayer, cell: Vector2i, size: Vector2i) -> Array[Vector2]:
-	var centers: Array[Vector2] = []
-	for footprint_cell in cells_of(cell, size):
-		centers.append(layer.map_to_local(footprint_cell))
-	return centers
-
-
 static func cell_at(layer: TileMapLayer, world_pos: Vector2) -> Vector2i:
 	return layer.local_to_map(layer.to_local(world_pos))
 

@@ -87,3 +87,13 @@ func test_visitor_tuning_lives_in_data() -> void:
 		assert_true(tuning.has(key), key)
 	for variant: String in tuning["variants"]:
 		assert_true(ArtRegistry.get_texture("visitors/" + variant) != null, variant)
+
+
+func test_entrance_joins_routes_and_spawns_only_when_connected() -> void:
+	var park := ParkModel.new(30, 24)
+	_path(park, [Vector2i(10, 10)])
+	var routes := VisitorRoutes.route_cells(park, Config.catalog)
+	assert_true(routes.has(Vector2i(15, 29)))
+	assert_eq(VisitorRoutes.spawn_cells(park, Config.catalog), [Vector2i(10, 10)])
+	_path(park, [park.gate_cell()])
+	assert_eq(VisitorRoutes.spawn_cells(park, Config.catalog), [Vector2i(15, 29)])

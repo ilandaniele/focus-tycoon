@@ -11,21 +11,21 @@ var _previous := Vector2i.ZERO
 var _rng := RandomNumberGenerator.new()
 
 
-func setup_visitor(variant: String, ground: TileMapLayer, cells: Array[Vector2i], views: Array[Vector2i]) -> void:
+func setup_visitor(variant: String, ground: TileMapLayer, cells: Array[Vector2i], views: Array[Vector2i], spawns: Array[Vector2i]) -> void:
 	_ground = ground
 	_rng.randomize()
 	_begin("visitors/" + variant, float(_tuning()["walk_px_per_second"]), 1.0)
 	_shadow.scale = SHADOW_SCALE
 	_cells = cells
 	_views = views
-	_enter_at(_cells.pick_random())
+	_enter_at(spawns.pick_random())
 
 
-func set_routes(cells: Array[Vector2i], views: Array[Vector2i]) -> void:
+func set_routes(cells: Array[Vector2i], views: Array[Vector2i], spawns: Array[Vector2i]) -> void:
 	_cells = cells
 	_views = views
 	if not _cells.has(_cell):
-		_enter_at(_cells.pick_random())
+		_enter_at(spawns.pick_random())
 
 
 func _enter_at(cell: Vector2i) -> void:
