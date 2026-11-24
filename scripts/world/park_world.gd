@@ -127,6 +127,8 @@ func _paint_ground() -> void:
 
 func _refresh_paths() -> void:
 	_paths.clear()
+	for cell in GameState.park.entrance_cells():
+		_paths.set_cell(cell, _tile_source[Scenery.ENTRANCE_TILE], Vector2i.ZERO)
 	for entry: Dictionary in GameState.park.objects.values():
 		var item_id: String = entry["item_id"]
 		if ArtRegistry.is_path(item_id):
@@ -196,6 +198,8 @@ func _on_object_removed(uid: String) -> void:
 
 func _on_park_expanded(_size: int) -> void:
 	_paint_ground()
+	_refresh_paths()
+	_refresh_visitors()
 	_grid_overlay.queue_redraw()
 
 

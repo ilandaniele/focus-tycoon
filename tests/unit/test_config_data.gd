@@ -21,7 +21,7 @@ func test_economy_matches_gdd() -> void:
 	assert_eq(Config.economy["levels"]["xp_thresholds"][6], 1400)
 	assert_near(Config.economy["refund_ratio"], 0.5)
 	assert_eq(Ints.of(Config.economy["starter_grant"]), {"coins": 300, "nature": 10})
-	assert_eq(Ints.of(Config.economy["park"]), {"map_size": 24, "initial_unlocked": 12})
+	assert_eq(Ints.of(Config.economy["park"]), {"map_size": 34, "initial_unlocked": 12})
 
 
 func test_catalog_matches_gdd() -> void:
@@ -52,9 +52,9 @@ func test_only_lantern_is_premium_and_enclosures_have_biome_and_capacity() -> vo
 
 
 func test_expansions_match_gdd() -> void:
-	assert_eq(Config.expansions.map(func(e: Dictionary) -> int: return int(e["size"])), [16, 20, 24])
-	assert_eq(Config.expansions.map(func(e: Dictionary) -> int: return int(e["cost"]["coins"])), [800, 2000, 4000])
-	assert_eq(Config.expansions.map(func(e: Dictionary) -> int: return int(e["unlock_level"])), [3, 6, 10])
+	assert_eq(Config.expansions.map(func(e: Dictionary) -> int: return int(e["size"])), [16, 20, 24, 28])
+	assert_eq(Config.expansions.map(func(e: Dictionary) -> int: return int(e["cost"]["coins"])), [800, 2000, 4000, 7000])
+	assert_eq(Config.expansions.map(func(e: Dictionary) -> int: return int(e["unlock_level"])), [3, 6, 10, 14])
 
 
 func test_species_match_gdd_and_are_visually_distinct() -> void:

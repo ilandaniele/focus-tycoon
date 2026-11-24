@@ -33,7 +33,7 @@
 	},
 	"refund_ratio": 0.5,
 	"starter_grant": {"coins": 300, "nature": 10},
-	"park": {"map_size": 24, "initial_unlocked": 12},
+	"park": {"map_size": 34, "initial_unlocked": 12},
 	"visitors": {"variants": ["man", "woman", "woman_casual"], "base": 1, "per_attraction": 2, "max": 12, "walk_px_per_second": 34, "look_seconds": [2.0, 5.0], "look_chance": 0.6},
 	"modes": ["study", "work", "reading", "languages", "review", "project"]
 }

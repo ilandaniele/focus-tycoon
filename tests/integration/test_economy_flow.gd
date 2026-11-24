@@ -52,7 +52,7 @@ func test_daily_objective_can_be_claimed_once() -> void:
 	assert_eq(Economy.claim_objective("place_3_objects")["error"], "not_done")
 	Economy.grant("seed", {"coins": 100}, "test")
 	for index in 3:
-		assert_true(ParkService.buy_and_place("path_dirt", Vector2i(10 + index, 10))["ok"])
+		assert_true(ParkService.buy_and_place("path_dirt", Vector2i(15 + index, 15))["ok"])
 	assert_eq(Economy.day_metrics(GameState.today())["objects_placed"], 3)
 	var coins_before := Economy.balance("coins")
 	assert_true(Economy.claim_objective("place_3_objects")["ok"])

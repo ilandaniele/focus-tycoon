@@ -133,6 +133,7 @@ func _apply_data(data: Dictionary) -> void:
 	player = data["player"]
 	ledger = Ledger.from_dict(data["resources"])
 	park = ParkModel.from_dict(data["park"])
+	park.grow(int(Config.economy["park"]["map_size"]))
 	if data["focus_active"] != null:
 		timer = FocusTimer.from_dict(data["focus_active"])
 	focus_sessions = data["focus_sessions"]

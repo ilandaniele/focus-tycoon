@@ -112,3 +112,25 @@ func test_nearest_free_cell_skips_occupied_cells() -> void:
 func test_nearest_free_cell_returns_start_when_nothing_fits() -> void:
 	var park := ParkModel.new(4, 2)
 	assert_eq(park.nearest_free_cell(ENCLOSURE, Vector2i(0, 0)), Vector2i(0, 0))
+
+
+func test_entrance_runs_from_park_edge_to_map_edge() -> void:
+	var park := ParkModel.new(30, 24)
+	assert_eq(park.entrance_cells(), [Vector2i(15, 27), Vector2i(15, 28), Vector2i(15, 29)])
+	assert_eq(park.gate_cell(), Vector2i(15, 26))
+	assert_true(park.is_cell_unlocked(park.gate_cell()))
+	park.unlocked_size = 30
+	assert_true(park.entrance_cells().is_empty())
+
+
+func test_grow_recenters_objects_and_keeps_occupancy() -> void:
+	var park := _park()
+	park.place("o_1", "fountain", TWO, Vector2i(6, 6))
+	park.grow(30)
+	assert_eq(park.map_size, 30)
+	assert_eq(park.objects["o_1"]["cell"], Vector2i(9, 9))
+	assert_eq(park.object_at(Vector2i(10, 10)), "o_1")
+	assert_eq(park.object_at(Vector2i(6, 6)), "")
+	assert_true(park.is_cell_unlocked(Vector2i(9, 9)))
+	park.grow(20)
+	assert_eq(park.map_size, 30)

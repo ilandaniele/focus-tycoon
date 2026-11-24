@@ -59,6 +59,7 @@
 	"expansions": [
 		{"id": "expand_1", "size": 16, "cost": {"coins": 800}, "unlock_level": 3},
 		{"id": "expand_2", "size": 20, "cost": {"coins": 2000}, "unlock_level": 6},
-		{"id": "expand_3", "size": 24, "cost": {"coins": 4000}, "unlock_level": 10}
+		{"id": "expand_3", "size": 24, "cost": {"coins": 4000}, "unlock_level": 10},
+		{"id": "expand_4", "size": 28, "cost": {"coins": 7000}, "unlock_level": 14}
 	]
 }

@@ -15,7 +15,7 @@ func _chain(id: String) -> Dictionary:
 func test_claim_requires_done_and_advances_once() -> void:
 	assert_eq(Economy.claim_mission("collector")["error"], "not_done")
 	Economy.grant("test:fund", {"coins": 1000}, "test")
-	var cell := GameState.park.nearest_free_cell(Vector2i(3, 3), Vector2i(12, 12))
+	var cell := GameState.park.nearest_free_cell(Vector2i(3, 3), Vector2i(17, 17))
 	var placed := ParkService.buy_and_place("enclosure_meadow", cell)
 	assert_true(placed["ok"], placed["error"])
 	var enclosure_uid: String = placed["uid"]

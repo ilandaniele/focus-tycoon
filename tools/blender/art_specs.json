@@ -145,6 +145,7 @@
 			{"m": "quaternius/Mushroom_Common", "at": [0.25, 0.2], "s": 0.4},
 			{"m": "quaternius/Clover_2", "at": [-0.25, 0.22], "s": 0.3}
 		]},
+		"scenery/park_gate": {"size": [1, 1], "parts": [{"m": "quaternius/park/arch_round", "s": 0.32, "r": 90}]},
 		"scenery/tree_round": {"size": [1, 1], "parts": [{"m": "quaternius/CommonTree_2", "s": 0.2}]},
 		"scenery/tree_twisted": {"size": [1, 1], "parts": [{"m": "quaternius/TwistedTree_3", "s": 0.07}]},
 		"scenery/pine_tall": {"size": [1, 1], "parts": [{"m": "quaternius/Pine_4", "s": 0.17}]},

@@ -13,10 +13,34 @@ func _init(p_map_size: int, p_unlocked_size: int) -> void:
 	unlocked_size = p_unlocked_size
 
 
-@warning_ignore("integer_division")
 func is_cell_unlocked(cell: Vector2i) -> bool:
-	var margin: int = (map_size - unlocked_size) / 2
+	var margin := _margin()
 	return cell.x >= margin and cell.y >= margin and cell.x < margin + unlocked_size and cell.y < margin + unlocked_size
+
+
+@warning_ignore("integer_division")
+func entrance_cells() -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for y in range(_margin() + unlocked_size, map_size):
+		cells.append(Vector2i(map_size / 2, y))
+	return cells
+
+
+@warning_ignore("integer_division")
+func gate_cell() -> Vector2i:
+	return Vector2i(map_size / 2, _margin() + unlocked_size - 1)
+
+
+@warning_ignore("integer_division")
+func grow(new_size: int) -> void:
+	if new_size <= map_size:
+		return
+	var offset := Vector2i.ONE * ((new_size - map_size) / 2)
+	map_size = new_size
+	_occupancy.clear()
+	for entry: Dictionary in objects.values():
+		entry["cell"] += offset
+		_occupy(entry["uid"], entry["size"], entry["cell"])
 
 
 func can_place(size: Vector2i, cell: Vector2i, ignore_uid: String = "") -> bool:
@@ -106,6 +130,11 @@ static func from_dict(d: Dictionary) -> ParkModel:
 		park._occupy(uid, size, cell)
 	park.animals = d.get("animals", {}).duplicate(true)
 	return park
+
+
+@warning_ignore("integer_division")
+func _margin() -> int:
+	return (map_size - unlocked_size) / 2
 
 
 func _footprint(size: Vector2i, cell: Vector2i) -> Array[Vector2i]:
