@@ -115,16 +115,19 @@ Perfil medio llega a nivel 5 ≈ día 6, nivel 7 ≈ día 11, nivel 15 ≈ día 
 | enclosure_ice | enclosure | 3×3, capacidad 3 | 400 c + 20 n | 2 |
 | enclosure_forest | enclosure | 3×3, capacidad 3 | 600 c + 40 n | 4 |
 | enclosure_savanna | enclosure | 4×4, capacidad 2 | 1200 c + 80 n | 7 |
+| enclosure_desert | enclosure | 3×3, capacidad 3 | 900 c + 60 n | 5 |
+| enclosure_aquarium | enclosure (acuario) | 3×3, capacidad 4 | 1000 c + 70 n | 6 |
 | lantern_premium | decor (premium) | 1×1 | 0 c + entitlement `premium` | 1 |
 
 Quitar un objeto devuelve 50 % de las monedas (no la naturaleza). Mover es gratis.
 
-### Expansiones del parque (mapa 24×24, área inicial 12×12 centrada)
+### Expansiones del parque (mapa 34×34, área inicial 12×12 centrada; el resto del mapa es zona salvaje con el camino de entrada de visitantes)
 | id | Área resultante | Costo | Nivel |
 |---|---|---|---|
 | expand_1 | 16×16 | 800 c | 3 |
 | expand_2 | 20×20 | 2000 c | 6 |
 | expand_3 | 24×24 | 4000 c | 10 |
+| expand_4 | 28×28 | 7000 c | 14 |
 
 ### Especies
 | id | Bioma | Costo | Nivel | Rasgo visual |

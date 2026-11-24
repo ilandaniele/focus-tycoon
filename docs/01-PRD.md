@@ -44,7 +44,7 @@ Prioridad: P0 = sin esto no hay producto; P1 = entra en MVP pero puede llegar en
 ### Juego
 | # | Función | Prio | Criterio |
 |---|---|---|---|
-| G1 | Mapa isométrico 24×24 con área inicial 12×12 | P0 | El parque carga con el área inicial desbloqueada y el resto visible como terreno bloqueado. |
+| G1 | Mapa isométrico 34×34 con área inicial 12×12 y camino de entrada hasta el borde | P0 | El parque carga con el área inicial desbloqueada y el resto visible como terreno bloqueado. |
 | G2 | Cuadrícula y colocación | P0 | Con un objeto elegido, el fantasma sigue al dedo, se pinta verde/rojo según validez y se confirma con un toque. |
 | G3 | Caminos, árboles, decoraciones, recintos | P0 | Catálogo con al menos 3 caminos/suelos, 4 árboles/plantas, 4 decoraciones, 4 recintos (uno por bioma). |
 | G4 | Cinco especies | P0 | Conejo, pingüino, capibara, panda rojo, elefante; cada una requiere un recinto de su bioma. |
