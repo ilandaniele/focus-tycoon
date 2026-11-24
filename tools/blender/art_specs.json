@@ -94,18 +94,18 @@
 		]},
 		"objects/tree_birch": {"size": [1, 1], "parts": [{"m": "kenney/nature/tree_thin", "s": 1.0}]},
 		"objects/tree_small": {"size": [1, 1], "parts": [{"m": "kenney/nature/tree_small", "s": 1.0}]},
-		"objects/tall_grass": {"size": [1, 1], "parts": [{"m": "kenney/nature/grass_large", "at": [-0.15, -0.1], "s": 1.7}, {"m": "kenney/nature/grass_large", "at": [0.2, 0.15], "r": 60.0, "s": 1.5}]},
+		"objects/tall_grass": {"size": [1, 1], "parts": [{"m": "quaternius/Grass_Wispy_Tall", "at": [-0.15, -0.1], "s": 0.55}, {"m": "quaternius/Grass_Wispy_Tall", "at": [0.2, 0.05], "r": 70.0, "s": 0.45}, {"m": "quaternius/Grass_Wispy_Tall", "at": [0.0, 0.25], "r": 150.0, "s": 0.5}]},
 		"objects/flowers_red": {"size": [1, 1], "parts": [{"m": "kenney/nature/flower_redA", "at": [-0.15, 0.0], "s": 2.0}, {"m": "kenney/nature/flower_redB", "at": [0.15, -0.15], "s": 2.0}, {"m": "kenney/nature/flower_redC", "at": [0.1, 0.2], "s": 2.0}]},
 		"objects/flowers_yellow": {"size": [1, 1], "parts": [{"m": "kenney/nature/flower_yellowA", "at": [-0.15, 0.0], "s": 2.0}, {"m": "kenney/nature/flower_yellowB", "at": [0.15, -0.15], "s": 2.0}, {"m": "kenney/nature/flower_yellowC", "at": [0.1, 0.2], "s": 2.0}]},
 		"objects/bush_round": {"size": [1, 1], "parts": [{"m": "kenney/nature/plant_bushDetailed", "s": 1.8}]},
 		"objects/mushrooms": {"size": [1, 1], "parts": [{"m": "kenney/nature/mushroom_tanGroup", "at": [-0.1, 0.0], "s": 2.0}, {"m": "kenney/nature/mushroom_redTall", "at": [0.2, 0.15], "s": 2.0}]},
-		"objects/clover": {"size": [1, 1], "parts": [{"m": "quaternius/Clover_1", "at": [-0.1, 0.0], "s": 0.6}, {"m": "quaternius/Clover_2", "at": [0.15, 0.15], "s": 0.6}]},
+		"objects/clover": {"size": [1, 1], "parts": [{"m": "quaternius/Clover_1", "at": [-0.15, -0.05], "s": [0.6, 0.15, 0.6]}, {"m": "quaternius/Clover_2", "at": [0.18, 0.1], "r": 60.0, "s": [0.6, 0.15, 0.6]}, {"m": "quaternius/Clover_1", "at": [-0.02, 0.25], "r": 130.0, "s": [0.55, 0.13, 0.55]}, {"m": "quaternius/Clover_2", "at": [0.1, -0.22], "r": 200.0, "s": [0.5, 0.12, 0.5]}]},
 		"objects/tree_acacia": {"size": [1, 1], "parts": [{"m": "kenney/nature/tree_plateau", "s": 1.0}]},
 		"objects/tree_cypress": {"size": [1, 1], "parts": [{"m": "kenney/nature/tree_cone", "s": 1.0}]},
 		"objects/savanna_grass": {"size": [1, 1], "parts": [{"m": "quaternius/Grass_Wispy_Tall", "s": 0.4}]},
 		"objects/flowers_purple": {"size": [1, 1], "parts": [{"m": "kenney/nature/flower_purpleA", "at": [-0.15, 0.0], "s": 2.0}, {"m": "kenney/nature/flower_purpleB", "at": [0.15, -0.15], "s": 2.0}, {"m": "kenney/nature/flower_purpleC", "at": [0.1, 0.2], "s": 2.0}]},
 		"objects/bush_cone": {"size": [1, 1], "parts": [{"m": "kenney/nature/plant_bushLargeTriangle", "s": 1.9}]},
-		"objects/tropical_plant": {"size": [1, 1], "parts": [{"m": "kenney/nature/grass_leafsLarge", "at": [-0.1, -0.05], "s": 1.7}, {"m": "kenney/nature/grass_leafsLarge", "at": [0.2, 0.2], "r": 90.0, "s": 1.3}]},
+		"objects/tropical_plant": {"size": [1, 1], "parts": [{"m": "quaternius/Plant_7", "at": [-0.1, -0.05], "s": 0.35}, {"m": "quaternius/Fern_1", "at": [0.2, 0.18], "r": 90.0, "s": 0.3}, {"m": "quaternius/Plant_1_Big", "at": [-0.2, 0.25], "r": 40.0, "s": 0.18}]},
 		"objects/tree_maple_fall": {"size": [1, 1], "parts": [{"m": "kenney/nature/tree_oak_fall", "s": 1.0}]},
 		"objects/tree_poplar": {"size": [1, 1], "parts": [{"m": "kenney/nature/tree_tall", "s": 1.0}]},
 		"objects/pine_grove": {"size": [1, 1], "parts": [{"m": "kenney/nature/tree_pineSmallA", "at": [-0.2, -0.1], "s": 0.9}, {"m": "kenney/nature/tree_pineSmallC", "at": [0.2, -0.15], "s": 0.9}, {"m": "kenney/nature/tree_pineSmallB", "at": [0.0, 0.22], "s": 0.9}]},
@@ -124,14 +124,14 @@
 			{"m": "quaternius/Rock_Medium_1", "at": [0.05, -0.1], "y": -0.05, "r": 20.0, "s": 0.27},
 			{"m": "quaternius/Rock_Medium_3", "at": [-0.27, 0.15], "y": -0.03, "r": -40.0, "s": 0.16},
 			{"m": "quaternius/Pebble_Round_2", "at": [0.3, 0.28], "s": 0.35},
-			{"m": "kenney/nature/grass_large", "at": [-0.3, -0.25], "s": 0.7},
+			{"m": "quaternius/Grass_Wispy_Tall", "at": [-0.3, -0.25], "s": 0.25},
 			{"m": "quaternius/Clover_2", "at": [0.15, 0.32], "s": 0.3}
 		]},
 		"scenery/standing_stone": {"size": [1, 1], "parts": [
 			{"m": "quaternius/Rock_Medium_2", "y": -0.03, "r": 15.0, "s": [0.12, 0.3, 0.12]},
 			{"m": "quaternius/Rock_Medium_3", "at": [0.28, 0.2], "y": -0.01, "s": 0.09},
 			{"m": "quaternius/Fern_1", "at": [-0.25, 0.2], "s": 0.22},
-			{"m": "kenney/nature/grass_large", "at": [0.22, -0.25], "s": 0.6}
+			{"m": "quaternius/Grass_Wispy_Tall", "at": [0.22, -0.25], "s": 0.22}
 		]},
 		"scenery/pebble_patch": {"size": [1, 1], "parts": [
 			{"m": "quaternius/Pebble_Square_2", "at": [-0.15, 0.05], "s": 0.5},
