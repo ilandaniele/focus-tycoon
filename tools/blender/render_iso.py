@@ -25,10 +25,12 @@ def main(only: list) -> None:
         if _wanted(key, only):
             render_object(stage, specs["palette"], key, spec)
             rendered += 1
-    for species_id, spec in specs["animals"].items():
-        if _wanted("animals/" + species_id, only):
-            render_animal(stage, species_id, spec)
-            rendered += 1
+    for group in ("animals", "visitors"):
+        for actor_id, spec in specs[group].items():
+            key = "%s/%s" % (group, actor_id)
+            if _wanted(key, only):
+                render_actor(stage, key, spec)
+                rendered += 1
     print("%d keys rendered" % rendered)
 
 
@@ -44,7 +46,7 @@ def render_object(stage: dict, palette: dict, key: str, spec: dict) -> None:
     iso_scene.save(iso_scene.fade_shadow_floor(iso_scene.capture(), stage["shadow_floor"]), _target(key))
 
 
-def render_animal(stage: dict, species_id: str, spec: dict) -> None:
+def render_actor(stage: dict, key: str, spec: dict) -> None:
     scale = stage["asset_scale"]
     canvas = (stage["animal_canvas"][0] * scale, stage["animal_canvas"][1] * scale)
     anchor = (canvas[0] / 2.0, canvas[1] - stage["foot_margin"] * scale)
@@ -62,14 +64,15 @@ def render_animal(stage: dict, species_id: str, spec: dict) -> None:
         frames = []
         for index in range(count):
             if rigged:
-                start, end = animals.frame_range(action)
-                animals.play(action, start + (end - start) * index / count)
+                clip = animals.clip(spec, action)
+                start, end = animals.frame_range(clip)
+                animals.play(clip, start + (end - start) * index / count)
             else:
                 animals.sway(motion, action, index / count, stage["static_motion"])
             frames.append(iso_scene.capture())
         if action == "idle":
-            iso_scene.save(frames[0], _target("animals/" + species_id))
-        iso_scene.save(np.concatenate(frames, axis=1), _target("animals/%s_%s" % (species_id, action)))
+            iso_scene.save(frames[0], _target(key))
+        iso_scene.save(np.concatenate(frames, axis=1), _target("%s_%s" % (key, action)))
 
 
 def _wanted(key: str, only: list) -> bool:

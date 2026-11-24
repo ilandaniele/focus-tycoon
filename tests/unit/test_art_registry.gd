@@ -29,15 +29,24 @@ func test_every_species_has_texture_with_canvas_size() -> void:
 
 func test_every_species_has_idle_and_walk_strips() -> void:
 	for species_id: String in Config.species:
-		var canvas := Vector2(ArtRegistry.ANIMAL_CANVAS)
-		for anim: String in ANIMATION_FRAMES:
-			var strip := ArtRegistry.animation(species_id, anim)
-			assert_true(strip != null, "%s %s" % [species_id, anim])
-			assert_eq(strip.get_size(), Vector2(canvas.x * ANIMATION_FRAMES[anim], canvas.y), "%s %s" % [species_id, anim])
+		_assert_strips("animals/" + species_id)
+
+
+func test_every_visitor_has_idle_and_walk_strips() -> void:
+	for variant: String in Config.economy["visitors"]["variants"]:
+		_assert_strips("visitors/" + variant)
+
+
+func _assert_strips(art_key: String) -> void:
+	var canvas := Vector2(ArtRegistry.ANIMAL_CANVAS)
+	for anim: String in ANIMATION_FRAMES:
+		var strip := ArtRegistry.animation(art_key, anim)
+		assert_true(strip != null, "%s %s" % [art_key, anim])
+		assert_eq(strip.get_size(), Vector2(canvas.x * ANIMATION_FRAMES[anim], canvas.y), "%s %s" % [art_key, anim])
 
 
 func test_missing_animation_is_null() -> void:
-	assert_eq(ArtRegistry.animation("rabbit", "dance"), null)
+	assert_eq(ArtRegistry.animation("animals/rabbit", "dance"), null)
 
 
 func test_animal_pivot_is_frame_foot_center() -> void:

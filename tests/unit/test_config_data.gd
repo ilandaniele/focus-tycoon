@@ -25,7 +25,7 @@ func test_economy_matches_gdd() -> void:
 
 
 func test_catalog_matches_gdd() -> void:
-	assert_eq(Config.catalog.size(), 28)
+	assert_eq(Config.catalog.size(), 55)
 	assert_eq(Config.item("tree_oak")["cost"]["coins"], 25)
 	assert_eq(Config.item("path_wood")["unlock_level"], 4)
 	assert_eq(Ints.of(Config.item("fountain")["size"]), [2, 2])
@@ -37,7 +37,8 @@ func test_catalog_matches_gdd() -> void:
 	assert_true(Config.item("lantern_premium")["premium"])
 	assert_eq(Config.items_in("enclosure").size(), 4)
 	assert_eq(Config.items_in("path").size(), 3)
-	assert_eq(Config.items_in("plant").size(), 13)
+	assert_eq(Config.items_in("plant").size(), 35)
+	assert_eq(Config.items_in("building").size(), 5)
 	assert_eq(Config.item("hedge")["unlock_level"], 1)
 	assert_true(Config.item("missing").is_empty())
 
