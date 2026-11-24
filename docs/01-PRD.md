@@ -56,6 +56,7 @@ Prioridad: P0 = sin esto no hay producto; P1 = entra en MVP pero puede llegar en
 | G10 | Guardado y restauración | P0 | Cerrar y abrir la app restaura objetos, animales, recursos y sesión activa idénticos. |
 | G11 | Tutorial interactivo | P0 | Primer uso: guía de 6 pasos (bienvenida, primera sesión o regalo inicial, abrir catálogo, plantar árbol, construir recinto, adoptar conejo). Se puede saltar. |
 | G12 | Evolución del zoológico | P1 | Pantalla de perfil con nivel, especies adoptadas (colección), objetos colocados y una línea de tiempo de hitos. |
+| G13 | Visitantes y edificios | P2 | Edificios cosméticos (carrito de helados, arco de entrada, puesto de comida, baños, tienda de regalos) en el catálogo. Visitantes recorren los caminos y se detienen junto a recintos con animales y edificios. Cantidad crece con atracciones. Sin efecto en la economía. |
 
 ### Monetización
 | # | Función | Prio | Criterio |
@@ -65,7 +66,7 @@ Prioridad: P0 = sin esto no hay producto; P1 = entra en MVP pero puede llegar en
 | M3 | Restaurar compras | P1 | Botón visible en Perfil. |
 
 ## Fuera de alcance (MVP)
-Biomas adicionales, visitantes con navegación, edificios comerciales, reputación, eventos estacionales, misiones encadenadas, personalización avanzada, colecciones extendidas, sincronización multiplataforma, cuentas online obligatorias, anuncios, social/rankings, widgets, Apple Watch/Wear OS, Live Activities.
+Biomas adicionales, visitantes con economía o necesidades, ingresos de edificios comerciales, reputación, eventos estacionales, misiones encadenadas, personalización avanzada, colecciones extendidas, sincronización multiplataforma, cuentas online obligatorias, anuncios, social/rankings, widgets, Apple Watch/Wear OS, Live Activities.
 
 ## Requisitos no funcionales
 - **Rendimiento:** 60 fps en gama media (Snapdragon 6xx / iPhone 11) con 150 objetos y 20 animales; ≤ 30 fps en reposo del parque (`low_processor_mode` en pantallas de UI); arranque en frío ≤ 3 s.

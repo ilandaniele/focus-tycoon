@@ -15,7 +15,7 @@ def load(path: str, spec: dict, shape: dict) -> bpy.types.Object:
     root.rotation_euler.z = math.radians(FACING_DEG)
     if rigged():
         proportions.reshape(shape)
-        play("idle", 0.0)
+        play(clip(spec, "idle"), 0.0)
         low, high = _bounds()
         scale = spec["height"] / (high.z - low.z)
     else:
@@ -91,6 +91,10 @@ def _crease_open_edges(mesh: bpy.types.Mesh) -> None:
     crease = mesh.attributes.new("crease_edge", "FLOAT", "EDGE")
     for edge in mesh.edges:
         crease.data[edge.index].value = 1.0 if faces_per_edge.get(edge.key) == 1 else 0.0
+
+
+def clip(spec: dict, action: str) -> str:
+    return spec.get("actions", {}).get(action, action)
 
 
 def frame_range(name: str) -> tuple:

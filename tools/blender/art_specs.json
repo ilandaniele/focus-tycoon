@@ -45,7 +45,24 @@
 		"flamingo": {"model": "polygoogle/flamingo.glb", "size": 0.95},
 		"rhino": {"model": "polygoogle/rhino.glb", "size": 1.06, "tint": 2.2}
 	},
+	"visitors": {
+		"man": {"model": "quaternius/park/man.glb", "height": 0.62, "tint": 1.4, "actions": {"idle": "HumanArmature|Man_Idle", "walk": "HumanArmature|Man_Walk"}},
+		"woman": {"model": "quaternius/park/woman.glb", "height": 0.6, "tint": 1.4, "actions": {"idle": "HumanArmature|Female_Idle", "walk": "HumanArmature|Female_Walk"}},
+		"woman_casual": {"model": "quaternius/park/woman_casual.glb", "height": 0.6, "tint": 1.4, "actions": {"idle": "HumanArmature|Female_Idle", "walk": "HumanArmature|Female_Walk"}}
+	},
 	"objects": {
+		"objects/snack_stand": {"size": [2, 2], "parts": [{"m": "quaternius/park/market_stand", "s": 1.5}]},
+		"objects/gift_shop": {"size": [2, 2], "parts": [{"m": "quaternius/park/market_stalls_compact", "s": 0.95}]},
+		"objects/ice_cream_cart": {"size": [1, 1], "parts": [{"m": "quaternius/park/cart", "s": 0.9, "r": 90}, {"m": "quaternius/park/ice_cream", "s": 0.35, "y": 0.55}]},
+		"objects/restroom": {"size": [2, 2], "parts": [
+			{"shape": "box", "size": [1.5, 0.9, 1.2], "y": 0.45, "color": "F2E6D0"},
+			{"shape": "box", "size": [1.7, 0.08, 1.4], "y": 0.94, "color": "6FA8A0"},
+			{"shape": "box", "size": [0.28, 0.55, 0.02], "y": 0.28, "at": [-0.35, 0.61], "color": "8A6A4F"},
+			{"shape": "box", "size": [0.28, 0.55, 0.02], "y": 0.28, "at": [0.35, 0.61], "color": "8A6A4F"},
+			{"shape": "sphere", "size": [0.07], "y": 0.72, "at": [-0.35, 0.62], "color": "5B8DD6"},
+			{"shape": "sphere", "size": [0.07], "y": 0.72, "at": [0.35, 0.62], "color": "E07A8F"}
+		]},
+		"objects/entrance_arch": {"size": [2, 2], "parts": [{"m": "quaternius/park/arch_round", "s": 0.55}]},
 		"objects/tree_oak": {"size": [1, 1], "parts": [{"m": "quaternius/CommonTree_1", "s": 0.19}]},
 		"objects/tree_pine": {"size": [1, 1], "parts": [{"m": "quaternius/Pine_1", "s": 0.19}]},
 		"objects/tree_cherry": {"size": [1, 1], "parts": [{"m": "quaternius/CommonTree_3", "s": 0.15, "tint": {"Leaves_NormalTree": "F6B3CB"}}]},

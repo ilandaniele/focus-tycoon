@@ -10,6 +10,7 @@ const ANIMAL_SCENE := preload("res://scenes/world/animal_actor.tscn")
 var _tile_source: Dictionary = {}
 var _objects: Dictionary = {}
 var _actors: Dictionary = {}
+var _crowd := VisitorCrowd.new()
 
 @onready var _island_edge: IslandEdge = $IslandEdge
 @onready var _ground: TileMapLayer = $Ground
@@ -93,6 +94,7 @@ func rebuild() -> void:
 			node.queue_free()
 	_objects.clear()
 	_actors.clear()
+	_crowd.forget()
 	_paint_ground()
 	_refresh_paths()
 	for uid: String in park.objects:
@@ -100,6 +102,7 @@ func rebuild() -> void:
 			_spawn_object(uid)
 	for uid: String in park.animals:
 		_spawn_animal(uid)
+	_refresh_visitors()
 	_camera.bounds = IsoGrid.map_rect(_ground, park.map_size)
 	_camera.position = _ground.map_to_local(Vector2i(park.map_size, park.map_size) / 2)
 
@@ -145,12 +148,17 @@ func _spawn_animal(uid: String) -> void:
 	_actors[uid] = actor
 
 
+func _refresh_visitors() -> void:
+	_crowd.refresh(_entities, _ground, GameState.park)
+
+
 func _enclosure_points(enclosure_uid: String) -> Array[Vector2]:
 	var enclosure: Dictionary = GameState.park.objects[enclosure_uid]
 	return IsoGrid.cell_centers(_ground, enclosure["cell"], enclosure["size"])
 
 
 func _on_object_placed(uid: String) -> void:
+	_refresh_visitors()
 	var entry: Dictionary = GameState.park.objects[uid]
 	if ArtRegistry.is_path(entry["item_id"]):
 		_refresh_paths()
@@ -161,11 +169,13 @@ func _on_object_placed(uid: String) -> void:
 
 
 func _on_animal_adopted(uid: String) -> void:
+	_refresh_visitors()
 	_spawn_animal(uid)
 	WorldFx.celebrate(_entities, _actors[uid].position, _actors[uid])
 
 
 func _on_object_moved(uid: String) -> void:
+	_refresh_visitors()
 	if not _objects.has(uid):
 		_refresh_paths()
 		return
@@ -176,6 +186,7 @@ func _on_object_moved(uid: String) -> void:
 
 
 func _on_object_removed(uid: String) -> void:
+	_refresh_visitors()
 	if _objects.has(uid):
 		_objects[uid].queue_free()
 		_objects.erase(uid)

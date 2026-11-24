@@ -44,8 +44,8 @@ static func object_pivot(texture: Texture2D, size: Vector2i) -> Vector2:
 static func animal_pivot(frame_size: Vector2) -> Vector2:
 	return Vector2(frame_size.x / 2.0, frame_size.y - FOOT_MARGIN)
 
-static func animation(species_id: String, anim: String) -> Texture2D:
-	var key := "animals/%s_%s" % [species_id, anim]
+static func animation(art_key: String, anim: String) -> Texture2D:
+	var key := "%s_%s" % [art_key, anim]
 	if not _cache.has(key):
 		_cache[key] = _load_asset(key)
 	return _cache[key]

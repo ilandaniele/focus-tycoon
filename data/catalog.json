@@ -27,6 +27,11 @@
 		{"id": "enclosure_ice", "category": "enclosure", "size": [3, 3], "cost": {"coins": 400, "nature": 20}, "unlock_level": 2, "biome": "ice", "capacity": 3, "premium": false},
 		{"id": "enclosure_forest", "category": "enclosure", "size": [3, 3], "cost": {"coins": 600, "nature": 40}, "unlock_level": 4, "biome": "forest", "capacity": 3, "premium": false},
 		{"id": "enclosure_savanna", "category": "enclosure", "size": [4, 4], "cost": {"coins": 1200, "nature": 80}, "unlock_level": 7, "biome": "savanna", "capacity": 2, "premium": false},
+		{"id": "ice_cream_cart", "category": "building", "size": [1, 1], "cost": {"coins": 80, "nature": 0}, "unlock_level": 1, "premium": false},
+		{"id": "entrance_arch", "category": "building", "size": [2, 2], "cost": {"coins": 200, "nature": 0}, "unlock_level": 1, "premium": false},
+		{"id": "snack_stand", "category": "building", "size": [2, 2], "cost": {"coins": 150, "nature": 0}, "unlock_level": 2, "premium": false},
+		{"id": "restroom", "category": "building", "size": [2, 2], "cost": {"coins": 120, "nature": 0}, "unlock_level": 2, "premium": false},
+		{"id": "gift_shop", "category": "building", "size": [2, 2], "cost": {"coins": 250, "nature": 0}, "unlock_level": 3, "premium": false},
 		{"id": "lantern_premium", "category": "decor", "size": [1, 1], "cost": {"coins": 0, "nature": 0}, "unlock_level": 1, "premium": true}
 	],
 	"expansions": [

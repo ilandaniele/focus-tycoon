@@ -14,7 +14,9 @@ var species_id := ""
 var enclosure_uid := ""
 
 var _points: Array[Vector2] = []
-var _speed := 1.0
+var _pixels_per_second := WALK_PX_PER_SECOND
+var _art_key := ""
+var _current_anim := ""
 var _rest_scale := Vector2.ONE
 var _motion_factor := 1.0
 var _reduce_motion := false
@@ -32,18 +34,23 @@ func setup(new_species_id: String, new_enclosure_uid: String, points: Array[Vect
 	species_id = new_species_id
 	enclosure_uid = new_enclosure_uid
 	var species: Dictionary = Config.species[species_id]
-	_speed = species["speed"]
+	_begin("animals/" + species_id, WALK_PX_PER_SECOND * float(species["speed"]), float(species["scale"]))
+	set_points(points)
+
+
+func _begin(art_key: String, pixels_per_second: float, art_scale: float) -> void:
+	_art_key = art_key
+	_pixels_per_second = pixels_per_second
 	_canvas = Vector2(ArtRegistry.ANIMAL_CANVAS)
 	_load_strips()
-	_sprite.texture = ArtRegistry.get_texture("animals/" + species_id)
+	_sprite.texture = ArtRegistry.get_texture(art_key)
 	_sprite.centered = false
 	_sprite.offset = -ArtRegistry.animal_pivot(_canvas)
-	_rest_scale = Vector2.ONE * float(species["scale"])
+	_rest_scale = Vector2.ONE * art_scale
 	_sprite.scale = _rest_scale
 	_shadow.texture = ArtRegistry.get_texture("fx/shadow")
 	_shadow.scale = _rest_scale
 	GameState.settings_changed.connect(_on_setting_changed)
-	set_points(points)
 
 
 func set_points(points: Array[Vector2]) -> void:
@@ -58,7 +65,7 @@ func _exit_tree() -> void:
 
 func _load_strips() -> void:
 	for anim: String in ANIMATION_FPS:
-		var strip := ArtRegistry.animation(species_id, anim)
+		var strip := ArtRegistry.animation(_art_key, anim)
 		if strip == null:
 			_strips.clear()
 			return
@@ -84,6 +91,7 @@ func _kill_tweens() -> void:
 	for tween in [_move_tween, _bob_tween, _frame_tween]:
 		if tween != null:
 			tween.kill()
+	_current_anim = ""
 	_sprite.position = Vector2.ZERO
 	_sprite.scale = _rest_scale
 
@@ -97,8 +105,9 @@ func _start_bob() -> void:
 
 
 func _play(anim: String) -> void:
-	if _strips.is_empty():
+	if _strips.is_empty() or anim == _current_anim:
 		return
+	_current_anim = anim
 	if _frame_tween != null:
 		_frame_tween.kill()
 	var strip: Texture2D = _strips[anim]
@@ -118,14 +127,20 @@ func _show_frame(value: float) -> void:
 
 func _wander_step() -> void:
 	var target := _next_point()
-	var pixels_per_second := WALK_PX_PER_SECOND * _speed * _motion_factor
-	_sprite.flip_h = target.x < position.x
+	var pause := _pause_seconds()
+	if target.x != position.x:
+		_sprite.flip_h = target.x < position.x
 	_move_tween = create_tween()
 	_move_tween.tween_callback(_play.bind("walk"))
-	_move_tween.tween_property(self, "position", target, maxf(position.distance_to(target), 1.0) / pixels_per_second)
-	_move_tween.tween_callback(_play.bind("idle"))
-	_move_tween.tween_interval(randf_range(PAUSE_SECONDS.x, PAUSE_SECONDS.y) / _motion_factor)
+	_move_tween.tween_property(self, "position", target, maxf(position.distance_to(target), 1.0) / (_pixels_per_second * _motion_factor))
+	if pause > 0.0:
+		_move_tween.tween_callback(_play.bind("idle"))
+		_move_tween.tween_interval(pause / _motion_factor)
 	_move_tween.tween_callback(_wander_step)
+
+
+func _pause_seconds() -> float:
+	return randf_range(PAUSE_SECONDS.x, PAUSE_SECONDS.y)
 
 
 func _next_point() -> Vector2:

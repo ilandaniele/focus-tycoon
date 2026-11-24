@@ -5,7 +5,7 @@ signal placement_requested(item_id: String)
 signal adopt_requested(species_id: String)
 
 const TABS: Array[String] = ["build", "animals", "park", "premium"]
-const CATEGORIES: Array[String] = ["path", "plant", "decor", "enclosure"]
+const CATEGORIES: Array[String] = ["path", "plant", "decor", "building", "enclosure"]
 const LIST_FADE_SECONDS := 0.18
 
 var _tab: String = "build"
