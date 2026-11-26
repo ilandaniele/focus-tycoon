@@ -77,9 +77,10 @@ static func add_press_feedback(node: BaseButton) -> void:
 static func _tween_scale(node: Control, target: float) -> void:
 	if reduce_motion():
 		return
-	var running: Tween = node.get_meta("press_tween", null)
-	if running != null:
-		running.kill()
+	if node.has_meta("press_tween"):
+		var running: Tween = node.get_meta("press_tween")
+		if running != null and running.is_valid():
+			running.kill()
 	var tween := node.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 	tween.tween_property(node, "scale", Vector2.ONE * target, PRESS_SECONDS)
 	node.set_meta("press_tween", tween)
