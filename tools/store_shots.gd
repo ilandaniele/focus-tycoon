@@ -15,17 +15,22 @@ const CLEAR_VIEW_TIMEOUT := 20.0
 const BLANK_RETRIES := 120
 
 var _main: Node
+var _stage: SubViewport
 
 
 func _initialize() -> void:
-	change_scene_to_file(ProjectSettings.get_setting("application/run/main_scene"))
+	_stage = SubViewport.new()
+	_stage.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	_stage.size_2d_override_stretch = true
+	root.add_child(_stage)
+	_main = load(ProjectSettings.get_setting("application/run/main_scene")).instantiate()
+	_stage.add_child(_main)
 	_run.call_deferred()
 
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	await create_timer(SETTLE_SECONDS).timeout
-	_main = current_scene
 	_hide_debug_layers()
 	for store: String in PHONE_SIZES:
 		await _phone_set(store, PHONE_SIZES[store])
@@ -42,21 +47,22 @@ func _hide_debug_layers() -> void:
 
 
 func _phone_set(store: String, size: Vector2i) -> void:
-	_resize_window(size)
+	_resize_stage(size)
 	_focus_camera()
 	await _save_clearest_park("%s_1_park" % store)
 	for index in SCREENS.size():
 		_main.open_screen(SCREENS[index])
+		OS.low_processor_usage_mode = false
 		await create_timer(SETTLE_SECONDS).timeout
 		await _save("%s_%d_%s" % [store, index + 2, SCREENS[index]])
 	_main.close_screen()
 
 
-func _resize_window(size: Vector2i) -> void:
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, true)
-	root.size = size
-	DisplayServer.window_move_to_foreground()
+func _resize_stage(size: Vector2i) -> void:
+	var base := Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
+	var scale := minf(size.x / base.x, size.y / base.y)
+	_stage.size = size
+	_stage.size_2d_override = Vector2i((Vector2(size) / scale).round())
 
 
 func _save_clearest_park(file_name: String) -> void:
@@ -77,7 +83,7 @@ func _save_clearest_park(file_name: String) -> void:
 
 
 func _overlap_count() -> int:
-	var screen := Rect2(Vector2.ZERO, Vector2(root.size))
+	var screen := Rect2(Vector2.ZERO, Vector2(_stage.size_2d_override))
 	var actors := _animal_actors().filter(func(actor: Node2D) -> bool: return screen.has_point(actor.get_global_transform_with_canvas().origin))
 	var count := 0
 	for first in actors.size():
@@ -117,7 +123,7 @@ func _focus_camera() -> void:
 
 
 func _feature_graphic() -> void:
-	_resize_window(FEATURE_SIZE)
+	_resize_stage(FEATURE_SIZE)
 	_main.get_node("UI").visible = false
 	var layer := CanvasLayer.new()
 	var title := Label.new()
@@ -152,11 +158,12 @@ func _save(file_name: String) -> void:
 
 
 func _capture(file_name: String) -> Image:
-	var image := root.get_viewport().get_texture().get_image()
+	await RenderingServer.frame_post_draw
+	var image := _stage.get_texture().get_image()
 	var retries := 0
 	while image.is_invisible() and retries < BLANK_RETRIES:
-		await process_frame
-		image = root.get_viewport().get_texture().get_image()
+		await RenderingServer.frame_post_draw
+		image = _stage.get_texture().get_image()
 		retries += 1
 	if image.is_invisible():
 		printerr("BLANK %s: rerun with the window visible" % file_name)
