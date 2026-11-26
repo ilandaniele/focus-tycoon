@@ -58,6 +58,7 @@
 - `project.godot` activa `import_etc2_astc` (requerido por Android).
 - Toolchain local: JDK 17 (Microsoft OpenJDK), Android SDK en `%LOCALAPPDATA%/Android/Sdk` (platform-tools, build-tools 36.1.0, android-36), templates 4.7.2, keystore debug en `%APPDATA%/Godot/keystores/debug.keystore`.
 - Gradle build activo; `android/` se genera con `--install-android-build-template` y está en `.gitignore`.
+- Versión actual 0.2.0 (versionCode 2). AAB firmado: `build/android/focus-tycoon-release.aab` (24/11/2026, 47 MB). Subir `versionCode` en `export_presets.cfg` antes de cada subida a Play.
 - Keystore de release: `~/.focus-tycoon/release.keystore` (alias `focustycoon`) y `~/.focus-tycoon/release.env`. **Hacer backup**: perderla impide actualizar la app en Play.
 
 ## Export Web
