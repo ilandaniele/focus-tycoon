@@ -79,7 +79,7 @@ func _render() -> void:
 	body.add_child(UIKit.label(UIKit.t(STEPS[_step]["key"]), "", true))
 	_add_actions(body, STEPS[_step]["action"])
 	body.add_child(UIKit.button(UIKit.t("tut.skip"), _finish))
-	set_process(_highlight_target() != null)
+	set_process(true)
 
 
 func _add_actions(body: VBoxContainer, action: String) -> void:
