@@ -68,6 +68,8 @@ func start_benchmark() -> void:
 	save_now()
 	benchmark_active = true
 	park = BenchmarkPark.build(int(Config.economy["park"]["map_size"]), Config.catalog, Config.species)
+	focus_sessions = BenchmarkPark.demo_focus_sessions(now())
+	meditation_sessions = BenchmarkPark.demo_meditation_sessions(now())
 	state_loaded.emit()
 
 

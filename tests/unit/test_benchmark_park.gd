@@ -48,3 +48,16 @@ func test_uses_every_species_and_item() -> void:
 		species_ids[animal["species_id"]] = true
 	assert_eq(item_ids.size(), Config.catalog.size())
 	assert_eq(species_ids.size(), Config.species.size())
+
+
+func test_demo_sessions_fill_last_week() -> void:
+	var now := 1_800_000_000
+	var focus := BenchmarkPark.demo_focus_sessions(now)
+	var meditation := BenchmarkPark.demo_meditation_sessions(now)
+	var week := Stats.daily_focus_minutes(focus, DayKey.of(now, 0), 7, 0)
+	for day: Dictionary in week:
+		assert_true(float(day["minutes"]) > 0.0, "every day has focus")
+	assert_true(Stats.summary(focus, DayKey.add_days(DayKey.of(now, 0), -6), DayKey.of(now, 0), 0)["by_mode"].size() > 1, "several modes")
+	assert_true(Stats.distinct_meditation_days(meditation, 0, 0) > 1, "meditation on several days")
+	for session: Dictionary in focus + meditation:
+		assert_true(int(session["ended_at"]) <= now, "no future sessions")

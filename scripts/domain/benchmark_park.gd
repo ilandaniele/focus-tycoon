@@ -3,6 +3,10 @@ extends RefCounted
 
 const OBJECT_COUNT := 150
 const ANIMAL_COUNT := 75
+const DAY_SECONDS := 86400
+const DEMO_FOCUS_MINUTES: Array[int] = [50, 25, 75, 40, 100, 60, 45]
+const DEMO_MODES: Array[String] = ["study", "work", "reading", "project"]
+const DEMO_MEDITATION_SECONDS: Array[int] = [300, 0, 600, 300, 0, 900, 300]
 
 
 static func build(map_size: int, catalog: Dictionary, species: Dictionary) -> ParkModel:
@@ -45,3 +49,34 @@ static func _enclosures_by_biome(catalog: Dictionary) -> Dictionary:
 		if item["category"] == "enclosure":
 			result[item["biome"]] = item
 	return result
+
+
+static func demo_focus_sessions(now: int) -> Array:
+	var sessions: Array = []
+	for index in DEMO_FOCUS_MINUTES.size():
+		var minutes := DEMO_FOCUS_MINUTES[index]
+		var ended_at := _demo_ended_at(now, index)
+		sessions.append({
+			"id": "b_f_%d" % index, "mode": DEMO_MODES[index % DEMO_MODES.size()], "planned_min": minutes,
+			"effective_min": float(minutes), "status": "interrupted" if index == 1 else "completed",
+			"started_at": ended_at - minutes * 60, "ended_at": ended_at, "cycle": 1,
+		})
+	return sessions
+
+
+static func demo_meditation_sessions(now: int) -> Array:
+	var sessions: Array = []
+	for index in DEMO_MEDITATION_SECONDS.size():
+		var seconds := DEMO_MEDITATION_SECONDS[index]
+		if seconds == 0:
+			continue
+		var ended_at := _demo_ended_at(now, index)
+		sessions.append({
+			"id": "b_m_%d" % index, "exercise": "box", "planned_min": seconds / 60, "seconds": seconds,
+			"status": "completed", "started_at": ended_at - seconds, "ended_at": ended_at,
+		})
+	return sessions
+
+
+static func _demo_ended_at(now: int, index: int) -> int:
+	return now - (DEMO_FOCUS_MINUTES.size() - 1 - index) * DAY_SECONDS
