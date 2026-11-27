@@ -20,7 +20,7 @@ Copiar `~/.focus-tycoon/release.keystore` y `~/.focus-tycoon/release.env` a un l
 ## 3. Google Play (6.6 Android, USD 25 una vez)
 1. Crear cuenta en https://play.google.com/console (verificación de identidad; cuentas personales nuevas deben hacer una prueba cerrada con 12 testers durante 14 días antes de producción).
 2. Crear app "Focus Tycoon", paquete `com.focustycoon.game`.
-3. Ficha: copiar `docs/store/listing.es.md` y `docs/store/listing.en.md`. Gráficos: correr `godot --path . -s res://tools/store_shots.gd -- --benchmark` (con ventana) y subir de `build/store/` el ícono `icon_512.png`, el gráfico destacado `feature_graphic.png` y las capturas `play_*.png` (mínimo 2; la de progreso sale vacía, mejor omitirla).
+3. Ficha: copiar `docs/store/listing.es.md` y `docs/store/listing.en.md`. Gráficos: correr `godot --path . -s res://tools/store_shots.gd -- --benchmark` (con ventana) y subir de `build/store/` el ícono `icon_512.png`, el gráfico destacado `feature_graphic.png` y las capturas `play_*.png` (mínimo 2; la de progreso usa sesiones demo de la última semana).
 4. Política de privacidad: https://github.com/ilandaniele/focus-tycoon/blob/main/docs/store/privacy.es.md
 5. Clasificación de contenido y seguridad de datos: respuestas en `docs/store/listing.*.md`.
 6. Subir `build/android/focus-tycoon-release.aab` a Pruebas internas. Aceptar Play App Signing.

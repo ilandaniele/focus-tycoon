@@ -6,8 +6,11 @@ const SCREENS: Array[String] = ["focus", "meditation", "build", "stats"]
 const FEATURE_SIZE := Vector2i(1024, 500)
 const ICON_SIZE := 512
 const ICON_SOURCE := "res://assets/icon/icon.svg"
-const TITLE_FONT := "res://assets/fonts/Nunito.ttf"
 const SETTLE_SECONDS := 1.5
+const THEME_FACTORY := "res://scripts/ui/theme_factory.gd"
+const TITLE_HEIGHT_PX := 128.0
+const TITLE_OUTLINE_PX := 20.0
+const TITLE_TOP_PX := 24.0
 const PARK_ZOOM := Vector2(1.3, 1.3)
 const BODY_SIZE_PER_SCALE := Vector2(64.0, 72.0)
 const CLEAR_VIEW_POLL := 0.1
@@ -58,11 +61,12 @@ func _phone_set(store: String, size: Vector2i) -> void:
 	_main.close_screen()
 
 
-func _resize_stage(size: Vector2i) -> void:
+func _resize_stage(size: Vector2i) -> float:
 	var base := Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
 	var scale := minf(size.x / base.x, size.y / base.y)
 	_stage.size = size
 	_stage.size_2d_override = Vector2i((Vector2(size) / scale).round())
+	return scale
 
 
 func _save_clearest_park(file_name: String) -> void:
@@ -123,19 +127,21 @@ func _focus_camera() -> void:
 
 
 func _feature_graphic() -> void:
-	_resize_stage(FEATURE_SIZE)
+	var scale := _resize_stage(FEATURE_SIZE)
 	_main.get_node("UI").visible = false
 	var layer := CanvasLayer.new()
 	var title := Label.new()
 	title.text = "Focus Tycoon"
-	title.add_theme_font_override("font", load(TITLE_FONT))
-	title.add_theme_font_size_override("font_size", 96)
+	title.theme = _main.get_node("UI/TutorialOverlay").theme
+	title.theme_type_variation = "TitleLabel"
+	title.add_theme_color_override("font_color", load(THEME_FACTORY).CREAM)
+	title.add_theme_font_size_override("font_size", roundi(TITLE_HEIGHT_PX / scale))
 	title.add_theme_color_override("font_outline_color", Color("2E2420"))
-	title.add_theme_constant_override("outline_size", 24)
+	title.add_theme_constant_override("outline_size", roundi(TITLE_OUTLINE_PX / scale))
 	title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	title.position.y = 32
+	title.position.y = TITLE_TOP_PX / scale
 	layer.add_child(title)
 	_main.add_child(layer)
 	_focus_camera()
