@@ -4,6 +4,10 @@ extends Node2D
 const WALK_PX_PER_SECOND := 56.0
 const REDUCED_MOTION_FACTOR := 0.5
 const PAUSE_SECONDS := Vector2(1.5, 4.5)
+const START_DELAY_SECONDS := Vector2(0.0, 3.0)
+const TURN_SECONDS := 0.3
+const WANDER_STEP_PX := 160.0
+const KEEP_WALKING_CHANCE := 0.35
 const BOB_HEIGHT := 3.0
 const BOB_SECONDS := 0.35
 const SQUASH := Vector2(1.06, 0.94)
@@ -15,6 +19,7 @@ var enclosure_uid := ""
 
 var _points: Array[Vector2] = []
 var _pixels_per_second := WALK_PX_PER_SECOND
+var _wander_rng := RandomNumberGenerator.new()
 var _art_key := ""
 var _current_anim := ""
 var _rest_scale := Vector2.ONE
@@ -40,6 +45,7 @@ func setup(new_species_id: String, new_enclosure_uid: String, points: Array[Vect
 
 func _begin(art_key: String, pixels_per_second: float, art_scale: float) -> void:
 	_art_key = art_key
+	_wander_rng.randomize()
 	_pixels_per_second = pixels_per_second
 	_canvas = Vector2(ArtRegistry.ANIMAL_CANVAS)
 	_load_strips()
@@ -84,7 +90,9 @@ func _restart() -> void:
 	if _strips.is_empty() and not _reduce_motion:
 		_start_bob()
 	_play("idle")
-	_wander_step()
+	_move_tween = create_tween()
+	_move_tween.tween_interval(_wander_rng.randf_range(START_DELAY_SECONDS.x, START_DELAY_SECONDS.y))
+	_move_tween.tween_callback(_wander_step)
 
 
 func _kill_tweens() -> void:
@@ -118,7 +126,12 @@ func _play(anim: String) -> void:
 		return
 	var frames := _sprite.hframes
 	_frame_tween = create_tween().set_loops()
-	_frame_tween.tween_method(_show_frame, 0.0, float(frames), frames / (ANIMATION_FPS[anim] * _motion_factor))
+	_frame_tween.tween_method(_show_frame, 0.0, float(frames), frames / (_fps(anim) * _motion_factor))
+
+
+func _fps(anim: String) -> float:
+	var base: float = ANIMATION_FPS[anim]
+	return AnimalWander.walk_fps(base, _pixels_per_second / WALK_PX_PER_SECOND) if anim == "walk" else base
 
 
 func _show_frame(value: float) -> void:
@@ -128,25 +141,34 @@ func _show_frame(value: float) -> void:
 func _wander_step() -> void:
 	var target := _next_point()
 	var pause := _pause_seconds()
-	if target.x != position.x:
-		_sprite.flip_h = target.x < position.x
 	_move_tween = create_tween()
+	if target.x != position.x and (target.x < position.x) != _sprite.flip_h:
+		_move_tween.tween_callback(_play.bind("idle"))
+		_move_tween.tween_interval(TURN_SECONDS / _motion_factor)
+		_move_tween.tween_callback(_face.bind(target.x < position.x))
 	_move_tween.tween_callback(_play.bind("walk"))
-	_move_tween.tween_property(self, "position", target, maxf(position.distance_to(target), 1.0) / (_pixels_per_second * _motion_factor))
+	var walk := _move_tween.tween_property(self, "position", target, maxf(position.distance_to(target), 1.0) / (_pixels_per_second * _motion_factor))
+	if _eases_steps():
+		walk.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	if pause > 0.0:
 		_move_tween.tween_callback(_play.bind("idle"))
 		_move_tween.tween_interval(pause / _motion_factor)
 	_move_tween.tween_callback(_wander_step)
 
 
+func _face(left: bool) -> void:
+	_sprite.flip_h = left
+
+
+func _eases_steps() -> bool:
+	return true
+
+
 func _pause_seconds() -> float:
-	return randf_range(PAUSE_SECONDS.x, PAUSE_SECONDS.y)
+	if _wander_rng.randf() < KEEP_WALKING_CHANCE:
+		return 0.0
+	return _wander_rng.randf_range(PAUSE_SECONDS.x, PAUSE_SECONDS.y)
 
 
 func _next_point() -> Vector2:
-	if _points.size() < 2:
-		return position
-	var target: Vector2 = _points.pick_random()
-	while target == position:
-		target = _points.pick_random()
-	return target
+	return AnimalWander.next_point(_points, position, WANDER_STEP_PX, _wander_rng)

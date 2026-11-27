@@ -52,3 +52,7 @@ func _pause_seconds() -> float:
 
 func _tuning() -> Dictionary:
 	return Config.economy["visitors"]
+
+
+func _eases_steps() -> bool:
+	return false
