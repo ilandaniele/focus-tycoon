@@ -73,7 +73,7 @@ func add_enclosure_cell(uid: String, cell: Vector2i) -> Dictionary:
 	if not GameState.ledger.can_afford(cost):
 		return _fail("insufficient_funds")
 	GameState.park.add_cell(uid, cell)
-	Economy.spend("shape:%s:%d" % [uid, GameState.ledger.entries().size()], cost, "grow:" + GameState.park.objects[uid]["item_id"])
+	Economy.spend("shape:%s:%d" % [uid, GameState.ledger.applied_count()], cost, "grow:" + GameState.park.objects[uid]["item_id"])
 	GameState.mark_dirty()
 	object_resized.emit(uid)
 	return {"ok": true, "error": ""}
@@ -88,7 +88,7 @@ func remove_enclosure_cell(uid: String, cell: Vector2i) -> Dictionary:
 	if not GameState.park.remove_cell(uid, cell):
 		return _fail("cannot_shrink")
 	var refund := floori(int(cell_cost_of(uid).get("coins", 0)) * float(Config.economy["refund_ratio"]))
-	Economy.grant("unshape:%s:%d" % [uid, GameState.ledger.entries().size()], {"coins": refund}, "refund")
+	Economy.grant("unshape:%s:%d" % [uid, GameState.ledger.applied_count()], {"coins": refund}, "refund")
 	GameState.mark_dirty()
 	object_resized.emit(uid)
 	return {"ok": true, "error": ""}

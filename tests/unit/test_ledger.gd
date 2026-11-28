@@ -66,3 +66,24 @@ func test_log_capped_but_keys_kept() -> void:
 	assert_eq(ledger.to_dict()["log"].size(), Ledger.MAX_LOG)
 	assert_true(ledger.has_key("k0"))
 	assert_eq(ledger.get_balance("coins"), Ledger.MAX_LOG + 20)
+
+
+func test_zero_amounts_are_left_out_of_log() -> void:
+	var ledger := Ledger.new()
+	ledger.apply("focus:a", {"coins": 12, "nature": 0, "xp": 5}, "focus", 1)
+	assert_eq(ledger.entries()[0]["delta"], {"coins": 12, "xp": 5})
+
+
+func test_all_zero_grant_marks_key_without_log_entry() -> void:
+	var ledger := Ledger.new()
+	var result := ledger.apply("meditation:m", {"coins": 0, "nature": 0, "xp": 0}, "meditation", 1)
+	assert_true(result["ok"])
+	assert_true(ledger.has_key("meditation:m"))
+	assert_true(ledger.entries().is_empty())
+
+
+func test_applied_count_grows_even_without_log_entry() -> void:
+	var ledger := Ledger.new()
+	ledger.apply("a", {"coins": 0}, "test", 1)
+	ledger.apply("b", {"coins": 3}, "test", 2)
+	assert_eq(ledger.applied_count(), 2)
