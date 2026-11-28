@@ -17,13 +17,20 @@ func apply(key: String, delta: Dictionary, reason: String, at: int) -> Dictionar
 		return _result(false, false, error)
 	var clean: Dictionary = {}
 	for resource: String in delta:
-		clean[resource] = int(delta[resource])
-		balances[resource] = get_balance(resource) + int(delta[resource])
+		var amount: int = int(delta[resource])
+		if amount != 0:
+			clean[resource] = amount
+			balances[resource] = get_balance(resource) + amount
 	_applied_keys[key] = at
-	_log.append({"key": key, "delta": clean, "reason": reason, "at": at})
+	if not clean.is_empty():
+		_append_log({"key": key, "delta": clean, "reason": reason, "at": at})
+	return _result(true, false, "")
+
+
+func _append_log(entry: Dictionary) -> void:
+	_log.append(entry)
 	if _log.size() > MAX_LOG:
 		_log = _log.slice(_log.size() - MAX_LOG)
-	return _result(true, false, "")
 
 
 func can_afford(cost: Dictionary) -> bool:
@@ -43,6 +50,10 @@ func entries() -> Array:
 
 func has_key(key: String) -> bool:
 	return _applied_keys.has(key)
+
+
+func applied_count() -> int:
+	return _applied_keys.size()
 
 
 func to_dict() -> Dictionary:
