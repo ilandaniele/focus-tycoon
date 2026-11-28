@@ -5,41 +5,21 @@ const COUNT_UP_S := 0.8
 
 
 static func show_entries(from: Node, entries: Array) -> ModalDialog:
-	var last := entries.back() as Dictionary
-	var completed := _status(last) == "completed"
-	var dialog := ModalDialog.open(from, UIKit.t("summary.title_done" if completed else "summary.title_partial"))
-	var minutes := 0.0
-	var totals := {"coins": 0, "nature": 0, "xp": 0}
-	var capped := false
-	for entry: Dictionary in entries:
-		var record: Dictionary = entry.get("record", {})
-		var reward: Dictionary = entry.get("reward", {})
-		var effective := _minutes(entry["kind"], record)
-		minutes += effective
-		capped = capped or bool(reward.get("capped", false))
-		for key: String in totals:
-			totals[key] += int(reward.get(key, 0))
-	dialog.body.add_child(_centered(UIKit.fmt("summary.minutes_one" if int(minutes) == 1 else "summary.minutes", [int(minutes)]), "HeaderLabel"))
-	for key: String in totals:
+	var summary := SessionSummary.build(entries)
+	var minutes: int = summary["minutes"]
+	var rewards: Dictionary = summary["rewards"]
+	var dialog := ModalDialog.open(from, UIKit.t(summary["title_key"]))
+	if minutes > 0:
+		dialog.body.add_child(_centered(UIKit.fmt("summary.minutes_one" if minutes == 1 else "summary.minutes", [minutes]), "HeaderLabel"))
+	for key: String in rewards:
 		var line := _centered("", "")
 		dialog.body.add_child(line)
-		_count_up(dialog, line, key, int(totals[key]))
-	dialog.body.add_child(_centered(UIKit.t("summary.msg_done" if completed else "summary.msg_partial"), "MutedLabel"))
-	if capped:
+		_count_up(dialog, line, key, int(rewards[key]))
+	dialog.body.add_child(_centered(UIKit.t(summary["message_key"]), "MutedLabel"))
+	if summary["capped"]:
 		dialog.body.add_child(_centered(UIKit.t("summary.cap_hint"), "MutedLabel"))
 	dialog.add_button(UIKit.t("ui.continue"), true)
 	return dialog
-
-
-static func _status(entry: Dictionary) -> String:
-	var record: Dictionary = entry.get("record", {})
-	return record.get("status", "completed")
-
-
-static func _minutes(kind: String, record: Dictionary) -> float:
-	if kind == "meditation":
-		return float(record.get("seconds", 0)) / 60.0
-	return float(record.get("effective_min", 0.0))
 
 
 static func _centered(text: String, variation: String) -> Label:
